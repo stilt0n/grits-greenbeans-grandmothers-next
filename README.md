@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# About
 
-## Getting Started
+This is a rewrite of Grits Greenbeans and Grandmothers in Next js.
 
-First, run the development server:
+I'm not sure it was necessary to switch to Next but I wanted to give both Next and Remix a try and needing to rewrite the site seemed like an opportunity to try Next. Some of the other tools I was using seem like they are a little more compatible with Next which is another reason it seemed worth giving this a shot.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+I learned quite a bit from building the first iteration of this site, but I think I also made many mistakes:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Using forms to create recipes turned out to be a pretty terrible user experience.
+- The database schemas I used were way more complicated than they should have been.
+- Not testing turned out to be a mistake. I don't think this site needs bullet-proof tests, but doing a minimum CI check to make sure a PR didn't take the site down would have been surprisingly useful.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Rough ideas of the site architecture
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+The core functionality of this site is basically the same as a blog site:
 
-## Learn More
+- Everyone should be able to view and search recipes on the site.
+- Only authenticated admin users should be able to create or edit recipes.
 
-To learn more about Next.js, take a look at the following resources:
+Last time this functionality was implemented through forms. This worked okay and there were some potential advantages to doing it this way (being able to do math on ingredient quantities) but the editing experience really suffered as a result and I don't think it was really worthwhile.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+This also vastly simplifies the database. Each ingredient should have:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- an id
+- a title
+- an author
+- image url
+- recipe text
 
-## Deploy on Vercel
+Last time around I built methods to try to minimize rows fetched as much as possible as a performance / cost optimization. But I think this was premature. This time around I will explore this only if it appears necessary.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+I will probably continue to use Turso and Drizzle for this.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Instead of using a form, recipes will be entered using a text editor. My original plan was to make a markdown editor for this (and I am still doing this as a separate project) but for this particular use, WSIWYG seems like a better option. I found one libary that does this and converts the text to html strings. I would have honestly rather stored markdown, but this seems pretty reasonable as well. The HTML would be stored directly in the database and fetched when the page for the recipe is visited.
+
+I still need to do a little more research on how realistic this approach is. If it does not work, I can fall back to my markdown editor which I have already confirmed will work.
+
+This also works well with the eventual goal to add a chatbot (this is a pretty pointless thing to have, but I'd like to learn those techs a little better) since the recipe text can easily be used to populate a vector database later with very little preprocessing.
+
+## Planned techs
+
+- NextJS
+- Tailwind
+- Turso
+- Drizzle
+- ShadcnUI for components
+- TipTap or Mantine's TipTap wrapper
+- possibly MdxEditor
+- Bun for package management and unit tests (if possible)
+- Playwright for E2E tests
+- Vercel
