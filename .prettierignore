@@ -1,0 +1,6 @@
+build
+dist
+coverage
+playwright-report
+test-results
+migrations

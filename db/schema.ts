@@ -6,9 +6,14 @@ export const recipes = sqliteTable('recipes', {
   title: text('title').notNull(),
   author: text('author').default('grandmother_bot'),
   recipeTime: text('recipe_time'),
-  createAt: text('created_at').default(sql`(CURRENT_TIMESTAMP)`).notNull(),
-  updatedAt: integer('updated_at', { mode: 'timestamp' }).$onUpdate(() => new Date()),
+  createAt: text('created_at')
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).$onUpdate(
+    () => new Date()
+  ),
   instructions: text('instructions').notNull(),
+  imageUrl: text('image_url'),
 });
 
 export type InsertRecipe = typeof recipes.$inferInsert;
