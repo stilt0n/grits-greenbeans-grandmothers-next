@@ -1,5 +1,5 @@
 'use client';
-import { mls } from '@/lib/utils';
+import { html } from '@/lib/utils';
 import { useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
@@ -10,7 +10,7 @@ export interface UseTipTapProps {
   initialContent?: string;
 }
 
-const defaultContent = mls`
+const defaultContent = html`
   <h2>Ingredients</h2>
   <ul>
     <li>Your ingredients go here</li>

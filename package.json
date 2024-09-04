@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "seed": "bun scripts/seed.ts"
   },
   "dependencies": {
     "@libsql/client": "^0.9.0",
