@@ -1,18 +1,6 @@
 // TODO: determine format of instructions strings before finishing
 import * as db from '@/lib/api';
-
-/**
- * Multiline string function
- * Quick and dirty tag function to fix indentation on multiline strings.
- * This is not a reliable dedent function and does not preserve indentation.
- */
-const mls = (strings: TemplateStringsArray) => {
-  return strings
-    .join('')
-    .split('\n')
-    .map((s) => s.trim())
-    .join('\n');
-};
+import { mls } from '@/lib/utils';
 
 const seedData = [
   {
