@@ -1,12 +1,10 @@
-// Temporary
-'use client';
-import EditorInput from '@/components/editor';
+import { RecipeForm } from '@/components/recipe-edit-form.client';
 
 export default function Home() {
   return (
-    <EditorInput
-      className='mx-8 mt-4'
-      onChange={(editorContent) => console.log(editorContent)}
-    />
+    <div>
+      <h1 className='text-2xl text-center mt-2'>Recipe Form</h1>
+      <RecipeForm />
+    </div>
   );
 }
