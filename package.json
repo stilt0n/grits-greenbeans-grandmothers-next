@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "seed": "bun scripts/seed.ts"
+    "seed": "bun scripts/seed.ts",
+    "studio": "drizzle-kit studio"
   },
   "dependencies": {
     "@libsql/client": "^0.9.0",
