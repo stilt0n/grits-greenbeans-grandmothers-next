@@ -1,13 +1,18 @@
 'use client';
-import { useForm } from 'react-hook-form';
+import {
+  useForm,
+  type SubmitHandler,
+  type SubmitErrorHandler,
+} from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { FormInput } from '@/components/form/form-input';
 import { Button } from '@/components/ui/button';
 import EditorInput from '@/components/editor';
-import { useEffect } from 'react';
 
 export interface RecipeFormProps {
+  onSubmitSuccess: SubmitHandler<RecipeData>;
+  onSubmitError: SubmitErrorHandler<RecipeData>;
   initialRecipeData?: RecipeData;
 }
 
@@ -21,35 +26,18 @@ const blankRecipeData = {
 
 export const RecipeForm = ({
   initialRecipeData = blankRecipeData,
+  ...props
 }: RecipeFormProps) => {
   const {
     register,
     handleSubmit,
     setValue,
-    watch,
     formState: { errors: e },
   } = useForm({
     resolver: zodResolver(recipeSchema),
     defaultValues: initialRecipeData,
   });
-  const onSubmit = handleSubmit(
-    (data, event) => {
-      event?.preventDefault();
-      console.log(data);
-    },
-    (e) => {
-      console.log(e);
-    }
-  );
-
-  useEffect(() => {
-    const subscription = watch((value, { name }) => {
-      if (name === 'instructions') {
-        console.log(value.instructions);
-      }
-    });
-    return () => subscription.unsubscribe();
-  });
+  const onSubmit = handleSubmit(props.onSubmitSuccess, props.onSubmitError);
 
   return (
     <>
