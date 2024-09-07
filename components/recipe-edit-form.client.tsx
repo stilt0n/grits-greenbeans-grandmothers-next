@@ -1,51 +1,43 @@
 'use client';
-import { useForm } from 'react-hook-form';
+import {
+  useForm,
+  type SubmitHandler,
+  type SubmitErrorHandler,
+} from 'react-hook-form';
+import { recipeSchema, type RecipeData } from '@/types/recipeTypes';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { FormInput } from '@/components/form/form-input';
 import { Button } from '@/components/ui/button';
 import EditorInput from '@/components/editor';
-import { useEffect } from 'react';
 
 export interface RecipeFormProps {
-  recipeData?: RecipeData;
+  onSubmitSuccess: SubmitHandler<RecipeData>;
+  onSubmitError: SubmitErrorHandler<RecipeData>;
+  initialRecipeData?: RecipeData;
 }
 
-export const RecipeForm = (props: RecipeFormProps) => {
+const blankRecipeData = {
+  title: '',
+  author: null,
+  recipeTime: null,
+  imageUrl: null,
+  instructions: '',
+};
+
+export const RecipeForm = ({
+  initialRecipeData = blankRecipeData,
+  ...props
+}: RecipeFormProps) => {
   const {
     register,
     handleSubmit,
     setValue,
-    watch,
     formState: { errors: e },
   } = useForm({
     resolver: zodResolver(recipeSchema),
-    defaultValues: {
-      title: '',
-      author: '',
-      recipeTime: '',
-      imageUrl: '',
-      instructions: '',
-    },
+    defaultValues: initialRecipeData,
   });
-  const onSubmit = handleSubmit(
-    (data, event) => {
-      event?.preventDefault();
-      console.log(data);
-    },
-    (e) => {
-      console.log(e);
-    }
-  );
-
-  useEffect(() => {
-    const subscription = watch((value, { name }) => {
-      if (name === 'instructions') {
-        console.log(value.instructions);
-      }
-    });
-    return () => subscription.unsubscribe();
-  });
+  const onSubmit = handleSubmit(props.onSubmitSuccess, props.onSubmitError);
 
   return (
     <>
@@ -73,21 +65,14 @@ export const RecipeForm = (props: RecipeFormProps) => {
           label='Recipe instructions'
           inputProps={register('instructions')}
           errorMessage={e.instructions?.message}
+          initialContent={
+            initialRecipeData.instructions.length > 0
+              ? initialRecipeData.instructions
+              : undefined
+          }
         />
         <Button type='submit'>Submit</Button>
       </form>
     </>
   );
 };
-
-const recipeSchema = z.object({
-  title: z.string().min(1, 'Title cannot be blank!'),
-  instructions: z
-    .string()
-    .min(1, 'Instructions cannot be blank and cannot use the default input'),
-  author: z.string().optional(),
-  imageUrl: z.string().optional(),
-  recipeTime: z.string().optional(),
-});
-
-type RecipeData = z.infer<typeof recipeSchema>;
