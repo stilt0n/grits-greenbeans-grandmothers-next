@@ -18,9 +18,9 @@ export interface RecipeFormProps {
 
 const blankRecipeData = {
   title: '',
-  author: '',
-  recipeTime: '',
-  imageUrl: '',
+  author: null,
+  recipeTime: null,
+  imageUrl: null,
   instructions: '',
 };
 
