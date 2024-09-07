@@ -8,10 +8,20 @@ import EditorInput from '@/components/editor';
 import { useEffect } from 'react';
 
 export interface RecipeFormProps {
-  recipeData?: RecipeData;
+  initialRecipeData?: RecipeData;
 }
 
-export const RecipeForm = (props: RecipeFormProps) => {
+const blankRecipeData = {
+  title: '',
+  author: '',
+  recipeTime: '',
+  imageUrl: '',
+  instructions: '',
+};
+
+export const RecipeForm = ({
+  initialRecipeData = blankRecipeData,
+}: RecipeFormProps) => {
   const {
     register,
     handleSubmit,
@@ -20,13 +30,7 @@ export const RecipeForm = (props: RecipeFormProps) => {
     formState: { errors: e },
   } = useForm({
     resolver: zodResolver(recipeSchema),
-    defaultValues: {
-      title: '',
-      author: '',
-      recipeTime: '',
-      imageUrl: '',
-      instructions: '',
-    },
+    defaultValues: initialRecipeData,
   });
   const onSubmit = handleSubmit(
     (data, event) => {
@@ -73,6 +77,11 @@ export const RecipeForm = (props: RecipeFormProps) => {
           label='Recipe instructions'
           inputProps={register('instructions')}
           errorMessage={e.instructions?.message}
+          initialContent={
+            initialRecipeData.instructions.length > 0
+              ? initialRecipeData.instructions
+              : undefined
+          }
         />
         <Button type='submit'>Submit</Button>
       </form>
