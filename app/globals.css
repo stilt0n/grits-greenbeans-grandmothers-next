@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* 
+  Undoes built-in focus styles for prose-mirror. The focus style clashes with
+  text-editor's margin and I have my own custom focus style for the editor
+*/
+.ProseMirror:focus {
+  outline: none;
+}
