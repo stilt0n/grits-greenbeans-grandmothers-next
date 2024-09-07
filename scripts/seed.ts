@@ -1,5 +1,5 @@
 // TODO: determine format of instructions strings before finishing
-import * as db from '@/lib/api';
+import * as db from '@/lib/database';
 import type { InsertRecipe } from '@/db/schema';
 import { html } from '@/lib/utils';
 
