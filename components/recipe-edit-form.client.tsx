@@ -4,8 +4,8 @@ import {
   type SubmitHandler,
   type SubmitErrorHandler,
 } from 'react-hook-form';
+import { recipeSchema, type RecipeData } from '@/types/recipeTypes';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { FormInput } from '@/components/form/form-input';
 import { Button } from '@/components/ui/button';
 import EditorInput from '@/components/editor';
@@ -76,15 +76,3 @@ export const RecipeForm = ({
     </>
   );
 };
-
-const recipeSchema = z.object({
-  title: z.string().min(1, 'Title cannot be blank!'),
-  instructions: z
-    .string()
-    .min(1, 'Instructions cannot be blank and cannot use the default input'),
-  author: z.string().optional(),
-  imageUrl: z.string().optional(),
-  recipeTime: z.string().optional(),
-});
-
-type RecipeData = z.infer<typeof recipeSchema>;
