@@ -10,3 +10,10 @@ export const getRecipes = async () => {
 export const createRecipe = async (...recipe: InsertRecipe[]) => {
   return db.insert(recipes).values(recipe);
 };
+
+/**
+ * @internal
+ */
+export const resetRecipes = async () => {
+  return db.delete(recipes);
+};
