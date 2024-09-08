@@ -1,25 +1,12 @@
-'use client';
+import Link from 'next/link';
 
-import { RecipeForm } from '@/components/recipe-edit-form.client';
-import { useTransition } from 'react';
-import { formSubmitAction } from '@/app/actions/form-submit';
-
-export default function Home() {
-  const [, startTransition] = useTransition();
+const Home = () => {
   return (
     <div>
-      <h1 className='text-2xl text-center mt-2'>Recipe Form</h1>
-      <RecipeForm
-        onSubmitSuccess={(data) => {
-          console.log(data);
-          startTransition(() => {
-            formSubmitAction(data);
-          });
-        }}
-        onSubmitError={(e) => {
-          console.log(e);
-        }}
-      />
+      <h1 className='text-3xl text-center mt-2'>Under Construction...</h1>
+      <Link href='/create-recipe'>Add a Recipe</Link>
     </div>
   );
-}
+};
+
+export default Home;
