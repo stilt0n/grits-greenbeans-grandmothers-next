@@ -1,4 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
+import { requireEnv } from '@/types/typeguards';
 import dotenv from 'dotenv';
 
 dotenv.config({ path: '.env.local' });
@@ -12,6 +13,10 @@ dotenv.config({ path: '.env.local' });
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
+
+const { VERCEL_AUTOMATION_BYPASS_SECRET } = requireEnv(
+  'VERCEL_AUTOMATION_BYPASS_SECRET'
+);
 export default defineConfig({
   testDir: './tests',
   /* Run tests in files in parallel */
