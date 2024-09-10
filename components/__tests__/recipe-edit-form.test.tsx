@@ -1,4 +1,4 @@
-import { RecipeForm } from '../recipe-edit-form.client';
+import { RecipeForm } from '@/components/recipe-edit-form.client';
 import { it, describe, expect, mock, afterEach } from 'bun:test';
 import { screen, render, cleanup } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
