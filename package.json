@@ -44,6 +44,8 @@
     "@happy-dom/global-registrator": "^15.7.3",
     "@playwright/test": "^1.46.1",
     "@tailwindcss/typography": "^0.5.15",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/react": "^16.0.1",
     "@types/bun": "^1.1.9",
     "@types/node": "^20",
     "@types/react": "^18",
