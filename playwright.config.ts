@@ -12,8 +12,6 @@ dotenv.config({ path: '.env.local' });
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
-console.log(`Using BASE_URL: ${process.env.BASE_URL}`);
-
 export default defineConfig({
   testDir: './tests',
   /* Run tests in files in parallel */
@@ -33,6 +31,12 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
+
+    // necessary to access vercel preview deployments
+    extraHTTPHeaders: {
+      'x-vercel-protection-bypass':
+        process.env.VERCEL_AUTOMATION_BYPASS_SECRET!,
+    },
   },
 
   /* Configure projects for major browsers */
