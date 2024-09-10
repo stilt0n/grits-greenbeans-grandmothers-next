@@ -7,14 +7,13 @@ test.describe('sign-in tests', () => {
     E2E_CLERK_USER_USERNAME: username,
     E2E_CLERK_USER_PASSWORD: password,
   } = requireEnv('E2E_CLERK_USER_USERNAME', 'E2E_CLERK_USER_PASSWORD');
-  test.beforeAll(async ({ page }) => {
-    await setupClerkTestingToken({ page });
-  });
 
   test(
     'redirects to signin page when attempting to access protected page',
     { tag: '@smoke' },
     async ({ page }) => {
+      await setupClerkTestingToken({ page });
+
       await page.goto('/create-recipe');
       await expect(page.locator('h1')).toContainText('Sign In');
       await page.waitForSelector('.cl-signIn-root', { state: 'attached' });
