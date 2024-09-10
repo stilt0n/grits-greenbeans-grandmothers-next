@@ -2,6 +2,9 @@ name: Playwright Tests
 on:
   deployment_status:
 
+env:
+  PLAYWRIGHT_VERSION: ''
+
 jobs:
   run-e2es:
     if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
@@ -10,15 +13,32 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
+
       - name: Install depenendencies
         run: bun install
+
+      - name: Get Playwright Version
+        run: |
+          playwright_version=$(bun pm ls | grep @playwright/test | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+')
+          echo "PLAYWRIGHT_VERSION=$playwright_version" >> "$GITHUB_ENV"
+
+      - name: Cache Playwright Browsers
+        id: cache-playwright-browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-browsers-${{ env.PLAYWRIGHT_VERSION }}
+
       - name: Install Playwright Browsers
+        if: steps.cache-playwright-browsers.outputs.cache-hit != 'true'
         run: bunx playwright install --with-deps
+
       - name: Run Playwright tests
         run: bunx playwright test
         env:
           BASE_URL: ${{ github.event.deployment_status.environment_url }}
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
