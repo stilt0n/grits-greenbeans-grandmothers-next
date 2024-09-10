@@ -15,7 +15,7 @@ test.describe('sign-in tests', () => {
       await setupClerkTestingToken({ page });
 
       await page.goto('/create-recipe');
-      await expect(page.locator('h1')).toContainText('Sign In');
+      await expect(page.locator('h1')).toContainText('Sign in');
       await page.waitForSelector('.cl-signIn-root', { state: 'attached' });
       await page.locator('input[name=identifier]').fill(username);
       await page.getByRole('button', { name: 'Continue', exact: true }).click();

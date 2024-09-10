@@ -47,18 +47,25 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
+      name: 'global setup',
+      testMatch: /global\.setup\.ts/,
+    },
+    {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
+      dependencies: ['global setup'],
     },
 
     {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
+      dependencies: ['global setup'],
     },
 
     {
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
+      dependencies: ['global setup'],
     },
   ],
   /* Run your local dev server before starting the tests */

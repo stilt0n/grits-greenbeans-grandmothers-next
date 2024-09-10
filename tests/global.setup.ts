@@ -4,5 +4,5 @@ import { requireEnv } from '@/types/typeguards';
 
 setup('global setup', async ({}) => {
   await clerkSetup();
-  requireEnv('E2E_CLERK_USERNAME', 'E2E_CLERK_USER_PASSWORD');
+  requireEnv('E2E_CLERK_USER_USERNAME', 'E2E_CLERK_USER_PASSWORD');
 });
