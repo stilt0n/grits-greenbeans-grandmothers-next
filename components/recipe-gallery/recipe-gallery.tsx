@@ -1,22 +1,27 @@
+import * as db from '@/lib/database';
 import { GalleryPagination } from './gallery-pagination';
 import { RecipeCard, type RecipeCardProps } from './recipe-card';
+import { z } from 'zod';
 
 export interface LoadRecipeArgs {
-  startIndex?: number;
+  page: number;
+  pageSize: number;
   filter?: string;
 }
 
 export type LoadRecipeAction = (
   args: LoadRecipeArgs
-) => Pick<RecipeCardProps, 'title' | 'description' | 'imgUrl'>;
+) => Promise<ReturnedRecipeInfo>;
 
 export type LoadPageCountAction = (
-  args: Pick<LoadRecipeArgs, 'filter'>
-) => number;
+  args?: Pick<LoadRecipeArgs, 'filter'>
+) => Promise<number>;
 
 export interface RecipeGalleryProps {
   loadRecipeAction: LoadRecipeAction;
   loadPageCountAction: LoadPageCountAction;
+  page: number;
+  pageSize?: number;
 }
 
 /**
@@ -25,17 +30,57 @@ export interface RecipeGalleryProps {
  * it operates similarly to setup hooks, but is not a hook.
  */
 export const createRecipeLoaders = () => {
-  const loadRecipeAction = ({ startIndex, limit, filter }) => {};
+  const loadRecipeAction: LoadRecipeAction = async ({
+    page,
+    pageSize,
+    filter,
+  }) => {
+    'use server';
+    console.log(`using filter ${filter}`);
+    const result = await db.getRecipes({
+      fields: ['title', 'description', 'imageUrl'],
+      paginate: { page, pageSize },
+    });
+    const recipes = returnedRecipesSchema.parse(result);
+    return recipes;
+  };
+  // TODO: this can probably be cached
+  const loadPageCountAction: LoadPageCountAction = async (args) => {
+    'use server';
+    console.log(`using filter ${args?.filter ?? 'none'}`);
+    const [{ count }] = await db.getRecipeCount();
+    return count;
+  };
+  return { loadRecipeAction, loadPageCountAction };
 };
 
-const RecipeGallery = async (props: RecipeGalleryProps) => {
-  const pageCount = 10;
+const RecipeGallery = async ({
+  page,
+  pageSize = 10,
+  ...props
+}: RecipeGalleryProps) => {
+  const pageCount = await props.loadPageCountAction();
+  const recipes = await props.loadRecipeAction({ page, pageSize });
   return (
     <div>
-      <div className='gallery'></div>
+      <div className='gallery'>
+        {recipes.map((recipe) => (
+          <RecipeCard key={recipe.title} {...recipe} href='#' />
+        ))}
+      </div>
       <GalleryPagination pageCount={pageCount} />
     </div>
   );
 };
+
+const returnedRecipesSchema = z.array(
+  z.object({
+    title: z.string(),
+    description: z.string(),
+    imageUrl: z.string().optional(),
+  })
+);
+
+type ReturnedRecipeInfo = z.infer<typeof returnedRecipesSchema>;
 
 export default RecipeGallery;
