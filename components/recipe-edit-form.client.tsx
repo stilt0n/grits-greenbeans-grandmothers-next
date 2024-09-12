@@ -18,6 +18,7 @@ export interface RecipeFormProps {
 
 const blankRecipeData = {
   title: '',
+  description: '',
   author: null,
   recipeTime: null,
   imageUrl: null,
@@ -50,6 +51,12 @@ export const RecipeForm = ({
           type='text'
           required
           {...register('title')}
+        />
+        <FormInput
+          label='Recipe description'
+          type='text'
+          required
+          {...register('description')}
         />
         <FormInput label='Author' type='text' {...register('author')} />
         <FormInput
