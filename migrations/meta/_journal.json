@@ -15,6 +15,13 @@
       "when": 1725424413158,
       "tag": "0001_cute_vampiro",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1726113747310,
+      "tag": "0002_third_celestials",
+      "breakpoints": true
     }
   ]
 }
