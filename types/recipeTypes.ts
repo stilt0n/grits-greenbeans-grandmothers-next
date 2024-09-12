@@ -2,6 +2,13 @@ import { z } from 'zod';
 
 export const recipeSchema = z.object({
   title: z.string().min(1, 'Title cannot be blank!'),
+  description: z
+    .string()
+    .min(1, 'Description cannot be blank')
+    .max(
+      255,
+      'Recipe descriptions are a small summary and should be kept to less than 256 characters.'
+    ),
   instructions: z
     .string()
     .min(1, 'Instructions cannot be blank and cannot use the default input'),

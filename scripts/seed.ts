@@ -7,6 +7,7 @@ import { images } from '@/lib/constants';
 const seedData: InsertRecipe[] = [
   {
     title: 'Grits',
+    description: "grandmother_bot's classic take on a southern classic.",
     author: 'grandmother_bot',
     recipeTime: '20 minutes',
     instructions: html`
@@ -25,6 +26,8 @@ const seedData: InsertRecipe[] = [
   },
   {
     title: 'Green Beans',
+    description:
+      "These greenbeans are so good you'll wish you weren't a robot. - grandmother_bot",
     author: 'grandmother_bot',
     recipeTime: '15 minutes',
     instructions: html`
