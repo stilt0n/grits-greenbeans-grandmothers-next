@@ -1,1 +1,1 @@
-export { getRecipes, createRecipe } from './internal';
+export { getRecipes, getRecipeCount, createRecipe } from './internal';
