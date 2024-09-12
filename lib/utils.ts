@@ -16,3 +16,16 @@ export const html = (strings: TemplateStringsArray) => {
     .map((s) => s.trim())
     .join('');
 };
+
+export const parseIntWithFallback = (maybeInt: unknown, fallback: number) => {
+  const parsedInt = Number(maybeInt);
+  return Number.isNaN(parsedInt) ? parsedInt : fallback;
+};
+
+export const truncateRange = (num: number, floor: number, ceiling: number) => {
+  return Math.min(Math.max(num, floor), ceiling);
+};
+
+// returns [start, end)
+export const range = (start: number, end: number) =>
+  [...Array(end - start)].map((_, i) => i + start);
