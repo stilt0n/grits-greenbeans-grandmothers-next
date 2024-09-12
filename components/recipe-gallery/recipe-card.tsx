@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { images } from '@/lib/constants';
 import { Card, CardTitle, CardDescription } from '@/components/ui/card';
 import { LinkButton } from './link-button.client';
 
@@ -6,7 +7,7 @@ export interface RecipeCardProps {
   title: string;
   description: string;
   href: string;
-  imgUrl: string;
+  imageUrl?: string;
 }
 
 export const RecipeCard = (props: RecipeCardProps) => {
@@ -14,7 +15,7 @@ export const RecipeCard = (props: RecipeCardProps) => {
     <Card className='flex flex-col md:flex-row w-full max-4-4xl'>
       <div className='md:w-1/2 overflow-hidden rounded-t-lg md:rounded-t-none md:rounded-l-lg'>
         <Image
-          src={props.imgUrl}
+          src={props.imageUrl ?? images.greenbeans}
           placeholder='blur'
           alt={props.title}
           width='400'
