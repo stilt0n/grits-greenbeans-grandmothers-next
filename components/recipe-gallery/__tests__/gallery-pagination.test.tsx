@@ -23,4 +23,17 @@ describe('Given Gallery Pagination component', () => {
     const { getAllByRole } = within(pagination);
     expect(getAllByRole('listitem')).toHaveLength(7);
   });
+
+  it('should set aria current based on search params', () => {
+    withMockNavigation({ searchParams: { page: '4' } });
+    render(<GalleryPagination pageCount={10} />);
+    const current = screen.getByRole('link', { current: 'page' });
+    expect(current.innerText).toBe('4');
+  });
+
+  it('should disable previous button when on first page', () => {
+    withMockNavigation();
+    render(<GalleryPagination pageCount={7} />);
+    const current = screen.getByRole('link', { current: 'page' });
+  });
 });
