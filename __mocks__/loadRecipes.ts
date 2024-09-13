@@ -42,6 +42,8 @@ export const mockLoadRecipeAction: LoadRecipeAction = async ({
     .slice(page * pageSize, (page + 1) * pageSize);
 };
 
-export const mockLoadPageCountAction: LoadPageCountAction = async (args) =>
-  (args?.filter ? mockDatabase.filter(makeFilter(args.filter)) : mockDatabase)
-    .length;
+export const mockLoadPageCountAction: LoadPageCountAction = async ({
+  filter,
+  pageSize,
+}) =>
+  Math.ceil(mockDatabase.filter(makeFilter(filter ?? '')).length / pageSize);

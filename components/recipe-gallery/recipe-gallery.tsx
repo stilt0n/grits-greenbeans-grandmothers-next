@@ -14,7 +14,7 @@ export type LoadRecipeAction = (
 ) => Promise<ReturnedRecipeInfo>;
 
 export type LoadPageCountAction = (
-  args?: Pick<LoadRecipeArgs, 'filter'>
+  args: Omit<LoadRecipeArgs, 'page'>
 ) => Promise<number>;
 
 export interface RecipeGalleryProps {
@@ -45,11 +45,14 @@ export const createRecipeLoaders = () => {
     return recipes;
   };
   // TODO: this can probably be cached
-  const loadPageCountAction: LoadPageCountAction = async (args) => {
+  const loadPageCountAction: LoadPageCountAction = async ({
+    pageSize,
+    filter,
+  }) => {
     'use server';
-    console.log(`using filter ${args?.filter ?? 'none'}`);
+    console.log(`using filter ${filter ?? 'none'}`);
     const [{ count }] = await db.getRecipeCount();
-    return count;
+    return Math.ceil(count / pageSize);
   };
   return { loadRecipeAction, loadPageCountAction };
 };
@@ -59,7 +62,7 @@ const RecipeGallery = async ({
   pageSize = 10,
   ...props
 }: RecipeGalleryProps) => {
-  const pageCount = await props.loadPageCountAction();
+  const pageCount = await props.loadPageCountAction({ pageSize });
   const recipes = await props.loadRecipeAction({ page, pageSize });
   return (
     <div>
