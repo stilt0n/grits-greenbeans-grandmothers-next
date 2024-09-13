@@ -17,6 +17,7 @@ describe('given a default recipe edit form', () => {
     const onError = mock(() => {});
     const initialData = {
       title: 'Test',
+      description: 'This is a test recipe',
       author: 'grandmother_bot',
       recipeTime: '20 minutes',
       imageUrl: null,
@@ -43,6 +44,7 @@ describe('given a default recipe edit form', () => {
     const onError = mock(() => {});
     const initialData = {
       title: '',
+      description: '',
       author: 'grandmother_bot',
       recipeTime: '20 minutes',
       imageUrl: null,
