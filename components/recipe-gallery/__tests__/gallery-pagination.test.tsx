@@ -1,11 +1,7 @@
 import { GalleryPagination } from '../gallery-pagination.client';
 import { withMockNavigation } from '@/__mocks__/nextMocks';
-import { describe, it, expect, afterEach } from 'bun:test';
-import { screen, render, within, cleanup } from '@testing-library/react';
-
-afterEach(() => {
-  cleanup();
-});
+import { describe, it, expect } from 'bun:test';
+import { screen, render, within } from '@testing-library/react';
 
 describe('Given Gallery Pagination component', () => {
   it('should render three list items when there is one page', () => {
@@ -28,12 +24,13 @@ describe('Given Gallery Pagination component', () => {
     withMockNavigation({ searchParams: { page: '4' } });
     render(<GalleryPagination pageCount={10} />);
     const current = screen.getByRole('link', { current: 'page' });
-    expect(current.innerText).toBe('4');
+    expect(current).toHaveTextContent('4');
   });
 
   it('should disable previous button when on first page', () => {
     withMockNavigation();
     render(<GalleryPagination pageCount={7} />);
-    const current = screen.getByRole('link', { current: 'page' });
+    const prev = document.querySelector('[aria-disabled]');
+    expect(prev).toHaveTextContent(/previous/i);
   });
 });
