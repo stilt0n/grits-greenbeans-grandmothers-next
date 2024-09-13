@@ -62,7 +62,7 @@ const getItemNumbers = (selected: number, max: number) => {
     return range(1, 6);
   }
   if (max - 5 <= selected) {
-    return range(max - 5, max + 1);
+    return range(max - 4, max + 1);
   }
-  return range(selected - 2, selected + 2);
+  return range(selected - 2, selected + 3);
 };

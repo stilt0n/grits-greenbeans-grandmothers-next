@@ -7,7 +7,10 @@ export interface RecipeCardProps {
   title: string;
   description: string;
   href: string;
-  imageUrl?: string;
+  // Because of constrains of react-hook-form I think we need to support
+  // both `null` and `undefined` here. This is sort of a pain and it might
+  // be a good idea to look into if there's a way to avoid it.
+  imageUrl?: string | null;
 }
 
 export const RecipeCard = (props: RecipeCardProps) => {
