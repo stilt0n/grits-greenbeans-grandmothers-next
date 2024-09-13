@@ -1,5 +1,5 @@
 import * as db from '@/lib/database';
-import { GalleryPagination } from './gallery-pagination';
+import { GalleryPagination } from './gallery-pagination.client';
 import { RecipeCard, type RecipeCardProps } from './recipe-card';
 import { z } from 'zod';
 
@@ -77,7 +77,7 @@ const returnedRecipesSchema = z.array(
   z.object({
     title: z.string(),
     description: z.string(),
-    imageUrl: z.string().optional(),
+    imageUrl: z.string().optional().nullable(),
   })
 );
 

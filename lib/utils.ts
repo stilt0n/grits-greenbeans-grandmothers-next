@@ -19,7 +19,7 @@ export const html = (strings: TemplateStringsArray) => {
 
 export const parseIntWithFallback = (maybeInt: unknown, fallback: number) => {
   const parsedInt = Number(maybeInt);
-  return Number.isNaN(parsedInt) ? parsedInt : fallback;
+  return Number.isNaN(parsedInt) ? fallback : parsedInt;
 };
 
 export const truncateRange = (num: number, floor: number, ceiling: number) => {

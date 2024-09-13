@@ -2,10 +2,10 @@
 
 import type { RecipeData } from '@/types/recipeTypes';
 import { images } from '@/lib/constants';
-
-interface CardData extends RecipeData {
-  description: string;
-}
+import type {
+  LoadRecipeAction,
+  LoadPageCountAction,
+} from '@/components/recipe-gallery';
 
 const createDummyRecipes = (count: number): RecipeData[] => {
   return [...Array(count)].map((_, i) => ({
@@ -18,21 +18,30 @@ const createDummyRecipes = (count: number): RecipeData[] => {
   }));
 };
 
-interface LoadRecipeProps {
-  startIndex?: number;
-  limit?: number;
-  filter?: string;
-}
-
 const mockDatabase = createDummyRecipes(200);
 
-export const loadRecipes = ({
-  startIndex = 0,
-  limit = 10,
+const makeFilter =
+  (filterValue: string, func: 'startsWith' | 'includes' = 'includes') =>
+  ({ title }: RecipeData) =>
+    title[func](filterValue);
+
+export const mockLoadRecipeAction: LoadRecipeAction = async ({
+  page = 0,
+  pageSize = 10,
   filter,
-}: LoadRecipeProps) => {
+}) => {
   const filteredDatabase = filter
-    ? mockDatabase.filter(({ title }) => title.includes(filter))
+    ? mockDatabase.filter(makeFilter(filter))
     : mockDatabase;
-  return mockDatabase.slice(startIndex, startIndex + limit);
+  return filteredDatabase
+    .map(({ title, description, imageUrl }) => ({
+      title,
+      description,
+      imageUrl,
+    }))
+    .slice(page * pageSize, (page + 1) * pageSize);
 };
+
+export const mockLoadPageCountAction: LoadPageCountAction = async (args) =>
+  (args?.filter ? mockDatabase.filter(makeFilter(args.filter)) : mockDatabase)
+    .length;
