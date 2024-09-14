@@ -23,7 +23,8 @@ export const GalleryPagination = (props: GalleryPaginationProps) => {
     props.pageCount
   );
   const itemNumbers = getItemNumbers(currentPage, props.pageCount);
-  const page = (pageNumber: number) => `${pathname}?page=${pageNumber}`;
+  const page = (pageNumber: number) =>
+    `${pathname}?page=${truncateRange(pageNumber, 1, props.pageCount)}`;
   return (
     <Pagination>
       <PaginationContent>
