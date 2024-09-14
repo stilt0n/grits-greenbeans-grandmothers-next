@@ -58,8 +58,10 @@ const PaginationLink = ({
         variant: isActive ? 'outline' : 'ghost',
         size,
       }),
+      props['aria-disabled'] ? 'pointer-events-none text-gray-400' : undefined,
       className
     )}
+    tabIndex={props['aria-disabled'] ? -1 : undefined}
     {...props}
   />
 );

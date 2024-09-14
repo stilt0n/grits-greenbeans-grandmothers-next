@@ -15,7 +15,7 @@ export interface RecipeCardProps {
 
 export const RecipeCard = (props: RecipeCardProps) => {
   return (
-    <Card className='flex flex-col md:flex-row w-full max-4-4xl'>
+    <Card className='flex flex-col md:flex-row w-full h-full max-4-4xl'>
       <div className='md:w-1/2 overflow-hidden rounded-t-lg md:rounded-t-none md:rounded-l-lg'>
         <Image
           src={props.imageUrl ?? images.greenbeans}
