@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { images } from '@/lib/constants';
+import { images, blurDataUrl } from '@/lib/constants';
 import { Card, CardTitle, CardDescription } from '@/components/ui/card';
 import { LinkButton } from './link-button.client';
 
@@ -20,6 +20,7 @@ export const RecipeCard = (props: RecipeCardProps) => {
         <Image
           src={props.imageUrl ?? images.greenbeans}
           placeholder='blur'
+          blurDataURL={blurDataUrl}
           alt={props.title}
           width='400'
           height='400'
