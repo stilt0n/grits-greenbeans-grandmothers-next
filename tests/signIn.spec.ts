@@ -15,7 +15,9 @@ test.describe('sign-in tests', () => {
       await setupClerkTestingToken({ page });
 
       await page.goto('/create-recipe');
-      await expect(page.locator('h1')).toContainText('Sign in');
+      await expect(
+        page.getByRole('heading', { name: 'Sign In' })
+      ).toBeVisible();
       await page.waitForSelector('.cl-signIn-root', { state: 'attached' });
       await page.locator('input[name=identifier]').fill(username);
       await page.getByRole('button', { name: 'Continue', exact: true }).click();
@@ -23,7 +25,9 @@ test.describe('sign-in tests', () => {
       await page.getByRole('button', { name: 'Continue', exact: true }).click();
       await page.waitForURL('**/create-recipe');
 
-      await expect(page.locator('h1')).toContainText('Add a Recipe');
+      await expect(
+        page.getByRole('heading', { name: 'Add a Recipe' })
+      ).toBeVisible();
     }
   );
 });
