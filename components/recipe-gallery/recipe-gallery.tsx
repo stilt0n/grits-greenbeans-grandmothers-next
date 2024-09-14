@@ -1,8 +1,9 @@
 import * as db from '@/lib/database';
 import { GalleryPagination } from './gallery-pagination.client';
-import { RecipeCard, type RecipeCardProps } from './recipe-card';
+import { RecipeCard } from './recipe-card';
 import { z } from 'zod';
 import { NextSearchParams } from '@/types/nextTypes';
+import { cn } from '@/lib/utils';
 
 export interface LoadRecipeArgs {
   page: number;
@@ -23,6 +24,7 @@ export interface RecipeGalleryProps {
   loadPageCountAction: LoadPageCountAction;
   page: number;
   pageSize?: number;
+  className?: string;
 }
 
 const defaultPageSize = 10;
@@ -79,16 +81,16 @@ const RecipeGallery = async ({
   const pageCount = await props.loadPageCountAction({ pageSize });
   const recipes = await props.loadRecipeAction({ page, pageSize });
   return (
-    <div>
-      <div className='gallery'>
+    <>
+      <ul className={cn('w-full grid grid-cols-9 gap-4', props.className)}>
         {recipes.map((recipe) => (
-          <li key={recipe.title}>
+          <li key={recipe.title} className='col-span-7 col-start-2 h-96'>
             <RecipeCard {...recipe} href='#' />
           </li>
         ))}
-      </div>
+      </ul>
       <GalleryPagination pageCount={pageCount} />
-    </div>
+    </>
   );
 };
 
