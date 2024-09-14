@@ -22,8 +22,8 @@ export const RecipeCard = (props: RecipeCardProps) => {
           placeholder='blur'
           blurDataURL={blurDataUrl}
           alt={props.title}
-          width='400'
-          height='400'
+          width={400}
+          height={400}
           className='w-full h-full object-cover'
         />
       </div>
