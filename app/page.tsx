@@ -1,17 +1,11 @@
-import Link from 'next/link';
-import { currentUser } from '@clerk/nextjs/server';
-import { hasElevatedPermissions } from '@/lib/auth';
+import RecipeGallery, { createRecipeProps } from '@/components/recipe-gallery';
+import { NextPageBaseProps } from '@/types/nextTypes';
 
-// Has possible solution to auth issue
-// https://github.com/clerk/javascript/issues/1528
-const Home = async () => {
-  const user = await currentUser();
+const Home = async ({ searchParams }: NextPageBaseProps) => {
+  const recipeProps = createRecipeProps(searchParams);
   return (
     <div>
-      <h1 className='text-3xl text-center mt-2'>Under Construction...</h1>
-      {hasElevatedPermissions(user) ? (
-        <Link href='/create-recipe'>Add a Recipe</Link>
-      ) : null}
+      <RecipeGallery {...recipeProps} />
     </div>
   );
 };

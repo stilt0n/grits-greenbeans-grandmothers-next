@@ -2,6 +2,7 @@ import * as db from '@/lib/database';
 import { GalleryPagination } from './gallery-pagination.client';
 import { RecipeCard, type RecipeCardProps } from './recipe-card';
 import { z } from 'zod';
+import { NextSearchParams } from '@/types/nextTypes';
 
 export interface LoadRecipeArgs {
   page: number;
@@ -24,12 +25,20 @@ export interface RecipeGalleryProps {
   pageSize?: number;
 }
 
+const defaultPageSize = 10;
+
 /**
  * The reason recipe loaders are not hardcoded is for dependency injection purposes.
- * `createRecipeLoaders` takes the work out of creating recipe loaders for recipe gallery
+ * `createRecipeProps` takes the work out of creating recipe loaders for recipe gallery
  * it operates similarly to setup hooks, but is not a hook.
  */
-export const createRecipeLoaders = () => {
+export const createRecipeProps = (
+  searchParams: NextSearchParams,
+  options: { pageSize: number } = { pageSize: defaultPageSize }
+) => {
+  // we don't want to crash when there are unexpected search params
+  // or when the params are undefined. We can instead default to page 1
+  const { success, data } = searchParamsSchema.safeParse(searchParams);
   const loadRecipeAction: LoadRecipeAction = async ({
     page,
     pageSize,
@@ -54,12 +63,17 @@ export const createRecipeLoaders = () => {
     const [{ count }] = await db.getRecipeCount();
     return Math.ceil(count / pageSize);
   };
-  return { loadRecipeAction, loadPageCountAction };
+  return {
+    loadRecipeAction,
+    loadPageCountAction,
+    page: success ? data.page : 1,
+    pageSize: options.pageSize,
+  };
 };
 
 const RecipeGallery = async ({
   page,
-  pageSize = 10,
+  pageSize = defaultPageSize,
   ...props
 }: RecipeGalleryProps) => {
   const pageCount = await props.loadPageCountAction({ pageSize });
@@ -68,7 +82,9 @@ const RecipeGallery = async ({
     <div>
       <div className='gallery'>
         {recipes.map((recipe) => (
-          <RecipeCard key={recipe.title} {...recipe} href='#' />
+          <li key={recipe.title}>
+            <RecipeCard {...recipe} href='#' />
+          </li>
         ))}
       </div>
       <GalleryPagination pageCount={pageCount} />
@@ -83,6 +99,10 @@ const returnedRecipesSchema = z.array(
     imageUrl: z.string().optional().nullable(),
   })
 );
+
+const searchParamsSchema = z.object({
+  page: z.coerce.number(),
+});
 
 type ReturnedRecipeInfo = z.infer<typeof returnedRecipesSchema>;
 
