@@ -42,3 +42,4 @@ next-env.d.ts
 
 # local files
 PLAN.md
+*storybook.log
