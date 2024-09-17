@@ -42,9 +42,12 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "^1.9.0",
     "@clerk/testing": "^1.2.18",
     "@happy-dom/global-registrator": "^15.7.3",
     "@playwright/test": "^1.46.1",
+    "@storybook/addon-essentials": "^8.3.1",
+    "@storybook/nextjs": "^8.3.1",
     "@tailwindcss/typography": "^0.5.15",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.5.0",
@@ -60,8 +63,7 @@
     "postcss": "^8",
     "prettier": "^3.3.3",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5",
-    "@chromatic-com/storybook": "^1.9.0"
+    "typescript": "^5"
   },
   "packageManager": "pnpm@9.7.0+sha512.dc09430156b427f5ecfc79888899e1c39d2d690f004be70e05230b72cb173d96839587545d09429b55ac3c429c801b4dc3c0e002f653830a420fa2dd4e3cf9cf"
 }
