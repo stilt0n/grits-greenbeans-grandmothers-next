@@ -6,4 +6,8 @@ declare global {
       role?: string;
     };
   }
+
+  interface UserPublicMetadata {
+    role?: string;
+  }
 }
