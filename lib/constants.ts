@@ -7,3 +7,7 @@ export const images = {
 
 export const blurDataUrl =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mM0W7q0HgAEmgIB3KULHAAAAABJRU5ErkJggg==';
+
+const hash = Date.now().toString();
+
+export const robohash = `https://robohash.org/${hash}?set=set3`;
