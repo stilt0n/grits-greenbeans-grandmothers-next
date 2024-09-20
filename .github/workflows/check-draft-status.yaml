@@ -1,0 +1,27 @@
+# Draft PRs are a paid feature.
+# This simulates them by adding a draft label check.
+name: Check draft status
+
+on:
+  pull_request:
+    types:
+      - labeled
+      - unlabeled
+      - synchronize
+    branches:
+      - main
+
+env:
+  labels: ${{ toJson(github.event.pull_request.labels) }}
+
+jobs:
+  check-draft-status:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for draft label
+        run: |
+          hasDraftLabel=$(echo '${{ env.labels }}' | jq '.[] | select(.name == "draft")')
+          if [ -n "$hasDraftLabel" ]; then
+            echo "Draft PRs can not be merged. Remove the draft label when this PR is ready."
+            exit 1
+          fi
