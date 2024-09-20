@@ -1,12 +1,7 @@
-import {
-  ClerkProvider,
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from '@clerk/nextjs';
+import { ClerkProvider } from '@clerk/nextjs';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import Navbar from '@/components/navbar';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -26,15 +21,7 @@ export default function RootLayout({
       <html lang='en'>
         <body className={inter.className}>
           <header>
-            <h1 className='text-center text-3xl'>
-              Grits Greenbeans and Grandmothers
-            </h1>
-            <SignedOut>
-              <SignInButton />
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
+            <Navbar />
           </header>
           <main>{children}</main>
         </body>
