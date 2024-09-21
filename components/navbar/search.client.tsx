@@ -1,6 +1,10 @@
 'use client';
 import { useRef } from 'react';
-import { useForm, type SubmitHandler } from 'react-hook-form';
+import {
+  useForm,
+  type SubmitHandler,
+  type SubmitErrorHandler,
+} from 'react-hook-form';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -12,24 +16,32 @@ interface SearchFormInput {
 }
 
 export const Search = () => {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const { replace } = useRouter();
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const { push } = useRouter();
   useFocusHotkey('/', inputRef);
   const { register, handleSubmit } = useForm<SearchFormInput>({
     defaultValues: { query: '' },
   });
 
-  const onSubmit: SubmitHandler<SearchFormInput> = ({ query }) => {
+  const onSubmitSuccess: SubmitHandler<SearchFormInput> = ({ query }) => {
     const params = new URLSearchParams();
     if (query) {
       params.set('query', query);
     }
-    replace(`?${params.toString()}`);
+    push(`?${params.toString()}`);
   };
 
+  const onSubmitError: SubmitErrorHandler<SearchFormInput> = (error) => {
+    console.log('failure!', error);
+  };
+
+  const fullRef = (element: HTMLInputElement) => {
+    inputRef.current = element;
+    register('query').ref(element);
+  };
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <Input {...register('query')} ref={inputRef} />
+    <form onSubmit={handleSubmit(onSubmitSuccess, onSubmitError)}>
+      <Input {...register('query')} ref={fullRef} />
       <Button type='submit'>
         <MagnifyingGlassIcon />
       </Button>
