@@ -41,7 +41,11 @@ export const Search = () => {
   };
   return (
     <form onSubmit={handleSubmit(onSubmitSuccess, onSubmitError)}>
-      <Input {...register('query')} ref={fullRef} />
+      <Input
+        {...register('query')}
+        placeholder='Type / to search'
+        ref={fullRef}
+      />
       <Button type='submit'>
         <MagnifyingGlassIcon />
       </Button>
