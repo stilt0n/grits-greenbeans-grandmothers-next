@@ -1,14 +1,14 @@
 'use server';
 
-import type { RecipeData } from '@/types/recipeTypes';
 import { images } from '@/lib/constants';
 import type {
   LoadRecipeAction,
   LoadPageCountAction,
 } from '@/components/recipe-gallery';
 
-const createDummyRecipes = (count: number): RecipeData[] => {
+const createDummyRecipes = (count: number) => {
   return [...Array(count)].map((_, i) => ({
+    id: i,
     title: `Recipe ${i}`,
     instructions: '<h2>Do it!</h2>',
     author: 'grandmother_bot',
@@ -18,11 +18,13 @@ const createDummyRecipes = (count: number): RecipeData[] => {
   }));
 };
 
+type DatabaseEntry = ReturnType<typeof createDummyRecipes>[0];
+
 const mockDatabase = createDummyRecipes(200);
 
 const makeFilter =
   (filterValue: string, func: 'startsWith' | 'includes' = 'includes') =>
-  ({ title }: RecipeData) =>
+  ({ title }: DatabaseEntry) =>
     title[func](filterValue);
 
 export const mockLoadRecipeAction: LoadRecipeAction = async ({
@@ -34,7 +36,8 @@ export const mockLoadRecipeAction: LoadRecipeAction = async ({
     ? mockDatabase.filter(makeFilter(filter))
     : mockDatabase;
   return filteredDatabase
-    .map(({ title, description, imageUrl }) => ({
+    .map(({ id, title, description, imageUrl }) => ({
+      id,
       title,
       description,
       imageUrl,
