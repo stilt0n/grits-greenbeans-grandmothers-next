@@ -20,6 +20,7 @@ jobs:
     steps:
       - name: Check for draft label
         run: |
+          echo '${{ env.labels }}'
           hasDraftLabel=$(echo '${{ env.labels }}' | jq '.[] | select(.name == "draft")')
           if [ -n "$hasDraftLabel" ]; then
             echo "Draft PRs can not be merged. Remove the draft label when this PR is ready."
