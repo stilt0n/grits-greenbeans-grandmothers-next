@@ -4,6 +4,7 @@ import { RecipeCard } from './recipe-card';
 import { z } from 'zod';
 import { NextSearchParams } from '@/types/nextTypes';
 import { cn } from '@/lib/utils';
+import { Suspense } from 'react';
 
 export interface LoadRecipeArgs {
   page: number;
@@ -20,68 +21,65 @@ export type LoadPageCountAction = (
 ) => Promise<number>;
 
 export interface RecipeGalleryProps {
-  loadRecipeAction: LoadRecipeAction;
-  loadPageCountAction: LoadPageCountAction;
   page: number;
+  loadRecipeAction?: LoadRecipeAction;
+  loadPageCountAction?: LoadPageCountAction;
   pageSize?: number;
   className?: string;
+  filter?: string;
 }
 
 const defaultPageSize = 10;
 
-/**
- * The reason recipe loaders are not hardcoded is for dependency injection purposes.
- * `createRecipeProps` takes the work out of creating recipe loaders for recipe gallery
- * it operates similarly to setup hooks, but is not a hook.
- */
-export const createRecipeProps = (
-  searchParams: NextSearchParams,
-  options: { pageSize: number } = { pageSize: defaultPageSize }
-) => {
-  // we don't want to crash when there are unexpected search params
-  // or when the params are undefined. We can instead default to page 1
-  const { success, data } = searchParamsSchema.safeParse(searchParams);
-  const loadRecipeAction: LoadRecipeAction = async ({
-    page,
-    pageSize,
-    filter,
-  }) => {
-    'use server';
-    console.log(`using filter ${filter}`);
-    const result = await db.getRecipes({
-      fields: ['title', 'description', 'imageUrl'],
-      paginate: { page, pageSize },
-    });
-    const recipes = returnedRecipesSchema.parse(result);
-    return recipes;
-  };
-  // TODO: this can probably be cached
-  const loadPageCountAction: LoadPageCountAction = async ({
-    pageSize,
-    filter,
-  }) => {
-    'use server';
-    console.log(`using filter ${filter ?? 'none'}`);
-    const [{ count }] = await db.getRecipeCount();
-    return Math.ceil(count / pageSize);
-  };
+export const createSearchParamProps = (searchParams: NextSearchParams) => {
+  // Zod will return undefined if there are extra search params values and we parse them directly
+  // I'd rather just ignore these params and handle valid params correctly whenever present
+  const { page, query } = searchParams;
+  const { data } = searchParamsSchema.safeParse({ page, query });
   return {
-    loadRecipeAction,
-    loadPageCountAction,
-    page: success ? data.page : 1,
-    pageSize: options.pageSize,
+    page: data?.page ?? 1,
+    filter: data?.query,
   };
+};
+
+const defaultLoadRecipeAction: LoadRecipeAction = async ({
+  page,
+  pageSize,
+  filter,
+}) => {
+  'use server';
+  console.log(`using filter ${filter}`);
+  const result = await db.getRecipes({
+    fields: ['title', 'description', 'imageUrl'],
+    paginate: { page, pageSize },
+    filter,
+  });
+  const recipes = returnedRecipesSchema.parse(result);
+  return recipes;
+};
+
+const deafaultLoadPageCountAction: LoadPageCountAction = async ({
+  pageSize,
+  filter,
+}) => {
+  'use server';
+  console.log(`using filter ${filter ?? 'none'}`);
+  const [{ count }] = await db.getRecipeCount();
+  return Math.ceil(count / pageSize);
 };
 
 const RecipeGallery = async ({
   page,
   pageSize = defaultPageSize,
+  filter,
+  loadPageCountAction = deafaultLoadPageCountAction,
+  loadRecipeAction = defaultLoadRecipeAction,
   ...props
 }: RecipeGalleryProps) => {
-  const pageCount = await props.loadPageCountAction({ pageSize });
-  const recipes = await props.loadRecipeAction({ page, pageSize });
+  const pageCount = await loadPageCountAction({ pageSize });
+  const recipes = await loadRecipeAction({ page, pageSize, filter });
   return (
-    <>
+    <Suspense fallback={<p>Loading...</p>}>
       <ul className={cn('w-full grid grid-cols-9 gap-4', props.className)}>
         {recipes.map((recipe) => (
           <li key={recipe.title} className='col-span-7 col-start-2 h-96'>
@@ -90,7 +88,7 @@ const RecipeGallery = async ({
         ))}
       </ul>
       <GalleryPagination pageCount={pageCount} />
-    </>
+    </Suspense>
   );
 };
 
@@ -103,7 +101,8 @@ const returnedRecipesSchema = z.array(
 );
 
 const searchParamsSchema = z.object({
-  page: z.coerce.number(),
+  page: z.coerce.number().optional(),
+  query: z.string().optional(),
 });
 
 type ReturnedRecipeInfo = z.infer<typeof returnedRecipesSchema>;

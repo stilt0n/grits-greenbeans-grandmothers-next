@@ -1,11 +1,14 @@
-import RecipeGallery, { createRecipeProps } from '@/components/recipe-gallery';
+import RecipeGallery, {
+  createSearchParamProps,
+} from '@/components/recipe-gallery';
 import { NextPageBaseProps } from '@/types/nextTypes';
 
 const Home = async ({ searchParams }: NextPageBaseProps) => {
-  const recipeProps = createRecipeProps(searchParams);
+  const recipeGalleryProps = createSearchParamProps(searchParams);
+  console.log('filter', recipeGalleryProps.filter);
   return (
     <div>
-      <RecipeGallery {...recipeProps} />
+      <RecipeGallery {...recipeGalleryProps} />
     </div>
   );
 };
