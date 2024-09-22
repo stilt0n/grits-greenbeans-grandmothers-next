@@ -43,6 +43,7 @@ export const Search = () => {
     <form onSubmit={handleSubmit(onSubmitSuccess, onSubmitError)}>
       <Input
         {...register('query')}
+        autoComplete='off'
         placeholder='Type / to search'
         ref={fullRef}
       />
