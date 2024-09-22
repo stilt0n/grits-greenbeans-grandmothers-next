@@ -1,4 +1,5 @@
 'use server';
+import sanitizeHtml from 'sanitize-html';
 import { currentUser } from '@clerk/nextjs/server';
 import type { RecipeData } from '@/types/recipeTypes';
 import * as db from '@/lib/database';
@@ -21,9 +22,18 @@ export const formSubmitAction = async (data: RecipeData) => {
     console.log('other submission is in process. Cancelling submission');
     return;
   }
-  isSubmitting = true;
-  // for now I just want to get this data visible on the server
-  console.log(`inserting data:\n${data}`);
-  await db.createRecipe(data);
-  isSubmitting = false;
+
+  try {
+    isSubmitting = true;
+    // The html from TipTap is already sanitized but it is still
+    // possible for a user to submit malicious code directly to
+    // the api. So we sanitize it here to be safe.
+    data.instructions = sanitizeHtml(data.instructions);
+    // for now I just want to get this data visible on the server
+    console.log(`inserting data:\n${data}`);
+    await db.createRecipe(data);
+  } finally {
+    // want to guarantee that this is reset
+    isSubmitting = false;
+  }
 };
