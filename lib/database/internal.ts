@@ -1,5 +1,5 @@
 import type { SQLiteSelect, SelectedFields } from 'drizzle-orm/sqlite-core';
-import { count } from 'drizzle-orm';
+import { count, like } from 'drizzle-orm';
 import { db } from '@/db';
 import { recipes, InsertRecipe } from '@/db/schema';
 
@@ -11,6 +11,7 @@ export interface GetRecipeArgs {
     page: number;
     pageSize: number;
   };
+  filter?: string;
 }
 
 const queryFromKeys = (
@@ -33,14 +34,28 @@ const withPagination = <T extends SQLiteSelect>(
   return qb.limit(pageSize).offset((page - 1) * pageSize);
 };
 
-export const getRecipes = async ({ fields, paginate }: GetRecipeArgs) => {
+const withFilter = <T extends SQLiteSelect>(qb: T, filter: string) => {
+  return qb.where(like(recipes.title, `%${filter}%`));
+};
+
+export const getRecipes = async ({
+  fields,
+  paginate,
+  filter,
+}: GetRecipeArgs) => {
   const selectedFields = queryFromKeys(fields);
   const qb = selectedFields
     ? db.select(selectedFields).from(recipes).$dynamic()
     : db.select().from(recipes).$dynamic();
+
+  if (filter) {
+    withFilter(qb, filter);
+  }
+
   if (paginate) {
     withPagination(qb, paginate.page, paginate.pageSize);
   }
+
   return qb;
 };
 
