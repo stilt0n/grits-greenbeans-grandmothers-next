@@ -50,7 +50,7 @@ const defaultLoadRecipeAction: LoadRecipeAction = async ({
   'use server';
   console.log(`using filter ${filter}`);
   const result = await db.getRecipes({
-    fields: ['title', 'description', 'imageUrl'],
+    fields: ['id', 'title', 'description', 'imageUrl'],
     paginate: { page, pageSize },
     filter,
   });
@@ -81,11 +81,14 @@ const RecipeGallery = async ({
   return (
     <Suspense fallback={<p>Loading...</p>}>
       <ul className={cn('w-full grid grid-cols-9 gap-4', props.className)}>
-        {recipes.map((recipe) => (
-          <li key={recipe.title} className='col-span-7 col-start-2 h-96'>
-            <RecipeCard {...recipe} href='#' />
-          </li>
-        ))}
+        {recipes.map((recipe) => {
+          const { id, ...recipeProps } = recipe;
+          return (
+            <li key={recipeProps.title} className='col-span-7 col-start-2 h-96'>
+              <RecipeCard {...recipeProps} href={`/recipes/${id}`} />
+            </li>
+          );
+        })}
       </ul>
       <GalleryPagination pageCount={pageCount} />
     </Suspense>
@@ -94,6 +97,7 @@ const RecipeGallery = async ({
 
 const returnedRecipesSchema = z.array(
   z.object({
+    id: z.number(),
     title: z.string(),
     description: z.string(),
     imageUrl: z.string().optional().nullable(),
