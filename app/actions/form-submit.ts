@@ -37,3 +37,33 @@ export const formSubmitAction = async (data: RecipeData) => {
     isSubmitting = false;
   }
 };
+
+export const recipeUpdateAction = async (
+  data: Partial<RecipeData>,
+  id: number
+) => {
+  const user = await currentUser();
+  if (!hasElevatedPermissions(user)) {
+    console.error(
+      'CRITICAL: an unauthorized user accessed a protected route and attempted an action. User info:'
+    );
+    console.error(user);
+    return;
+  }
+
+  if (isSubmitting) {
+    console.log('other submission is in process. Cancelling submission');
+    return;
+  }
+
+  try {
+    isSubmitting = true;
+    if (data.instructions) {
+      data.instructions = sanitizeHtml(data.instructions);
+    }
+    console.log(`updating recipe ${id} with data:\n${data}`);
+    await db.updateRecipe(id, data);
+  } finally {
+    isSubmitting = false;
+  }
+};

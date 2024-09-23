@@ -77,6 +77,12 @@ export const createRecipe = async (...recipe: InsertRecipe[]) => {
   return db.insert(recipes).values(recipe);
 };
 
+export const updateRecipe = async (
+  id: number,
+  recipe: Partial<InsertRecipe>
+) => {
+  return db.update(recipes).set(recipe).where(eq(recipes.id, id));
+};
 /**
  * @internal
  */

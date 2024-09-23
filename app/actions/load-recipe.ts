@@ -5,7 +5,14 @@ import { z } from 'zod';
 export const loadRecipe = async (recipeId: number) => {
   const recipes = await getRecipes({
     id: recipeId,
-    fields: ['title', 'author', 'recipeTime', 'instructions', 'imageUrl'],
+    fields: [
+      'title',
+      'description',
+      'author',
+      'recipeTime',
+      'instructions',
+      'imageUrl',
+    ],
   });
   if (recipes.length !== 1) {
     return null;
@@ -16,8 +23,14 @@ export const loadRecipe = async (recipeId: number) => {
 
 const returnedRecipeSchema = z.object({
   title: z.string(),
+  description: z.string(),
   author: z.string().nullable(),
   recipeTime: z.string().nullable(),
   instructions: z.string(),
   imageUrl: z.string().nullable(),
 });
+
+export type RecipeFormData = z.infer<typeof returnedRecipeSchema>;
+export interface RecipeFormDataWithId extends RecipeFormData {
+  id: number;
+}
