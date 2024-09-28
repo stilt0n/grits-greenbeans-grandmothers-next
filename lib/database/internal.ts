@@ -74,7 +74,7 @@ export const getRecipeCount = async () => {
 };
 
 export const createRecipe = async (...recipe: InsertRecipe[]) => {
-  return db.insert(recipes).values(recipe);
+  return db.insert(recipes).values(recipe).returning({ recipeId: recipes.id });
 };
 
 export const updateRecipe = async (

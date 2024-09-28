@@ -2,6 +2,7 @@
 import { useTransition } from 'react';
 import { RecipeForm } from '@/components/recipe-edit-form.client';
 import { formSubmitAction } from '@/app/actions/form-submit';
+import { redirect } from 'next/navigation';
 
 const CreateRecipe = () => {
   const [, startTransition] = useTransition();
@@ -10,8 +11,11 @@ const CreateRecipe = () => {
       <h1 className='text-3xl text-center mt-2'>Add a Recipe</h1>
       <RecipeForm
         onSubmitSuccess={(data) => {
-          startTransition(() => {
-            formSubmitAction(data);
+          startTransition(async () => {
+            const result = await formSubmitAction(data);
+            if (result?.[0]?.recipeId) {
+              redirect(`/recipes/${result[0].recipeId}`);
+            }
           });
         }}
         onSubmitError={(error) => {

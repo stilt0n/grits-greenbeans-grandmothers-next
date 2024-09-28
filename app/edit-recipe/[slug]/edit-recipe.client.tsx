@@ -1,4 +1,5 @@
 'use client';
+import { redirect } from 'next/navigation';
 import { useTransition } from 'react';
 import { RecipeForm } from '@/components/recipe-edit-form.client';
 import { recipeUpdateAction } from '@/app/actions/form-submit';
@@ -18,10 +19,11 @@ export const EditRecipe = ({ recipe }: EditRecipeProps) => {
       <RecipeForm
         onSubmitSuccess={(data) => {
           const updatedFields = getUpdatedRecipeFields(recipeData, data);
-          startTransition(() => {
+          startTransition(async () => {
             if (Object.keys(updatedFields).length !== 0) {
-              recipeUpdateAction(updatedFields, id);
+              await recipeUpdateAction(updatedFields, id);
             }
+            redirect(`/recipes/${id}`);
           });
         }}
         onSubmitError={(error) => {
