@@ -31,7 +31,7 @@ export const formSubmitAction = async (data: RecipeData) => {
     data.instructions = sanitizeHtml(data.instructions);
     // for now I just want to get this data visible on the server
     console.log(`inserting data:\n${data}`);
-    await db.createRecipe(data);
+    return db.createRecipe(data);
   } finally {
     // want to guarantee that this is reset
     isSubmitting = false;
