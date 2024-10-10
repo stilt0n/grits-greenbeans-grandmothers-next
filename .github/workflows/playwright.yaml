@@ -1,4 +1,4 @@
-name: Playwright Tests
+name: Test Preview Deployment
 on:
   deployment_status:
 
@@ -6,7 +6,7 @@ env:
   PLAYWRIGHT_VERSION: ''
 
 jobs:
-  run-e2es:
+  test-preview-deployment:
     if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
     timeout-minutes: 5
     runs-on: ubuntu-latest
