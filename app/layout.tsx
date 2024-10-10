@@ -23,7 +23,7 @@ export default function RootLayout({
           <header>
             <Navbar />
           </header>
-          <main>{children}</main>
+          <main className='bg-zinc-100 pt-4'>{children}</main>
         </body>
       </html>
     </ClerkProvider>

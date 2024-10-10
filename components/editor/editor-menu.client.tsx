@@ -135,7 +135,7 @@ export const EditorMenu = (props: EditorMenuProps) => {
         }}
         value={activeTextLevel}
       >
-        <SelectTrigger className='w-32'>
+        <SelectTrigger className='w-32 bg-white'>
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
