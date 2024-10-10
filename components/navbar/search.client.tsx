@@ -10,12 +10,17 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useFocusHotkey } from '@/hooks/useFocusHotkey';
 import { useRouter } from 'next/navigation';
+import { cn } from '@/lib/utils';
 
 interface SearchFormInput {
   query: string;
 }
 
-export const Search = () => {
+interface SearchProps {
+  className?: string;
+}
+
+export const Search = (props: SearchProps) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const { push } = useRouter();
   useFocusHotkey('/', inputRef);
@@ -40,14 +45,18 @@ export const Search = () => {
     register('query').ref(element);
   };
   return (
-    <form onSubmit={handleSubmit(onSubmitSuccess, onSubmitError)}>
+    <form
+      onSubmit={handleSubmit(onSubmitSuccess, onSubmitError)}
+      className={cn('flex', props.className)}
+    >
       <Input
         {...register('query')}
         autoComplete='off'
         placeholder='Type / to search'
         ref={fullRef}
+        className='w-[25rem]'
       />
-      <Button type='submit'>
+      <Button type='submit' variant='outline'>
         <MagnifyingGlassIcon />
       </Button>
     </form>
