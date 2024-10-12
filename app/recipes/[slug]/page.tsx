@@ -21,7 +21,7 @@ const Page = async ({ params }: { params: { slug: string } }) => {
 
   return (
     <>
-      <div className='prose prose-zinc lg:prose-xl'>
+      <div className='prose prose-zinc'>
         <h1>{recipe.title}</h1>
         {recipe.author ? <p>By {recipe.author}</p> : null}
         {recipe.recipeTime ? <p>Time: {recipe.recipeTime}</p> : null}
