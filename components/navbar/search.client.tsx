@@ -18,6 +18,7 @@ interface SearchFormInput {
 
 interface SearchProps {
   className?: string;
+  successCallback?: () => void;
 }
 
 export const Search = (props: SearchProps) => {
@@ -33,7 +34,8 @@ export const Search = (props: SearchProps) => {
     if (query) {
       params.set('query', query);
     }
-    push(`?${params.toString()}`);
+    props.successCallback?.();
+    push(`/?${params.toString()}`);
   };
 
   const onSubmitError: SubmitErrorHandler<SearchFormInput> = (error) => {
