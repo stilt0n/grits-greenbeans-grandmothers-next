@@ -1,21 +1,7 @@
 import Link from 'next/link';
-import { HamburgerMenuIcon } from '@radix-ui/react-icons';
 import { Search } from './search.client';
 import { UserMenu } from './user-menu.client';
-import {
-  Sheet,
-  SheetTrigger,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet';
-import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  SignOutButton,
-  SignUpButton,
-} from '@clerk/nextjs';
+import { SideNav } from './side-nav';
 
 const Navbar = () => {
   return (
@@ -26,45 +12,9 @@ const Navbar = () => {
       <div className='flex flex-row justify-end ml-auto gap-6 items-baseline'>
         <Search className='hidden lg:flex' />
         <UserMenu className='hidden md:flex' />
-        <NavMenu />
+        <SideNav />
       </div>
     </nav>
-  );
-};
-
-const NavMenu = () => {
-  return (
-    <Sheet>
-      <SheetTrigger asChild>
-        <HamburgerMenuIcon />
-      </SheetTrigger>
-      <SheetContent side='left' className='w-[36rem] max-w-full'>
-        <SheetHeader>
-          <SheetTitle>Menu</SheetTitle>
-        </SheetHeader>
-        <div className='flex flex-col pt-8 pl-4 gap-8'>
-          <Search />
-          <SignedIn>
-            <Link href='/create-recipe'>Create a Recipe</Link>
-          </SignedIn>
-          <LoginStateButton className='flex flex-col gap-8 items-start' />
-        </div>
-      </SheetContent>
-    </Sheet>
-  );
-};
-
-const LoginStateButton = (props: { className?: string }) => {
-  return (
-    <div className={props.className}>
-      <SignedIn>
-        <SignOutButton />
-      </SignedIn>
-      <SignedOut>
-        <SignInButton />
-        <SignUpButton />
-      </SignedOut>
-    </div>
   );
 };
 
