@@ -1,4 +1,6 @@
+'use client';
 import Link from 'next/link';
+import { useState } from 'react';
 import { HamburgerMenuIcon } from '@radix-ui/react-icons';
 import {
   Sheet,
@@ -12,8 +14,9 @@ import { SidebarLogin } from './sidebar-login';
 import { Search } from './search.client';
 
 export const SideNav = () => {
+  const [open, setOpen] = useState(false);
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <HamburgerMenuIcon height='2.5rem' />
       </SheetTrigger>
@@ -22,7 +25,7 @@ export const SideNav = () => {
           <SheetTitle>Menu</SheetTitle>
         </SheetHeader>
         <div className='flex flex-col pt-8 pl-4 gap-8'>
-          <Search />
+          <Search successCallback={() => setOpen(false)} />
           <SignedIn>
             <Link href='/create-recipe'>Create a Recipe</Link>
           </SignedIn>

@@ -41,8 +41,7 @@ const Page = async ({ params }: { params: { slug: string } }) => {
             <Image
               src={recipe.imageUrl}
               alt={recipe.title}
-              layout='fill'
-              objectFit='cover'
+              fill
               className='object-cover'
             />
           </div>
