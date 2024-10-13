@@ -4,7 +4,7 @@ import { UserMenu } from './user-menu.client';
 
 const Navbar = () => {
   return (
-    <nav className='flex flex-row px-4 py-4 drop-shadow-xl'>
+    <nav className='flex flex-row px-4 py-4 drop-shadow-xl border-b border-zinc-200'>
       <h1 className='text-3xl text-left'>
         <Link href='/'>Grits Greenbeans and Grandmothers</Link>
       </h1>
