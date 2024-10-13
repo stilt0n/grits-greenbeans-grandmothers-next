@@ -15,7 +15,7 @@ export const SideNav = () => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <HamburgerMenuIcon />
+        <HamburgerMenuIcon height='2.5rem' />
       </SheetTrigger>
       <SheetContent side='left' className='w-[36rem] max-w-full'>
         <SheetHeader>

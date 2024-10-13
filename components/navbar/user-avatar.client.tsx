@@ -7,7 +7,13 @@ export const UserAvatar = () => {
   const { user } = useUser();
   const canModifyRecipes = hasElevatedPermissions(user);
   return canModifyRecipes ? (
-    <UserButton>
+    <UserButton
+      appearance={{
+        elements: {
+          userButtonAvatarBox: 'h-10 w-10',
+        },
+      }}
+    >
       <UserButton.MenuItems>
         <UserButton.Link
           label='Create Recipe'
