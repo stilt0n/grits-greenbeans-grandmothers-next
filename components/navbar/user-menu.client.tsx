@@ -3,9 +3,9 @@ import { SignedIn, SignedOut, ClerkLoaded, ClerkLoading } from '@clerk/nextjs';
 import { UserAvatar } from './user-avatar.client';
 import { SignInAvatar } from './sign-in-avatar.client';
 
-export const UserMenu = () => {
+export const UserMenu = (props: { className?: string }) => {
   return (
-    <>
+    <div className={props.className}>
       <ClerkLoaded>
         <SignedIn>
           <UserAvatar />
@@ -17,6 +17,6 @@ export const UserMenu = () => {
       <ClerkLoading>
         <div>Loading...</div>
       </ClerkLoading>
-    </>
+    </div>
   );
 };
