@@ -10,12 +10,15 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { SignedIn } from '@clerk/nextjs';
+import { useUser } from '@clerk/nextjs';
+import { hasElevatedPermissions } from '@/lib/auth';
 import { SidebarLogin } from './sidebar-login';
 import { Search } from './search.client';
 
 export const SideNav = () => {
   const [open, setOpen] = useState(false);
+  const { user } = useUser();
+  const canCreateRecipes = hasElevatedPermissions(user);
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
@@ -29,9 +32,9 @@ export const SideNav = () => {
         </SheetHeader>
         <div className='flex flex-col pt-8 pl-4 gap-8'>
           <Search successCallback={() => setOpen(false)} />
-          <SignedIn>
+          {canCreateRecipes ? (
             <Link href='/create-recipe'>Create a Recipe</Link>
-          </SignedIn>
+          ) : null}
           <SidebarLogin className='flex flex-col gap-8 items-start' />
         </div>
       </SheetContent>
