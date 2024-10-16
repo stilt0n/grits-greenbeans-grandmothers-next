@@ -9,6 +9,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet';
+import { Button } from '@/components/ui/button';
 import { SignedIn } from '@clerk/nextjs';
 import { SidebarLogin } from './sidebar-login';
 import { Search } from './search.client';
@@ -18,7 +19,9 @@ export const SideNav = () => {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <HamburgerMenuIcon height='2.5rem' />
+        <Button variant='ghost'>
+          <HamburgerMenuIcon height='2.5rem' />
+        </Button>
       </SheetTrigger>
       <SheetContent side='left' className='w-[36rem] max-w-full'>
         <SheetHeader>
