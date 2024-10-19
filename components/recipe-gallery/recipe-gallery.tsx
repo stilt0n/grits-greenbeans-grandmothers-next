@@ -58,7 +58,7 @@ const defaultLoadRecipeAction: LoadRecipeAction = async ({
   return recipes;
 };
 
-const deafaultLoadPageCountAction: LoadPageCountAction = async ({
+const defaultLoadPageCountAction: LoadPageCountAction = async ({
   pageSize,
   filter,
 }) => {
@@ -72,7 +72,7 @@ const RecipeGallery = async ({
   page,
   pageSize = defaultPageSize,
   filter,
-  loadPageCountAction = deafaultLoadPageCountAction,
+  loadPageCountAction = defaultLoadPageCountAction,
   loadRecipeAction = defaultLoadRecipeAction,
   ...props
 }: RecipeGalleryProps) => {
