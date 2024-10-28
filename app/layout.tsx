@@ -24,7 +24,11 @@ export default function RootLayout({
           <header className='h-18 flex-shrink-0'>
             <Navbar />
           </header>
-          <main className='bg-zinc-100 pt-4 flex-grow overflow-y-auto'>
+          {/* FIXME: Main here should not be focusable but seems to sometimes be. The tabIndex is kind of a lazy fix. */}
+          <main
+            className='bg-zinc-100 pt-4 flex-grow overflow-y-auto'
+            tabIndex={-1}
+          >
             {children}
           </main>
         </body>

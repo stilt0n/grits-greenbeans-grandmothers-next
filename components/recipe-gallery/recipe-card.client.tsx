@@ -1,4 +1,7 @@
+'use client';
+import { useId } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { images, blurDataUrl } from '@/lib/constants';
 import { Card, CardTitle, CardDescription } from '@/components/ui/card';
 import { LinkButton } from './link-button.client';
@@ -14,8 +17,16 @@ export interface RecipeCardProps {
 }
 
 export const RecipeCard = (props: RecipeCardProps) => {
+  const titleId = useId();
+  const descriptionId = useId();
+  const router = useRouter();
   return (
-    <Card className='flex flex-col md:flex-row w-full h-full max-4-4xl'>
+    <Card
+      className='flex flex-col md:flex-row w-full h-full max-4-4xl cursor-pointer'
+      onClick={() => {
+        router.push(props.href);
+      }}
+    >
       <div className='md:w-1/2 overflow-hidden rounded-t-lg md:rounded-t-none md:rounded-l-lg'>
         <Image
           src={props.imageUrl ?? images.greenbeans}
@@ -28,12 +39,18 @@ export const RecipeCard = (props: RecipeCardProps) => {
         />
       </div>
       <div className='p-6 md:p-8 flex flex-col justify-center'>
-        <CardTitle>{props.title}</CardTitle>
-        <CardDescription className='mt-2 text-zinc-500'>
+        <CardTitle id={titleId}>{props.title}</CardTitle>
+        <CardDescription className='mt-2 text-zinc-500' id={descriptionId}>
           {props.description}
         </CardDescription>
         <div className='mt-4 flex gap-2'>
-          <LinkButton href={props.href}>Read More</LinkButton>
+          <LinkButton
+            href={props.href}
+            aria-labelledby={titleId}
+            aria-describedby={descriptionId}
+          >
+            Read More
+          </LinkButton>
         </div>
       </div>
     </Card>
