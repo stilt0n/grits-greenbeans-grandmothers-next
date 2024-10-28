@@ -1,6 +1,6 @@
 import * as db from '@/lib/database';
 import { GalleryPagination } from './gallery-pagination.client';
-import { RecipeCard } from './recipe-card';
+import { RecipeCard } from './recipe-card.client';
 import { z } from 'zod';
 import { NextSearchParams } from '@/types/nextTypes';
 import { cn } from '@/lib/utils';
