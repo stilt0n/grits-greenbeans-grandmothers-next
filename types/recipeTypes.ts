@@ -15,8 +15,17 @@ export const recipeSchema = z.object({
   // use nullable instead of optional here because RHF does not support undefined as a default type
   // but we do not want to insert empty strings into the recipes table when we perform the db op
   author: z.string().nullable(),
-  imageUrl: z.string().nullable(),
+  imageFileList: z
+    .instanceof(FileList)
+    .nullable()
+    .refine(
+      (fl) => fl == null || fl.length == 1,
+      'If a file is uploaded there can only be one file'
+    ),
   recipeTime: z.string().nullable(),
 });
 
 export type RecipeData = z.infer<typeof recipeSchema>;
+export interface RecipeActionData extends Omit<RecipeData, 'imageFileList'> {
+  imageUrl: string | null;
+}

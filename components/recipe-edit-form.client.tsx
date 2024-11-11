@@ -21,7 +21,7 @@ const blankRecipeData = {
   description: '',
   author: null,
   recipeTime: null,
-  imageUrl: null,
+  imageFileList: null,
   instructions: '',
 };
 
@@ -65,7 +65,12 @@ export const RecipeForm = ({
           placeholder='e.g. 30 minutes'
           {...register('recipeTime')}
         />
-        <FormInput label='Image url' type='text' {...register('imageUrl')} />
+        <FormInput
+          label='Upload Image'
+          type='file'
+          accept='image/*'
+          {...register('imageFileList')}
+        />
         <EditorInput
           onChange={(editorContent) => setValue('instructions', editorContent)}
           menuAriaLabel='instructions editor menu'
