@@ -1,5 +1,5 @@
 import { useId, forwardRef } from 'react';
-import { Input, InputProps } from '@/components/ui/input';
+import { Input, type InputProps } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 interface FormInputProps extends InputProps {
