@@ -4,24 +4,29 @@ import {
   type SubmitHandler,
   type SubmitErrorHandler,
 } from 'react-hook-form';
-import { recipeSchema, type RecipeData } from '@/types/recipeTypes';
+import {
+  recipeFormSchema,
+  type RecipeFormData,
+  type CropCoordinates,
+} from '@/types/recipeTypes';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormInput } from '@/components/form/form-input';
 import { Button } from '@/components/ui/button';
 import EditorInput from '@/components/editor';
 import ImageEditorForm, { useImageFileUrl } from '@/components/image-editor';
 export interface RecipeFormProps {
-  onSubmitSuccess: SubmitHandler<RecipeData>;
-  onSubmitError: SubmitErrorHandler<RecipeData>;
-  initialRecipeData?: RecipeData;
+  onSubmitSuccess: SubmitHandler<RecipeFormData>;
+  onSubmitError: SubmitErrorHandler<RecipeFormData>;
+  initialRecipeData?: RecipeFormData;
 }
 
-const blankRecipeData = {
+const blankRecipeData: RecipeFormData = {
   title: '',
   description: '',
   author: null,
   recipeTime: null,
   imageFileList: null,
+  cropCoordinates: null,
   instructions: '',
 };
 
@@ -36,12 +41,17 @@ export const RecipeForm = ({
     watch,
     formState: { errors: e },
   } = useForm({
-    resolver: zodResolver(recipeSchema),
+    resolver: zodResolver(recipeFormSchema),
     defaultValues: initialRecipeData,
   });
   const onSubmit = handleSubmit(props.onSubmitSuccess, props.onSubmitError);
   const imageFileList = watch('imageFileList');
   const imageUrl = useImageFileUrl(imageFileList);
+  const onCropChange = (coords: CropCoordinates | null) => {
+    console.log('setting coordinates:');
+    console.log(coords);
+    setValue('cropCoordinates', coords ? JSON.stringify(coords) : null);
+  };
   return (
     <>
       <form
@@ -73,7 +83,8 @@ export const RecipeForm = ({
           accept='image/*'
           {...register('imageFileList')}
         />
-        {imageUrl && <ImageEditorForm src={imageUrl} />}
+        <input type='invisible' {...register('cropCoordinates')} />
+        {imageUrl && <ImageEditorForm src={imageUrl} onChange={onCropChange} />}
         <EditorInput
           onChange={(editorContent) => setValue('instructions', editorContent)}
           menuAriaLabel='instructions editor menu'

@@ -6,6 +6,7 @@ import ReactCrop, {
   centerCrop,
   makeAspectCrop,
 } from 'react-image-crop';
+import { CropCoordinates } from '@/types/recipeTypes';
 import 'react-image-crop/dist/ReactCrop.css';
 
 export const useImageFileUrl = (fileList: FileList | null) => {
@@ -24,7 +25,7 @@ export const useImageFileUrl = (fileList: FileList | null) => {
 
 export interface ImageEditorFormProps {
   src: string;
-  onChange: (crop: Omit<Crop, 'unit'>) => void;
+  onChange: (coords: CropCoordinates | null) => void;
 }
 
 // helper to prevent initial percentages from being out of bounds
@@ -82,6 +83,7 @@ const ImageEditorForm = (props: ImageEditorFormProps) => {
       keepSelection
       onComplete={(_, c) => {
         if (!imageDimensions) {
+          props.onChange(null);
           return;
         }
         const { width: w, height: h } = imageDimensions;
