@@ -24,7 +24,7 @@ export const useImageFileUrl = (fileList: FileList | null) => {
 };
 
 export interface ImageEditorFormProps {
-  src: string;
+  src: string | null;
   onChange: (coords: CropCoordinates | null) => void;
 }
 
@@ -49,6 +49,16 @@ const ImageEditorForm = (props: ImageEditorFormProps) => {
     width: number;
     height: number;
   }>();
+
+  // I'm not really sure if this is a good approach
+  // What I want to accomplish is:
+  //  - do not render image editor when there is no image
+  //  - cropCoordinates should always be null if there is no image
+  if (props.src === null) {
+    props.onChange(null);
+    return null;
+  }
+
   const onImageLoad = (e: SyntheticEvent<HTMLImageElement, Event>) => {
     const { naturalWidth: width, naturalHeight: height } = e.currentTarget;
     const [startWidth, startHeight] = getStartingWidthAndHeight(width, height);
