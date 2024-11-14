@@ -18,20 +18,28 @@ export const preprocessImage = async (
   cropCoordinates: CropCoordinates
 ) => {
   if (!fileIsImage(imageFile)) {
+    console.warn('warning: received file that is not an image');
     return;
   }
 
-  const fileBuffer = await fileToBuffer(imageFile);
+  try {
+    const fileBuffer = await fileToBuffer(imageFile);
 
-  return sharp(fileBuffer)
-    .extract({
-      left: cropCoordinates.x,
-      top: cropCoordinates.y,
-      width: cropCoordinates.width,
-      height: cropCoordinates.height,
-    })
-    .resize(IMAGE_DIMENSIONS.width, IMAGE_DIMENSIONS.height)
-    .toBuffer();
+    return sharp(fileBuffer)
+      .extract({
+        left: cropCoordinates.x,
+        top: cropCoordinates.y,
+        width: cropCoordinates.width,
+        height: cropCoordinates.height,
+      })
+      .resize(IMAGE_DIMENSIONS.width, IMAGE_DIMENSIONS.height)
+      .toBuffer();
+  } catch (error) {
+    console.error(
+      'encountered an error preprocessing the image! See error message below:'
+    );
+    console.error((error as any)?.message ?? String(error));
+  }
 };
 
 // This is strictly for testing purposes

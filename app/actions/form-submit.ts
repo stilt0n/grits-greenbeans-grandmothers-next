@@ -9,6 +9,7 @@ import {
 } from '@/types/recipeTypes';
 import * as db from '@/lib/database';
 import { hasElevatedPermissions } from '@/lib/auth';
+import { preprocessImage, writeImageBufferToFile } from '@/lib/images';
 
 let isSubmitting = false;
 
@@ -65,6 +66,11 @@ export const recipeCreateAction = async (data: RecipeFormData) => {
     let recipeData: RecipeData = { ...baseRecipeData, imageUrl: null };
     // upload image to s3 if relevant
     if (imageFile !== null && cropCoordinates !== null) {
+      const imageBuffer = await preprocessImage(imageFile, cropCoordinates);
+      if (!imageBuffer) {
+        return;
+      }
+      await writeImageBufferToFile(imageBuffer);
       recipeData.imageUrl = await uploadImageToS3(imageFile, cropCoordinates);
     }
     // The html from TipTap is already sanitized but it is still
