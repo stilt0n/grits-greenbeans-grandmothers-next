@@ -77,14 +77,26 @@ export const RecipeForm = ({
           placeholder='e.g. 30 minutes'
           {...register('recipeTime')}
         />
-        <FormInput
-          label='Upload Image'
-          type='file'
-          accept='image/*'
-          {...register('imageFileList')}
-        />
-        <input type='invisible' {...register('cropCoordinates')} />
-        {imageUrl && <ImageEditorForm src={imageUrl} onChange={onCropChange} />}
+        <div className='flex flex-row gap-x-2 items-center'>
+          <FormInput
+            label='Upload Image'
+            type='file'
+            accept='image/*'
+            {...register('imageFileList')}
+          />
+          <Button
+            type='button'
+            onClick={() => {
+              setValue('imageFileList', null);
+              setValue('cropCoordinates', null);
+            }}
+            className='self-end'
+          >
+            Clear
+          </Button>
+        </div>
+        <input type='hidden' {...register('cropCoordinates')} />
+        <ImageEditorForm src={imageUrl} onChange={onCropChange} />
         <EditorInput
           onChange={(editorContent) => setValue('instructions', editorContent)}
           menuAriaLabel='instructions editor menu'
