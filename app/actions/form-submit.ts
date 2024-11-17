@@ -3,46 +3,42 @@ import sanitizeHtml from 'sanitize-html';
 import { currentUser } from '@clerk/nextjs/server';
 import {
   cropCoordinateSchema,
-  type RecipeFormData,
+  type ParsedRecipeFormData,
   type RecipeData,
   type CropCoordinates,
 } from '@/types/recipeTypes';
 import * as db from '@/lib/database';
 import { hasElevatedPermissions } from '@/lib/auth';
 import { preprocessImage, writeImageBufferToFile } from '@/lib/images';
+import { formDataToRecipe } from '@/lib/formUtils';
 
 let isSubmitting = false;
 
-const parseFormData = (data: RecipeFormData) => {
-  const {
-    imageFileList,
-    cropCoordinates: cropCoordinateString,
-    ...baseRecipeData
-  } = data;
-
-  let cropCoordinates = null,
-    imageFile = null;
-  if (imageFileList !== null && cropCoordinateString !== null) {
+const parseFormData = ({
+  image,
+  cropCoordinates: cropCoordinateString,
+  ...baseRecipeData
+}: ParsedRecipeFormData) => {
+  let cropCoordinates = null;
+  if (image !== undefined && cropCoordinateString !== null) {
     cropCoordinates = cropCoordinateSchema.parse(
       JSON.parse(cropCoordinateString)
     );
-    imageFile = imageFileList[0];
   }
-
-  return { cropCoordinates, imageFile, baseRecipeData };
+  return { image, cropCoordinates, baseRecipeData };
 };
 
-// TODO: implement this and split cropping and uploading into two separate functoin calls
+// TODO: implement this and split cropping and uploading into two separate function calls
 const uploadImageToS3 = async (
-  imageFile: File,
+  image: File,
   cropCoordinates: CropCoordinates
 ) => {
-  console.log(imageFile.name);
+  console.log(image.name);
   console.log(cropCoordinates);
   return 'dummyurl';
 };
 
-export const recipeCreateAction = async (data: RecipeFormData) => {
+export const recipeCreateAction = async (formData: FormData) => {
   // this route should already be protected by middleware but it seems safest to go ahead and do this check anyway
   const user = await currentUser();
   if (!hasElevatedPermissions(user)) {
@@ -60,18 +56,22 @@ export const recipeCreateAction = async (data: RecipeFormData) => {
 
   try {
     isSubmitting = true;
+
+    // convert form data back to recipe
+    const data = formDataToRecipe(formData);
     // parse the form data
-    const { imageFile, cropCoordinates, baseRecipeData } = parseFormData(data);
+    const { image, cropCoordinates, baseRecipeData } = parseFormData(data);
 
     let recipeData: RecipeData = { ...baseRecipeData, imageUrl: null };
     // upload image to s3 if relevant
-    if (imageFile !== null && cropCoordinates !== null) {
-      const imageBuffer = await preprocessImage(imageFile, cropCoordinates);
+    if (image !== undefined && cropCoordinates !== null) {
+      const imageBuffer = await preprocessImage(image, cropCoordinates);
       if (!imageBuffer) {
+        console.log('no image buffer!');
         return;
       }
       await writeImageBufferToFile(imageBuffer);
-      recipeData.imageUrl = await uploadImageToS3(imageFile, cropCoordinates);
+      recipeData.imageUrl = await uploadImageToS3(image, cropCoordinates);
     }
     // The html from TipTap is already sanitized but it is still
     // possible for a user to submit malicious code directly to
