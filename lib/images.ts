@@ -13,6 +13,14 @@ const fileToBuffer = async (file: File) => {
 
 const fileIsImage = (file: File) => file.type.startsWith('image/');
 
+/**
+ * Assumes cropCoordinates values are all integers.
+ * You should parse cropCoordinates with the cropCoordinateSchema
+ * before passing them to this function.
+ * @param imageFile
+ * @param cropCoordinates
+ * @returns
+ */
 export const preprocessImage = async (
   imageFile: File,
   cropCoordinates: CropCoordinates
@@ -24,7 +32,6 @@ export const preprocessImage = async (
 
   try {
     const fileBuffer = await fileToBuffer(imageFile);
-
     return sharp(fileBuffer)
       .extract({
         left: cropCoordinates.x,

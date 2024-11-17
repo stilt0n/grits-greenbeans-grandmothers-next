@@ -9,6 +9,8 @@ const isValidJson = (str: string) => {
   }
 };
 
+const Integer = z.number().transform(Math.floor);
+
 export const baseRecipeSchema = z.object({
   title: z.string().min(1, 'Title cannot be blank'),
   description: z
@@ -21,14 +23,14 @@ export const baseRecipeSchema = z.object({
   instructions: z
     .string()
     .min(1, 'Instructions cannot be blank and cannot use the default input'),
-  author: z.string().nullable(),
-  recipeTime: z.string().nullable(),
+  author: z.string().nullable().default(null),
+  recipeTime: z.string().nullable().default(null),
 });
 
 export const recipeFormSchema = baseRecipeSchema.extend({
   imageFileList: z
-    .instanceof(FileList)
-    .nullable()
+    .unknown()
+    .transform((value) => value as FileList | null)
     .refine(
       (fl) => fl == null || fl.length === 1,
       'Upload a maximum of one image'
@@ -39,11 +41,20 @@ export const recipeFormSchema = baseRecipeSchema.extend({
     .refine((str) => str == null || isValidJson(str)),
 });
 
+export const recipeFormServerSchema = baseRecipeSchema.extend({
+  image: z.unknown().transform((value) => value as File | undefined),
+  cropCoordinates: z
+    .string()
+    .nullable()
+    .default(null)
+    .refine((str) => str == null || isValidJson(str)),
+});
+
 export const cropCoordinateSchema = z.object({
-  x: z.number(),
-  y: z.number(),
-  width: z.number(),
-  height: z.number(),
+  x: Integer,
+  y: Integer,
+  width: Integer,
+  height: Integer,
 });
 
 export const recipeSchema = baseRecipeSchema.extend({
@@ -53,3 +64,4 @@ export const recipeSchema = baseRecipeSchema.extend({
 export type RecipeData = z.infer<typeof recipeSchema>;
 export type RecipeFormData = z.infer<typeof recipeFormSchema>;
 export type CropCoordinates = z.infer<typeof cropCoordinateSchema>;
+export type ParsedRecipeFormData = z.infer<typeof recipeFormServerSchema>;
