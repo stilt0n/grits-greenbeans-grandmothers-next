@@ -83,6 +83,7 @@ export const recipeCreateAction = async (
     // for now I just want to get this data visible on the server
     console.log(`inserting data:\n${recipeData}`);
     if (dryRun) {
+      console.log('skipping database update because this is a dry run...');
       return;
     }
 
@@ -129,6 +130,7 @@ export const recipeUpdateAction = async (
     if (!dryRun) {
       return db.updateRecipe(id, { ...data, imageUrl: undefined });
     }
+    console.log('skipping database update because this is a dry run...');
   } finally {
     isSubmitting = false;
   }
