@@ -10,7 +10,7 @@ import {
 import * as db from '@/lib/database';
 import { hasElevatedPermissions } from '@/lib/auth';
 import { preprocessImage, writeImageBufferToFile } from '@/lib/images';
-import { formDataToRecipe } from '@/lib/formUtils';
+import { formDataToRecipe, formDataToRecipePartial } from '@/lib/formUtils';
 
 let isSubmitting = false;
 
@@ -38,7 +38,10 @@ const uploadImageToS3 = async (
   return 'dummyurl';
 };
 
-export const recipeCreateAction = async (formData: FormData) => {
+export const recipeCreateAction = async (
+  formData: FormData,
+  dryRun: boolean = false
+) => {
   // this route should already be protected by middleware but it seems safest to go ahead and do this check anyway
   const user = await currentUser();
   if (!hasElevatedPermissions(user)) {
@@ -79,7 +82,11 @@ export const recipeCreateAction = async (formData: FormData) => {
     recipeData.instructions = sanitizeHtml(recipeData.instructions);
     // for now I just want to get this data visible on the server
     console.log(`inserting data:\n${recipeData}`);
-    // return db.createRecipe(recipeData);
+    if (dryRun) {
+      return;
+    }
+
+    return db.createRecipe(recipeData);
   } finally {
     // want to guarantee that this is reset
     isSubmitting = false;
@@ -87,8 +94,9 @@ export const recipeCreateAction = async (formData: FormData) => {
 };
 
 export const recipeUpdateAction = async (
-  data: Partial<RecipeData>,
-  id: number
+  formData: FormData,
+  id: number,
+  dryRun: boolean = false
 ) => {
   const user = await currentUser();
   if (!hasElevatedPermissions(user)) {
@@ -106,11 +114,21 @@ export const recipeUpdateAction = async (
 
   try {
     isSubmitting = true;
+
+    const { image, cropCoordinates, ...data } =
+      formDataToRecipePartial(formData);
+
+    if (image && cropCoordinates) {
+      console.log('Image updates are not currently implemented.');
+    }
+
     if (data.instructions) {
       data.instructions = sanitizeHtml(data.instructions);
     }
-    console.log(`updating recipe ${id} with data:\n${data}`);
-    await db.updateRecipe(id, data);
+    console.log(`updating recipe ${id} with data: \n`);
+    if (!dryRun) {
+      return db.updateRecipe(id, { ...data, imageUrl: undefined });
+    }
   } finally {
     isSubmitting = false;
   }

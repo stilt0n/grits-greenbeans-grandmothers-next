@@ -1,13 +1,15 @@
-import type { RecipeFormData } from '@/app/actions/load-recipe';
+import type { RecipeFormData } from '@/types/recipeTypes';
 
-type RecipeKeys = keyof RecipeFormData;
+type FormDiffData = Omit<RecipeFormData, 'imageFileList' | 'cropCoordinates'>;
+
+type RecipeKeys = keyof FormDiffData;
 
 const keys = (recipe: Partial<RecipeFormData>) =>
   Object.keys(recipe) as RecipeKeys[];
 
 export const getUpdatedRecipeFields = (
-  currentRecipe: RecipeFormData,
-  newRecipe: Partial<RecipeFormData>
+  currentRecipe: FormDiffData,
+  newRecipe: Partial<FormDiffData>
 ) => {
   return keys(newRecipe).reduce(
     (changed: Partial<RecipeFormData>, key: RecipeKeys) => {
@@ -17,5 +19,17 @@ export const getUpdatedRecipeFields = (
       return changed;
     },
     {}
+  );
+};
+
+export const shouldUpdateRecipe = (
+  currentRecipe: FormDiffData,
+  { imageFileList, cropCoordinates, ...newRecipe }: Partial<RecipeFormData>
+) => {
+  if (imageFileList != null && cropCoordinates != null) {
+    return true;
+  }
+  return (
+    Object.keys(getUpdatedRecipeFields(currentRecipe, newRecipe)).length > 0
   );
 };
