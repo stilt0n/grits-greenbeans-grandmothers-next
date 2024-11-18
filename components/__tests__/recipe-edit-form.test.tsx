@@ -20,8 +20,9 @@ describe('given a default recipe edit form', () => {
       description: 'This is a test recipe',
       author: 'grandmother_bot',
       recipeTime: '20 minutes',
-      imageUrl: null,
       instructions: '<p>test recipe</p>',
+      imageFileList: null,
+      cropCoordinates: null,
     };
 
     render(
@@ -47,8 +48,9 @@ describe('given a default recipe edit form', () => {
       description: '',
       author: 'grandmother_bot',
       recipeTime: '20 minutes',
-      imageUrl: null,
       instructions: '<p>test recipe</p>',
+      imageFileList: null,
+      cropCoordinates: null,
     };
 
     render(
