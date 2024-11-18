@@ -1,25 +1,42 @@
 'use client';
 import { useTransition } from 'react';
-import { RecipeForm } from '@/components/recipe-edit-form.client';
-import { recipeCreateAction } from '@/app/actions/form-submit';
+import {
+  RecipeForm,
+  RecipeFormProps,
+} from '@/components/recipe-edit-form.client';
+import { recipeCreateAction } from '@/app/actions/form-actions';
 import { useRouter } from 'next/navigation';
 import { recipeToFormData } from '@/lib/formUtils';
 
-const CreateRecipe = () => {
-  const [, startTransition] = useTransition();
+interface UseCreateRecipeFromFormProps {
+  redirect?: string;
+  dryRun?: boolean;
+}
+
+const useCreateRecipeFromForm = ({
+  redirect = '/recipes',
+  dryRun = false,
+}: UseCreateRecipeFromFormProps): RecipeFormProps['onSubmitSuccess'] => {
   const router = useRouter();
+  const [, startTransition] = useTransition();
+
+  return (data) => {
+    startTransition(async () => {
+      const result = await recipeCreateAction(recipeToFormData(data), dryRun);
+      if (redirect && result?.[0]?.recipeId) {
+        router.push(`${redirect}/${result[0].recipeId}`);
+      }
+    });
+  };
+};
+
+const CreateRecipe = () => {
+  const createRecipeFromForm = useCreateRecipeFromForm({ dryRun: true });
   return (
     <div>
       <h1 className='text-3xl text-center mt-2'>Add a Recipe</h1>
       <RecipeForm
-        onSubmitSuccess={(data) => {
-          startTransition(async () => {
-            const result = await recipeCreateAction(recipeToFormData(data));
-            // if (result?.[0]?.recipeId) {
-            //   router.push(`/recipes/${result[0].recipeId}`);
-            // }
-          });
-        }}
+        onSubmitSuccess={createRecipeFromForm}
         onSubmitError={(error) => {
           console.log('there was an error');
           console.error(error);
