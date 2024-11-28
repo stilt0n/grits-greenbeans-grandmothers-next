@@ -9,6 +9,10 @@ import ReactCrop, {
 import { CropCoordinates } from '@/types/recipeTypes';
 import 'react-image-crop/dist/ReactCrop.css';
 
+const HEIGHT_ASPECT_SCALE = 0.5625;
+
+const scaleHeight = (height: number) => height * HEIGHT_ASPECT_SCALE;
+
 export const useImageFileUrl = (fileList: FileList | null) => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   useEffect(() => {
@@ -30,8 +34,8 @@ export interface ImageEditorFormProps {
 
 // helper to prevent initial percentages from being out of bounds
 const getStartingWidthAndHeight = (width: number, height: number) => {
-  if (height < width) {
-    return [undefined, 90 * 0.5625];
+  if (scaleHeight(height) < width) {
+    return [undefined, scaleHeight(90)];
   }
   return [90, undefined];
 };
