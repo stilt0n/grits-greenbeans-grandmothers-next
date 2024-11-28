@@ -2,8 +2,8 @@ import type { CropCoordinates } from '@/types/recipeTypes';
 import sharp from 'sharp';
 
 const IMAGE_DIMENSIONS = {
-  width: 400,
-  height: 400,
+  width: 1280,
+  height: 720,
 };
 
 const fileToBuffer = async (file: File) => {
