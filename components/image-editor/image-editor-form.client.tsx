@@ -31,7 +31,7 @@ export interface ImageEditorFormProps {
 // helper to prevent initial percentages from being out of bounds
 const getStartingWidthAndHeight = (width: number, height: number) => {
   if (height < width) {
-    return [undefined, 90];
+    return [undefined, 90 * 0.5625];
   }
   return [90, undefined];
 };
@@ -70,7 +70,7 @@ const ImageEditorForm = (props: ImageEditorFormProps) => {
           width: startWidth,
           height: startHeight,
         },
-        1,
+        16 / 9,
         width,
         height
       ),
@@ -84,7 +84,7 @@ const ImageEditorForm = (props: ImageEditorFormProps) => {
     <ReactCrop
       crop={crop}
       onChange={(_, c) => setCrop(c)}
-      aspect={1}
+      aspect={16 / 9}
       style={{
         maxWidth: '100%',
         width: imageDimensions?.width,

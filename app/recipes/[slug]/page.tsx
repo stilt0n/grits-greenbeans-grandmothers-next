@@ -37,7 +37,7 @@ const Page = async ({ params }: { params: { slug: string } }) => {
           </span>
         ) : null}
         {recipe.imageUrl ? (
-          <div className='relative h-96 w-[calc(100%+2rem)] -mx-4'>
+          <div className='relative w-[calc(100%+2rem)] pb-[calc(56.25%+1.125rem)] -mx-4'>
             <Image
               src={recipe.imageUrl}
               alt={recipe.title}
