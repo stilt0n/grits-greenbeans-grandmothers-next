@@ -26,7 +26,7 @@ export const SideNav = () => {
           <HamburgerMenuIcon height='2.5rem' />
         </Button>
       </SheetTrigger>
-      <SheetContent side='left' className='w-[36rem] max-w-full'>
+      <SheetContent side='right' className='w-[36rem] max-w-full'>
         <SheetHeader>
           <SheetTitle>Menu</SheetTitle>
         </SheetHeader>
