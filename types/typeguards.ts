@@ -13,3 +13,19 @@ export const requireEnv = <T extends string>(
   }
   return env;
 };
+
+export const requireConfig = <T extends string>(
+  config: Record<string, unknown>,
+  ...keys: T[]
+) => {
+  const cfg: { [K in T]: string } = {} as { [K in T]: string };
+  for (const key of keys) {
+    if (typeof config[key] !== 'string') {
+      throw new Error(
+        `Invariant failed: config object contained no property called '${key}'`
+      );
+    }
+    cfg[key] = config[key];
+  }
+  return cfg;
+};
