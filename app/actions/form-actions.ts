@@ -73,6 +73,7 @@ export const recipeCreateAction = async (
         console.log('no image buffer!');
         return;
       }
+      await writeImageBufferToFile(imageBuffer);
       recipeData.imageUrl = await uploadImageToS3(image, cropCoordinates);
     }
     // The html from TipTap is already sanitized but it is still
