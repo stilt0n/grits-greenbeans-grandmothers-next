@@ -1,6 +1,9 @@
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { loadSharedConfigFiles } from '@smithy/shared-ini-file-loader';
 import { requireConfig, requireEnv } from '@/types/typeguards';
+import dotenv from 'dotenv';
+
+dotenv.config({ path: '../.env.local' });
 
 const bucketName = requireEnv('bucket').bucket;
 const filePath = '../transformed_image.png';
@@ -26,7 +29,7 @@ const uploadFile = async (bucketName: string, filePath: string) => {
   try {
     const file = await Bun.file(filePath);
     const buffer = Buffer.from(await file.arrayBuffer());
-    const keyName = 'test_image_pizza.png';
+    const keyName = 'images/default_recipe_image_00.png';
     const response = await b2.send(
       new PutObjectCommand({
         Bucket: bucketName,

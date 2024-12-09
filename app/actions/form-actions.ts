@@ -5,7 +5,6 @@ import {
   cropCoordinateSchema,
   type ParsedRecipeFormData,
   type RecipeData,
-  type CropCoordinates,
 } from '@/types/recipeTypes';
 import * as db from '@/lib/database';
 import { uploadFileToImageStore } from '@/lib/image-store';

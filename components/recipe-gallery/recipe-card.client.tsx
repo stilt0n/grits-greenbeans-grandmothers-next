@@ -29,7 +29,7 @@ export const RecipeCard = (props: RecipeCardProps) => {
     >
       <div className='md:w-1/2 overflow-hidden rounded-t-lg md:rounded-t-none md:rounded-l-lg'>
         <Image
-          src={props.imageUrl || images.greenbeans}
+          src={props.imageUrl || images.default}
           placeholder='blur'
           blurDataURL={blurDataUrl}
           alt={props.title}
