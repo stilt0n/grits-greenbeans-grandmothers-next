@@ -117,8 +117,10 @@ export const recipeUpdateAction = async (
       data.instructions = sanitizeHtml(data.instructions);
     }
     console.log(`updating recipe ${id} with data: \n`);
+    console.log(data);
     if (!dryRun) {
-      return db.updateRecipe(id, { ...data, imageUrl: undefined });
+      await db.updateRecipe(id, { ...data, imageUrl: undefined });
+      return;
     }
     console.log('skipping database update because this is a dry run...');
   } finally {
