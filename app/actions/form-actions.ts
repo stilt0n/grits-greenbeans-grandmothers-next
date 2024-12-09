@@ -8,6 +8,7 @@ import {
   type CropCoordinates,
 } from '@/types/recipeTypes';
 import * as db from '@/lib/database';
+import { uploadFileToImageStore } from '@/lib/image-store';
 import { hasElevatedPermissions } from '@/lib/auth';
 import { preprocessImage, writeImageBufferToFile } from '@/lib/images';
 import { formDataToRecipe, formDataToRecipePartial } from '@/lib/formUtils';
@@ -66,15 +67,15 @@ export const recipeCreateAction = async (
     const { image, cropCoordinates, baseRecipeData } = parseFormData(data);
 
     let recipeData: RecipeData = { ...baseRecipeData, imageUrl: null };
-    // upload image to s3 if relevant
+    // upload image to b2 if relevant
     if (image !== undefined && cropCoordinates !== null) {
       const imageBuffer = await preprocessImage(image, cropCoordinates);
       if (!imageBuffer) {
         console.log('no image buffer!');
         return;
       }
-      await writeImageBufferToFile(imageBuffer);
-      recipeData.imageUrl = await uploadImageToS3(image, cropCoordinates);
+      const { imageUrl } = await uploadFileToImageStore(imageBuffer);
+      recipeData.imageUrl = imageUrl;
     }
     // The html from TipTap is already sanitized but it is still
     // possible for a user to submit malicious code directly to

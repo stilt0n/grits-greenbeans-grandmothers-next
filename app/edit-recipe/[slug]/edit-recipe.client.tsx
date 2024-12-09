@@ -47,7 +47,6 @@ export const EditRecipe = ({ recipe }: EditRecipeProps) => {
   const editRecipeFromForm = useEditRecipeFromForm({
     id,
     recipeData,
-    dryRun: true,
   });
   return (
     <div>

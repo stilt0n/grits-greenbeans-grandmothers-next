@@ -1,8 +1,8 @@
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { loadSharedConfigFiles } from '@smithy/shared-ini-file-loader';
-import { requireConfig } from '@/types/typeguards';
+import { requireConfig, requireEnv } from '@/types/typeguards';
 
-const bucketName = 'grits-greenbeans-and-grandmothers';
+const bucketName = requireEnv('bucket').bucket;
 const filePath = '../transformed_image.png';
 const profile = 'ggg';
 
