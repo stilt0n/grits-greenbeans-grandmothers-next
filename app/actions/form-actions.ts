@@ -29,16 +29,6 @@ const parseFormData = ({
   return { image, cropCoordinates, baseRecipeData };
 };
 
-// TODO: implement this and split cropping and uploading into two separate function calls
-const uploadImageToS3 = async (
-  image: File,
-  cropCoordinates: CropCoordinates
-) => {
-  console.log(image.name);
-  console.log(cropCoordinates);
-  return 'dummyurl';
-};
-
 export const recipeCreateAction = async (
   formData: FormData,
   dryRun: boolean = false
