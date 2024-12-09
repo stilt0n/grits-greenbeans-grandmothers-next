@@ -16,7 +16,7 @@ interface UseCreateRecipeFromFormProps {
 const useCreateRecipeFromForm = ({
   redirect = '/recipes',
   dryRun = false,
-}: UseCreateRecipeFromFormProps): RecipeFormProps['onSubmitSuccess'] => {
+}: UseCreateRecipeFromFormProps = {}): RecipeFormProps['onSubmitSuccess'] => {
   const router = useRouter();
   const [, startTransition] = useTransition();
 
@@ -31,7 +31,7 @@ const useCreateRecipeFromForm = ({
 };
 
 const CreateRecipe = () => {
-  const createRecipeFromForm = useCreateRecipeFromForm({ dryRun: true });
+  const createRecipeFromForm = useCreateRecipeFromForm();
   return (
     <div>
       <h1 className='text-3xl text-center mt-2'>Add a Recipe</h1>
