@@ -10,7 +10,7 @@ import {
 import * as db from '@/lib/database';
 import { uploadFileToImageStore } from '@/lib/image-store';
 import { hasElevatedPermissions } from '@/lib/auth';
-import { preprocessImage, writeImageBufferToFile } from '@/lib/images';
+import { preprocessImage } from '@/lib/images';
 import { formDataToRecipe, formDataToRecipePartial } from '@/lib/formUtils';
 
 let isSubmitting = false;
