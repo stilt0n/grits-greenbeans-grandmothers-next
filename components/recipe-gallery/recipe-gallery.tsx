@@ -51,7 +51,7 @@ const defaultLoadRecipeAction: LoadRecipeAction = async ({
   'use server';
   console.log(`using filter ${filter}`);
   const result = await db.getRecipes({
-    fields: ['id', 'title', 'description', 'imageUrl'],
+    fields: ['id', 'title', 'description', 'imageUrl', 'author'],
     paginate: { page, pageSize },
     filter,
   });
@@ -104,6 +104,7 @@ const returnedRecipesSchema = z.array(
     title: z.string(),
     description: z.string(),
     imageUrl: z.string().optional().nullable(),
+    author: z.string().optional().nullable(),
   })
 );
 

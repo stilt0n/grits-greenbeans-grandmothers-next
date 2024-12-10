@@ -14,6 +14,7 @@ export interface RecipeCardProps {
   // both `null` and `undefined` here. This is sort of a pain and it might
   // be a good idea to look into if there's a way to avoid it.
   imageUrl?: string | null;
+  author?: string | null;
 }
 
 export const RecipeCard = (props: RecipeCardProps) => {
@@ -39,11 +40,18 @@ export const RecipeCard = (props: RecipeCardProps) => {
         />
       </div>
       <div className='p-6 md:p-8 flex flex-col justify-center'>
-        <CardTitle id={titleId}>{props.title}</CardTitle>
+        <CardTitle id={titleId} className='text-lg'>
+          {props.title}
+        </CardTitle>
+        {props.author ? (
+          <p className='mt-4 mb-3 text-zinc-700 text-sm'>
+            Author: {props.author}
+          </p>
+        ) : undefined}
         <CardDescription className='mt-2 text-zinc-500' id={descriptionId}>
           {props.description}
         </CardDescription>
-        <div className='mt-4 flex gap-2'>
+        <div className='mt-6 flex gap-2'>
           <LinkButton
             href={props.href}
             aria-labelledby={titleId}
