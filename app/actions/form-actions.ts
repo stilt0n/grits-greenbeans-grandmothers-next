@@ -11,6 +11,7 @@ import { uploadFileToImageStore } from '@/lib/image-store';
 import { hasElevatedPermissions } from '@/lib/auth';
 import { preprocessImage } from '@/lib/images';
 import { formDataToRecipe, formDataToRecipePartial } from '@/lib/formUtils';
+import { revalidatePath } from 'next/cache';
 
 let isSubmitting = false;
 
@@ -120,6 +121,7 @@ export const recipeUpdateAction = async (
     console.log(data);
     if (!dryRun) {
       await db.updateRecipe(id, { ...data, imageUrl: undefined });
+      revalidatePath(`/recipes/${id}`);
       return;
     }
     console.log('skipping database update because this is a dry run...');
