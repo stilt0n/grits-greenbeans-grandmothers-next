@@ -87,5 +87,8 @@ export const updateRecipe = async (
  * @internal
  */
 export const resetRecipes = async () => {
-  return db.delete(recipes);
+  console.warn(
+    'this function has been disabled because it is dangerous. You can uncomment its contents if you REALLY need it.'
+  );
+  // return db.delete(recipes);
 };

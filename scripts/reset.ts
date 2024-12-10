@@ -1,3 +1,6 @@
-import { resetRecipes } from '@/lib/database/internal';
+// import { resetRecipes } from '@/lib/database/internal';
 
-resetRecipes();
+console.log(
+  'this script is disabled because it is dangerous. you can uncomment it if you REALLY need to reset the database'
+);
+// resetRecipes();
