@@ -22,11 +22,16 @@ const parseFormData = ({
 }: ParsedRecipeFormData) => {
   let cropCoordinates = null;
   if (image !== undefined && cropCoordinateString !== null) {
-    cropCoordinates = cropCoordinateSchema.parse(
-      JSON.parse(cropCoordinateString)
-    );
+    cropCoordinates = parseCropCoordinates(cropCoordinateString);
   }
   return { image, cropCoordinates, baseRecipeData };
+};
+
+const parseCropCoordinates = (cropCoordinateString: string) => {
+  const cropCoordinates = cropCoordinateSchema.parse(
+    JSON.parse(cropCoordinateString)
+  );
+  return cropCoordinates;
 };
 
 export const recipeCreateAction = async (
@@ -107,11 +112,24 @@ export const recipeUpdateAction = async (
   try {
     isSubmitting = true;
 
-    const { image, cropCoordinates, ...data } =
-      formDataToRecipePartial(formData);
+    const {
+      image,
+      cropCoordinates: cropCoordinateString,
+      ...data
+    } = formDataToRecipePartial(formData);
 
-    if (image && cropCoordinates) {
-      console.log('Image updates are not currently implemented.');
+    let imageUrl = undefined;
+    if (image !== undefined && cropCoordinateString != null) {
+      const cropCoordinates = parseCropCoordinates(cropCoordinateString);
+      const imageBuffer = await preprocessImage(image, cropCoordinates);
+      if (!imageBuffer) {
+        console.log('no image buffer!');
+        return;
+      }
+      // TODO: delete old image if it exists
+      const { imageUrl: uploadedImageUrl } =
+        await uploadFileToImageStore(imageBuffer);
+      imageUrl = uploadedImageUrl;
     }
 
     if (data.instructions) {
@@ -120,7 +138,7 @@ export const recipeUpdateAction = async (
     console.log(`updating recipe ${id} with data: \n`);
     console.log(data);
     if (!dryRun) {
-      await db.updateRecipe(id, { ...data, imageUrl: undefined });
+      await db.updateRecipe(id, { ...data, imageUrl });
       revalidatePath(`/recipes/${id}`);
       return;
     }
