@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { NextSearchParams } from '@/types/nextTypes';
 import { cn } from '@/lib/utils';
 import { Suspense } from 'react';
+import { unstable_noStore as noStore } from 'next/cache';
 
 export interface LoadRecipeArgs {
   page: number;
@@ -76,6 +77,8 @@ const RecipeGallery = async ({
   loadRecipeAction = defaultLoadRecipeAction,
   ...props
 }: RecipeGalleryProps) => {
+  // TODO: improve on this by being more granular with caching strategy
+  noStore();
   const pageCount = await loadPageCountAction({ pageSize });
   const recipes = await loadRecipeAction({ page, pageSize, filter });
   return (
