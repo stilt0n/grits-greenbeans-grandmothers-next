@@ -44,3 +44,4 @@ next-env.d.ts
 PLAN.md
 *storybook.log
 transformed_image.png
+/local-backups
