@@ -39,6 +39,10 @@ export const recipeFormSchema = baseRecipeSchema.extend({
     .string()
     .nullable()
     .refine((str) => str == null || isValidJson(str)),
+  tags: z
+    .string()
+    .nullable()
+    .refine((str) => str == null || isValidJson(str)),
 });
 
 export const recipeFormServerSchema = baseRecipeSchema.extend({
@@ -47,6 +51,10 @@ export const recipeFormServerSchema = baseRecipeSchema.extend({
     .string()
     .nullable()
     .default(null)
+    .refine((str) => str == null || isValidJson(str)),
+  tags: z
+    .string()
+    .nullable()
     .refine((str) => str == null || isValidJson(str)),
 });
 
@@ -57,7 +65,10 @@ export const cropCoordinateSchema = z.object({
   height: Integer,
 });
 
+export const tagsSchema = z.array(z.string());
+
 export const recipeSchema = baseRecipeSchema.extend({
+  tags: z.array(z.string()).nullable(),
   imageUrl: z.string().nullable(),
 });
 

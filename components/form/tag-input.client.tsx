@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { HTMLProps, useState } from 'react';
 import { FormInput } from './form-input';
 import { Button } from '@/components/ui/button';
 import { Tag } from './tag.client';
@@ -9,20 +9,24 @@ import { PlusIcon } from '@radix-ui/react-icons';
 export interface TagInputProps {
   label: string;
   className?: string;
+  onChange?: (tags: string[]) => void;
+  inputProps?: Omit<HTMLProps<HTMLInputElement>, 'type' | 'hidden'>;
 }
 
-export const TagInput = (props: TagInputProps) => {
+export const TagInput = ({ inputProps, ...props }: TagInputProps) => {
   const [tags, setTags] = useState<string[]>([]);
   const [value, setValue] = useState('');
 
   const onTagCreate = () => {
     const updatedTags = [...tags, value];
     setTags(updatedTags);
+    props.onChange?.(updatedTags);
     setValue('');
   };
 
   return (
     <div className={props.className}>
+      <input hidden type='text' {...inputProps} />
       <div className='flex flex-row max-w-full overflow-x-auto gap-x-2'>
         {tags.map((text, index) => (
           <Tag
