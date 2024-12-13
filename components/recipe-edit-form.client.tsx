@@ -14,6 +14,7 @@ import { FormInput } from '@/components/form/form-input';
 import { Button } from '@/components/ui/button';
 import EditorInput from '@/components/editor';
 import ImageEditorForm, { useImageFileUrl } from '@/components/image-editor';
+import { TagInput } from './form/tag-input.client';
 export interface RecipeFormProps {
   onSubmitSuccess: SubmitHandler<RecipeFormData>;
   onSubmitError: SubmitErrorHandler<RecipeFormData>;
@@ -28,6 +29,7 @@ const blankRecipeData: RecipeFormData = {
   imageFileList: null,
   cropCoordinates: null,
   instructions: '',
+  tags: null,
 };
 
 export const RecipeForm = ({
@@ -48,9 +50,10 @@ export const RecipeForm = ({
   const imageFileList = watch('imageFileList');
   const imageUrl = useImageFileUrl(imageFileList);
   const onCropChange = (coords: CropCoordinates | null) => {
-    console.log('setting coordinates:');
-    console.log(coords);
     setValue('cropCoordinates', coords ? JSON.stringify(coords) : null);
+  };
+  const onTagsChange = (tags: string[]) => {
+    setValue('tags', tags.length > 0 ? JSON.stringify(tags) : null);
   };
   return (
     <>
@@ -69,6 +72,11 @@ export const RecipeForm = ({
           type='text'
           required
           {...register('description')}
+        />
+        <TagInput
+          label='Recipe Tags'
+          onChange={onTagsChange}
+          inputProps={register('tags')}
         />
         <FormInput label='Author' type='text' {...register('author')} />
         <FormInput

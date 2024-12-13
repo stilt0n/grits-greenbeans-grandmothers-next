@@ -1,6 +1,6 @@
 export {
   getRecipes,
   getRecipeCount,
-  createRecipe,
+  createRecipeWithTags,
   updateRecipe,
 } from './internal';

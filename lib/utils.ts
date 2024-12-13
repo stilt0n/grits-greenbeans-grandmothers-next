@@ -29,3 +29,18 @@ export const truncateRange = (num: number, floor: number, ceiling: number) => {
 // returns [start, end)
 export const range = (start: number, end: number) =>
   [...Array(end - start)].map((_, i) => i + start);
+
+// Gets a vertical slice of a table. Returns it as { K: V }[]
+export const verticalSlice = <T, K extends keyof T>(
+  tableRows: T[],
+  key: K
+): { [J in K]: T[J] }[] => {
+  return tableRows.map(({ [key]: v }) => ({ [key]: v })) as {
+    [J in K]: T[J];
+  }[];
+};
+
+// gets a key from an array of objects and extracts an array of values
+export const extractColumn = <T, K extends keyof T>(objs: T[], key: K) => {
+  return objs.map(({ [key]: value }) => value);
+};

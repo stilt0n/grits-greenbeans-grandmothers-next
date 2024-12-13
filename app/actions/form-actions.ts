@@ -3,6 +3,7 @@ import sanitizeHtml from 'sanitize-html';
 import { currentUser } from '@clerk/nextjs/server';
 import {
   cropCoordinateSchema,
+  tagsSchema,
   type ParsedRecipeFormData,
   type RecipeData,
 } from '@/types/recipeTypes';
@@ -18,13 +19,22 @@ let isSubmitting = false;
 const parseFormData = ({
   image,
   cropCoordinates: cropCoordinateString,
+  tags: tagsString,
   ...baseRecipeData
 }: ParsedRecipeFormData) => {
   let cropCoordinates = null;
   if (image !== undefined && cropCoordinateString !== null) {
     cropCoordinates = parseCropCoordinates(cropCoordinateString);
   }
-  return { image, cropCoordinates, baseRecipeData };
+  const tags = parseTags(tagsString);
+  return {
+    image,
+    cropCoordinates,
+    baseRecipeData: {
+      ...baseRecipeData,
+      tags,
+    },
+  };
 };
 
 const parseCropCoordinates = (cropCoordinateString: string) => {
@@ -32,6 +42,12 @@ const parseCropCoordinates = (cropCoordinateString: string) => {
     JSON.parse(cropCoordinateString)
   );
   return cropCoordinates;
+};
+
+const parseTags = (tagsString: string | null) => {
+  if (tagsString === null) return null;
+  const tags = tagsSchema.parse(JSON.parse(tagsString));
+  return tags;
 };
 
 export const recipeCreateAction = async (
@@ -83,7 +99,7 @@ export const recipeCreateAction = async (
       return;
     }
 
-    return db.createRecipe(recipeData);
+    return db.createRecipeWithTags(recipeData);
   } finally {
     // want to guarantee that this is reset
     isSubmitting = false;
