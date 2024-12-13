@@ -1,5 +1,10 @@
 import { relations, sql } from 'drizzle-orm';
-import { integer, text, sqliteTable } from 'drizzle-orm/sqlite-core';
+import {
+  integer,
+  text,
+  sqliteTable,
+  uniqueIndex,
+} from 'drizzle-orm/sqlite-core';
 
 export const recipes = sqliteTable('recipes', {
   id: integer('id').primaryKey(),
@@ -22,11 +27,20 @@ export const tags = sqliteTable('tags', {
   name: text('name').notNull().unique(),
 });
 
-export const recipesToTags = sqliteTable('recipe_tag', {
-  id: integer('id').primaryKey(),
-  recipeId: integer('recipe_id').references(() => recipes.id),
-  tagId: integer('tag_id').references(() => tags.id),
-});
+export const recipesToTags = sqliteTable(
+  'recipe_tag',
+  {
+    id: integer('id').primaryKey(),
+    recipeId: integer('recipe_id').references(() => recipes.id),
+    tagId: integer('tag_id').references(() => tags.id),
+  },
+  (table) => ({
+    uniqueRecipeTag: uniqueIndex('unique_recipe_tag').on(
+      table.recipeId,
+      table.tagId
+    ),
+  })
+);
 
 export const recipeRelations = relations(recipes, ({ many }) => ({
   recipesToTags: many(recipesToTags),
