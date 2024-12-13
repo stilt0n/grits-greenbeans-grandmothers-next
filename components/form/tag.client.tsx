@@ -27,6 +27,12 @@ export const Tag = (props: TagProps) => {
         aria-label={`remove ${props.text} from tags`}
         tabIndex={0}
         onClick={() => props.onClose()}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter') {
+            props.onClose();
+          }
+        }}
+        role='button'
       />
     </span>
   );
