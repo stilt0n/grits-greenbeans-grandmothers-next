@@ -2,7 +2,7 @@ import { useId, forwardRef } from 'react';
 import { Input, type InputProps } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
-interface FormInputProps extends InputProps {
+export interface FormInputProps extends InputProps {
   label: string;
   errorMessage?: string;
 }
