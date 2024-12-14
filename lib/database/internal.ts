@@ -78,25 +78,6 @@ export const getRecipesWithTags = async ({
     };
   }
 
-  let withClause = {};
-  if (fields === undefined || fields.includes('tags')) {
-    console.log('creating with clause');
-    withClause = {
-      with: {
-        recipesToTags: {
-          columns: {},
-          with: {
-            tag: {
-              columns: {
-                name: true,
-              },
-            },
-          },
-        },
-      },
-    };
-  }
-
   const results = await db.query.recipes.findMany({
     columns,
     ...whereClause,
