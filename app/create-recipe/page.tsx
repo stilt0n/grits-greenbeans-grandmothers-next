@@ -22,9 +22,9 @@ const useCreateRecipeFromForm = ({
 
   return (data) => {
     startTransition(async () => {
-      const result = await recipeCreateAction(recipeToFormData(data), dryRun);
-      if (redirect && result?.[0]?.recipeId) {
-        router.push(`${redirect}/${result[0].recipeId}`);
+      const recipeId = await recipeCreateAction(recipeToFormData(data), dryRun);
+      if (redirect && recipeId !== undefined) {
+        router.push(`${redirect}/${recipeId}`);
       }
     });
   };

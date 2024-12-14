@@ -187,11 +187,12 @@ export const createRecipeWithTags = async (recipeWithTags: RecipeData) => {
         tagId,
       }));
 
-      return tx
+      await tx
         .insert(recipesToTags)
         .values(recipeTagValues)
-        .onConflictDoNothing()
-        .returning({ recipeToTagId: recipesToTags.id });
+        .onConflictDoNothing();
+
+      return recipeId;
     }
   });
 };
