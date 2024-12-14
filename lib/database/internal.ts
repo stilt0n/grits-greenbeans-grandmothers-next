@@ -182,18 +182,11 @@ export const createRecipeWithTags = async (recipeWithTags: RecipeData) => {
         .from(tags)
         .where(inArray(tags.name, tagArray));
 
-      // TODO: if a tag already exists it will not be returned by
-      // the returning clause so we will need to fetch it from the
-      // database before inserting creating the recipeTagValues
       const recipeTagValues = tagIds.map(({ tagId }) => ({
         recipeId,
         tagId,
       }));
 
-      // TODO: I've updated the schema to require that recipeId + tagId
-      // is unique so that we don't insert multiple copies of the same
-      // relationship. I need to run a new database migration before
-      // this will work.
       return tx
         .insert(recipesToTags)
         .values(recipeTagValues)
