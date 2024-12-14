@@ -1,13 +1,24 @@
 import type { SQLiteSelect, SelectedFields } from 'drizzle-orm/sqlite-core';
-import { count, like, eq, inArray } from 'drizzle-orm';
+import { count, like, eq, inArray, asc } from 'drizzle-orm';
 import { db } from '@/db';
 import { recipes, tags, recipesToTags, type InsertRecipe } from '@/db/schema';
 import { RecipeData } from '@/types/recipeTypes';
 
 type FieldKeys = keyof InsertRecipe;
+type RecipeWithTagsFields = keyof InsertRecipe | 'tags';
 
 export interface GetRecipeArgs {
   fields?: FieldKeys[];
+  paginate?: {
+    page: number;
+    pageSize: number;
+  };
+  filter?: string;
+  id?: number;
+}
+
+export interface GetRecipeWithTagsArgs {
+  fields?: RecipeWithTagsFields[];
   paginate?: {
     page: number;
     pageSize: number;
@@ -26,6 +37,102 @@ const queryFromKeys = (
   return Object.fromEntries(
     keys.map((key) => [key, recipes[key]])
   ) as SelectedFields;
+};
+
+export const getRecipesWithTags = async ({
+  fields,
+  paginate,
+  filter,
+  id,
+}: GetRecipeWithTagsArgs) => {
+  const recipeKeys = fields?.filter((key) => key !== 'tags');
+  if (recipeKeys && recipeKeys.length === 0) {
+    throw new Error(
+      'getRecipesWithTags must include at least one valid recipe field. If you want to select all fields pass undefined to `fields` instead of an empty array'
+    );
+  }
+
+  // get query columns
+  const columns = recipeKeys
+    ? Object.fromEntries(recipeKeys.map((key) => [key, true]))
+    : undefined;
+
+  // get query pagination
+  let paginateClause = {};
+  if (paginate) {
+    paginateClause = {
+      limit: paginate.pageSize,
+      offset: (paginate.page - 1) * paginate.pageSize,
+    };
+  }
+
+  // get where clause
+  let whereClause = {};
+  if (filter) {
+    whereClause = {
+      where: like(recipes.title, `%${filter}%`),
+    };
+  } else if (id) {
+    whereClause = {
+      where: eq(recipes.id, id),
+    };
+  }
+
+  let withClause = {};
+  if (fields === undefined || fields.includes('tags')) {
+    console.log('creating with clause');
+    withClause = {
+      with: {
+        recipesToTags: {
+          columns: {},
+          with: {
+            tag: {
+              columns: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    };
+  }
+
+  const results = await db.query.recipes.findMany({
+    columns,
+    ...whereClause,
+    ...paginateClause,
+    with: {
+      recipesToTags: {
+        columns: {},
+        with: {
+          tag: {
+            columns: {
+              name: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  const includeTags = fields === undefined || fields.includes('tags');
+  const adjustedResults = results.map((result) => {
+    const { recipesToTags, ...recipe } = result;
+
+    if (!includeTags) {
+      return recipe;
+    }
+
+    const tags = recipesToTags
+      .map((item) => {
+        return item?.tag?.name;
+      })
+      .filter((item) => item != null);
+
+    return { ...recipe, tags };
+  });
+  console.log(adjustedResults);
+  return adjustedResults;
 };
 
 const withPagination = <T extends SQLiteSelect>(
