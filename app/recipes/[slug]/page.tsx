@@ -3,9 +3,11 @@ import Image from 'next/image';
 import { loadRecipe } from '@/app/actions/load-recipe';
 import { currentUser } from '@clerk/nextjs/server';
 import { hasElevatedPermissions } from '@/lib/auth';
+import { DecorativeTag as Tag } from '@/components/form/decorative-tag';
 import { LinkButton } from '@/components/recipe-gallery/link-button.client';
 import { ClockIcon } from '@radix-ui/react-icons';
 import { images } from '@/lib/constants';
+import { ReactNode } from 'react';
 
 const Page = async ({ params }: { params: { slug: string } }) => {
   const { slug } = params;
@@ -20,6 +22,20 @@ const Page = async ({ params }: { params: { slug: string } }) => {
   }
 
   const user = await currentUser();
+
+  let TagArea: ReactNode = null;
+  if (recipe.tags && recipe.tags.length > 0) {
+    TagArea = (
+      <div className='flex flex-col'>
+        <h2 className='text-xl'>Tags:</h2>
+        <div className='flex flex-row gap-2'>
+          {recipe.tags.map((tag) => (
+            <Tag text={tag} key={tag} />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -48,6 +64,7 @@ const Page = async ({ params }: { params: { slug: string } }) => {
         </div>
         {/* HTML here is sanitized on the server-side and should be safe to set */}
         <div dangerouslySetInnerHTML={{ __html: recipe.instructions }} />
+        {TagArea}
       </div>
     </>
   );
