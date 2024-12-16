@@ -8,13 +8,13 @@ import {
 import { recipeUpdateAction } from '@/app/actions/form-actions';
 import type { RecipeFormDataWithId } from '@/app/actions/load-recipe';
 import { recipeToFormData } from '@/lib/formUtils';
-import { shouldUpdateRecipe } from '@/lib/database/utils';
+import { getUpdatedTags, shouldUpdateRecipe } from '@/lib/database/utils';
 
 interface EditRecipeProps {
   recipe: RecipeFormDataWithId;
 }
 
-interface UseEditRecipeFromFormProps {
+export interface UseEditRecipeFromFormProps {
   id: number;
   recipeData: Omit<RecipeFormDataWithId, 'id' | 'imageUrl'>;
   redirect?: string;
@@ -31,7 +31,20 @@ const useEditRecipeFromForm = ({
   const [, startTransition] = useTransition();
 
   return (data) => {
-    if (!shouldUpdateRecipe(recipeData, data)) {
+    // TODO: refactor this to be less awful
+    const { tags: currentTags, ...recipeDiffData } = recipeData;
+    const { tags: newTags, ...newData } = data;
+
+    // TODO: I am ignoring tag edits for now
+    const { addTags, removeTags } = getUpdatedTags(
+      currentTags,
+      newTags ? JSON.parse(newTags) : null
+    );
+    if (addTags || removeTags) {
+      console.log(`should update tags. Add ${addTags}. Remove ${removeTags}`);
+    }
+
+    if (!shouldUpdateRecipe(recipeDiffData, newData)) {
       return;
     }
     startTransition(async () => {
@@ -48,6 +61,7 @@ export const EditRecipe = ({ recipe }: EditRecipeProps) => {
     id,
     recipeData,
   });
+  const { tags, ...initialRecipeData } = recipeData;
   return (
     <div>
       <h1 className='text-3xl text-center mt-2'>Edit Recipe</h1>
@@ -57,7 +71,8 @@ export const EditRecipe = ({ recipe }: EditRecipeProps) => {
           console.error(error);
         }}
         initialRecipeData={{
-          ...recipeData,
+          ...initialRecipeData,
+          tags: tags ? JSON.stringify(tags) : null,
           cropCoordinates: null,
           imageFileList: null,
         }}
