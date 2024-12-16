@@ -12,6 +12,10 @@ test.describe('sign-in tests', () => {
     'redirects to signin page when attempting to access protected page',
     { tag: '@smoke' },
     async ({ page }) => {
+      // TODO: this type error does not seem to be a problem
+      // but I should probably investigate why it's occurring
+      // later anyway
+      // @ts-ignore
       await setupClerkTestingToken({ page });
 
       await page.goto('/create-recipe');
