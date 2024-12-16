@@ -23,6 +23,7 @@ describe('given a default recipe edit form', () => {
       instructions: '<p>test recipe</p>',
       imageFileList: null,
       cropCoordinates: null,
+      tags: null,
     };
 
     render(
@@ -51,6 +52,7 @@ describe('given a default recipe edit form', () => {
       instructions: '<p>test recipe</p>',
       imageFileList: null,
       cropCoordinates: null,
+      tags: null,
     };
 
     render(

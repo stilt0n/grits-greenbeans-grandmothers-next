@@ -1,5 +1,8 @@
+/**
+ * @deprecated
+ */
 // TODO: determine format of instructions strings before finishing
-import * as db from '@/lib/database';
+// import * as db from '@/lib/database';
 import type { InsertRecipe } from '@/db/schema';
 import { html } from '@/lib/utils';
 import { images } from '@/lib/constants';
@@ -49,4 +52,7 @@ const seedData: InsertRecipe[] = [
   },
 ];
 
-db.createRecipe(...seedData);
+console.log(
+  'this function is deprecated and should not longer be used as it could cause issues with the database. The logic is commented out. If you REALLY need to use this you will need to modify the file.'
+);
+// db.createRecipe(...seedData);
