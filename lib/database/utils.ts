@@ -1,6 +1,9 @@
 import type { RecipeFormData } from '@/types/recipeTypes';
 
-type FormDiffData = Omit<RecipeFormData, 'imageFileList' | 'cropCoordinates'>;
+type FormDiffData = Omit<
+  RecipeFormData,
+  'imageFileList' | 'cropCoordinates' | 'tags'
+>;
 
 type RecipeKeys = keyof FormDiffData;
 
@@ -13,7 +16,8 @@ export const getUpdatedRecipeFields = (
 ) => {
   return keys(newRecipe).reduce(
     (changed: Partial<RecipeFormData>, key: RecipeKeys) => {
-      if (currentRecipe[key] !== newRecipe[key]) {
+      // we want to consider null and undefined equal here
+      if (currentRecipe[key] != newRecipe[key]) {
         changed[key] = newRecipe[key] as any;
       }
       return changed;
@@ -24,7 +28,11 @@ export const getUpdatedRecipeFields = (
 
 export const shouldUpdateRecipe = (
   currentRecipe: FormDiffData,
-  { imageFileList, cropCoordinates, ...newRecipe }: Partial<RecipeFormData>
+  {
+    imageFileList,
+    cropCoordinates,
+    ...newRecipe
+  }: Partial<Omit<RecipeFormData, 'tags'>>
 ) => {
   if (imageFileList != null && cropCoordinates != null) {
     return true;
@@ -32,4 +40,19 @@ export const shouldUpdateRecipe = (
   return (
     Object.keys(getUpdatedRecipeFields(currentRecipe, newRecipe)).length > 0
   );
+};
+
+export const getUpdatedTags = (
+  currentTags: string[] | null | undefined,
+  newTags: string[] | null | undefined
+) => {
+  const addTags = newTags?.filter((tag) => {
+    !currentTags?.includes(tag);
+  });
+
+  const removeTags = currentTags?.filter((tag) => {
+    !newTags?.includes(tag);
+  });
+
+  return { addTags, removeTags };
 };
