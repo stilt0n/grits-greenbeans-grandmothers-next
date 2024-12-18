@@ -19,6 +19,7 @@ export interface RecipeFormProps {
   onSubmitSuccess: SubmitHandler<RecipeFormData>;
   onSubmitError: SubmitErrorHandler<RecipeFormData>;
   initialRecipeData?: RecipeFormData;
+  initialTags?: string[];
   _hackyFeatureFlag?: boolean;
 }
 
@@ -79,6 +80,7 @@ export const RecipeForm = ({
             label='Recipe Tags'
             onChange={onTagsChange}
             inputProps={register('tags')}
+            initialTags={props.initialTags}
           />
         ) : null}
         <FormInput label='Author' type='text' {...register('author')} />

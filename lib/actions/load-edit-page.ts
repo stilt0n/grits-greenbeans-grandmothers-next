@@ -1,16 +1,18 @@
 'use server';
+
 import { getRecipes } from '@/lib/repository/recipe-store/query';
 import { createWhereIdClause } from '@/lib/repository/recipe-store/utils';
 import { recipePageSchema } from '@/lib/translation/schema';
+import { convertPageToForm } from '../translation/parsers';
 
-export const loadRecipePageAction = async (recipeId: number) => {
+export const loadRecipeFormAction = async (recipeId: number) => {
   const recipes = await getRecipes({
     keys: [
       'title',
       'description',
-      'instructions',
       'author',
       'recipeTime',
+      'instructions',
       'imageUrl',
       'tags',
     ],
@@ -22,5 +24,13 @@ export const loadRecipePageAction = async (recipeId: number) => {
   }
 
   const { success, data } = recipePageSchema.safeParse(recipes[0]);
-  return success ? data : undefined;
+  if (!success) {
+    return undefined;
+  }
+
+  const recipeFormData = convertPageToForm(data);
+  return {
+    recipe: recipeFormData,
+    initialTags: data.tags,
+  };
 };

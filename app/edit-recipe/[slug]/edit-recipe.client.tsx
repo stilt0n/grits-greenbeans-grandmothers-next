@@ -6,9 +6,14 @@ import {
   type RecipeFormProps,
 } from '@/components/recipe-edit-form.client';
 import { recipeUpdateAction } from '@/app/actions/form-actions';
-import type { RecipeFormDataWithId } from '@/app/actions/load-recipe';
 import { recipeToFormData } from '@/lib/formUtils';
-import { getUpdatedTags, shouldUpdateRecipe } from '@/lib/database/utils';
+import { shouldUpdateRecipe } from '@/lib/database/utils';
+import { RecipeFormData } from '@/lib/translation/schema';
+
+interface RecipeFormDataWithId extends RecipeFormData {
+  id: number;
+  initialTags?: string[];
+}
 
 interface EditRecipeProps {
   recipe: RecipeFormDataWithId;
@@ -16,7 +21,7 @@ interface EditRecipeProps {
 
 export interface UseEditRecipeFromFormProps {
   id: number;
-  recipeData: Omit<RecipeFormDataWithId, 'id' | 'imageUrl'>;
+  recipeData: RecipeFormData;
   redirect?: string;
   dryRun?: boolean;
 }
@@ -35,15 +40,6 @@ const useEditRecipeFromForm = ({
     const { tags: currentTags, ...recipeDiffData } = recipeData;
     const { tags: newTags, ...newData } = data;
 
-    // TODO: I am ignoring tag edits for now
-    const { addTags, removeTags } = getUpdatedTags(
-      currentTags,
-      newTags ? JSON.parse(newTags) : null
-    );
-    if (addTags || removeTags) {
-      console.log(`should update tags. Add ${addTags}. Remove ${removeTags}`);
-    }
-
     if (!shouldUpdateRecipe(recipeDiffData, newData)) {
       return;
     }
@@ -56,7 +52,7 @@ const useEditRecipeFromForm = ({
 };
 
 export const EditRecipe = ({ recipe }: EditRecipeProps) => {
-  const { id, imageUrl: _, ...recipeData } = recipe;
+  const { id, initialTags, ...recipeData } = recipe;
   const editRecipeFromForm = useEditRecipeFromForm({
     id,
     recipeData,
@@ -76,6 +72,8 @@ export const EditRecipe = ({ recipe }: EditRecipeProps) => {
           cropCoordinates: null,
           imageFileList: null,
         }}
+        initialTags={initialTags}
+        _hackyFeatureFlag={true}
       />
     </div>
   );
