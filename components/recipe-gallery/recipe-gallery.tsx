@@ -1,4 +1,3 @@
-import * as db from '@/lib/database';
 import { GalleryPagination } from './gallery-pagination.client';
 import { RecipeCard } from './recipe-card.client';
 import { z } from 'zod';
@@ -6,7 +5,8 @@ import { NextSearchParams } from '@/types/nextTypes';
 import { cn } from '@/lib/utils';
 import { Suspense } from 'react';
 import { unstable_noStore as noStore } from 'next/cache';
-
+import { loadGalleryPageAction } from '@/lib/actions/load-gallery-page';
+import { loadPageCountAction as defaultLoadPageCountAction } from '@/lib/actions/load-page-count';
 export interface LoadRecipeArgs {
   page: number;
   pageSize: number;
@@ -43,38 +43,12 @@ export const createSearchParamProps = (searchParams: NextSearchParams) => {
   };
 };
 
-const defaultLoadRecipeAction: LoadRecipeAction = async ({
-  page,
-  pageSize,
-  filter,
-}) => {
-  'use server';
-  console.log(`using filter ${filter}`);
-  const result = await db.getRecipes({
-    fields: ['id', 'title', 'description', 'imageUrl', 'author'],
-    paginate: { page, pageSize },
-    filter,
-  });
-  const recipes = returnedRecipesSchema.parse(result);
-  return recipes;
-};
-
-const defaultLoadPageCountAction: LoadPageCountAction = async ({
-  pageSize,
-  filter,
-}) => {
-  'use server';
-  console.log(`using filter ${filter ?? 'none'}`);
-  const [{ count }] = await db.getRecipeCount();
-  return Math.ceil(count / pageSize);
-};
-
 const RecipeGallery = async ({
   page,
   pageSize = defaultPageSize,
   filter,
   loadPageCountAction = defaultLoadPageCountAction,
-  loadRecipeAction = defaultLoadRecipeAction,
+  loadRecipeAction = loadGalleryPageAction,
   ...props
 }: RecipeGalleryProps) => {
   // TODO: improve on this by being more granular with caching strategy

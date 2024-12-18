@@ -77,12 +77,22 @@ export const baseRecipeSchema = z.object({
 export const tagsSchema = z.array(z.string()).optional();
 
 export const recipePageSchema = baseRecipeSchema.extend({
-  imageUrl: z.string().optional(),
+  imageUrl: z.string().optional().nullable(),
   tags: tagsSchema,
 });
+
+export const galleryItemSchema = recipePageSchema
+  .pick({
+    title: true,
+    author: true,
+    description: true,
+    imageUrl: true,
+  })
+  .extend({ id: Integer });
 
 export type RecipeFormData = z.infer<typeof recipeFormSchema>;
 export type BaseRecipe = z.infer<typeof baseRecipeSchema>;
 export type TagsArray = z.infer<typeof tagsSchema>;
 export type RecipePageData = z.infer<typeof recipePageSchema>;
 export type CropCoordinates = z.infer<typeof cropCoordinateSchema>;
+export type GalleryItemData = z.infer<typeof galleryItemSchema>;
