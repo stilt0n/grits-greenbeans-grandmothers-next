@@ -1,8 +1,8 @@
 import { notFound } from 'next/navigation';
-import { loadRecipe } from '@/app/actions/load-recipe';
 import { EditRecipe } from './edit-recipe.client';
 import { unstable_noStore as noStore } from 'next/cache';
 import { Suspense } from 'react';
+import { loadRecipeFormAction } from '@/lib/actions/load-edit-page';
 
 const Page = async ({ params }: { params: { slug: string } }) => {
   noStore();
@@ -12,14 +12,16 @@ const Page = async ({ params }: { params: { slug: string } }) => {
     return notFound();
   }
 
-  const recipe = await loadRecipe(recipeId);
-  if (recipe === null) {
+  const result = await loadRecipeFormAction(recipeId);
+  if (result === undefined) {
     return notFound();
   }
 
+  const { recipe, initialTags } = result;
+
   return (
     <Suspense fallback='Loading...'>
-      <EditRecipe recipe={{ id: recipeId, ...recipe }} />
+      <EditRecipe recipe={{ id: recipeId, initialTags, ...recipe }} />
     </Suspense>
   );
 };

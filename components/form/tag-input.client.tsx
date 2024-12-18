@@ -8,13 +8,14 @@ import { PlusIcon } from '@radix-ui/react-icons';
 
 export interface TagInputProps {
   label: string;
+  initialTags?: string[];
   className?: string;
   onChange?: (tags: string[]) => void;
   inputProps?: Omit<HTMLProps<HTMLInputElement>, 'type' | 'hidden'>;
 }
 
 export const TagInput = ({ inputProps, ...props }: TagInputProps) => {
-  const [tags, setTags] = useState<string[]>([]);
+  const [tags, setTags] = useState<string[]>(props.initialTags ?? []);
   const [value, setValue] = useState('');
 
   const onTagCreate = () => {
