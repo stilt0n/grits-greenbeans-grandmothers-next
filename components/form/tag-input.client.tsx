@@ -54,7 +54,10 @@ export const TagInput = ({ inputProps, ...props }: TagInputProps) => {
         <Button
           className='self-end'
           aria-label='create tag'
-          onClick={onTagCreate}
+          onClick={(e) => {
+            e.preventDefault();
+            onTagCreate();
+          }}
         >
           <PlusIcon />
         </Button>
