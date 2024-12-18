@@ -70,8 +70,8 @@ export const baseRecipeSchema = z.object({
   instructions: z
     .string()
     .min(1, 'Instructions cannot be blank and cannot use the default template'),
-  author: z.string().optional().default('unknown author'),
-  recipeTime: z.string().optional(),
+  author: z.string().optional().nullable().default('unknown author'),
+  recipeTime: z.string().optional().nullable(),
 });
 
 export const tagsSchema = z.array(z.string()).optional();

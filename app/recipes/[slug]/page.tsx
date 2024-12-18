@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import { loadRecipe } from '@/app/actions/load-recipe';
+import { loadRecipePageAction } from '@/lib/actions/load-recipe-page';
 import { currentUser } from '@clerk/nextjs/server';
 import { hasElevatedPermissions } from '@/lib/auth';
 import { DecorativeTag as Tag } from '@/components/form/decorative-tag';
@@ -16,8 +16,8 @@ const Page = async ({ params }: { params: { slug: string } }) => {
     return notFound();
   }
 
-  const recipe = await loadRecipe(recipeId);
-  if (recipe === null) {
+  const recipe = await loadRecipePageAction(recipeId);
+  if (recipe === undefined) {
     return notFound();
   }
 
