@@ -1,8 +1,8 @@
 import { recipes } from '@/db/schema';
-import { RecipePageData } from '@/lib/translation/schema';
+import { InsertRecipe } from '@/db/schema';
 import { like, eq } from 'drizzle-orm';
 
-export type ColumnKey = keyof RecipePageData;
+export type ColumnKey = keyof InsertRecipe | 'tags';
 export type QueryColumnKey = Exclude<ColumnKey, 'tags'>;
 
 export const queryFromKeys = (keys: QueryColumnKey[]) => {
@@ -12,7 +12,7 @@ export const queryFromKeys = (keys: QueryColumnKey[]) => {
   return Object.fromEntries(keys.map((key) => [key, true]));
 };
 
-export const splitRecipeAndTags = (keys: (keyof RecipePageData)[]) => ({
+export const splitRecipeAndTags = (keys: ColumnKey[]) => ({
   recipeKeys: keys.filter((key) => key !== 'tags'),
   includeTags: keys.includes('tags'),
 });

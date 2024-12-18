@@ -1,5 +1,8 @@
+import { SQLiteSelect } from 'drizzle-orm/sqlite-core';
 import { ColumnKey, splitRecipeAndTags, queryFromKeys } from './utils';
 import { db } from '@/db';
+import { recipes } from '@/db/schema';
+import { count, like } from 'drizzle-orm';
 
 interface GetRecipeWithTagsArgs {
   keys: ColumnKey[];
@@ -74,4 +77,17 @@ export const getRecipes = async ({
   }
 
   return mergedResults;
+};
+
+const withFilter = <T extends SQLiteSelect>(qb: T, filter: string) => {
+  return qb.where(like(recipes.title, `%${filter}%`));
+};
+
+export const getRecipeCount = (searchString?: string) => {
+  const qb = db.select({ count: count() }).from(recipes).$dynamic();
+  if (searchString) {
+    withFilter(qb, searchString);
+  }
+
+  return qb;
 };
