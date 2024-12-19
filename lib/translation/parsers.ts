@@ -1,9 +1,9 @@
 import {
-  recipeFormSchema,
-  RecipeFormData,
-  RecipePageData,
-  IntermediateRecipe,
   intermediateSchema,
+  recipeFormSchema,
+  type IntermediateRecipe,
+  type RecipeFormData,
+  type RecipePageData,
 } from './schema';
 
 export const convertPageToForm = ({
@@ -49,3 +49,25 @@ export function convertFormDataToRecipe(
   const validatedData = intermediateSchema.parse(data);
   return validatedData;
 }
+
+export const recipeToFormData = ({
+  imageFileList,
+  ...serializableData
+}: Partial<RecipeFormData>) => {
+  const formData = new FormData();
+
+  if ((imageFileList?.length ?? 1) !== 1) {
+    throw new TypeError(
+      `Expected imageFileList to be of nullish or have length=1. Received length=${imageFileList?.length}`
+    );
+  }
+
+  if (imageFileList?.length === 1) {
+    formData.append('image', imageFileList[0]);
+  }
+
+  Object.entries(serializableData).forEach(([key, value]) => {
+    formData.append(key, value === null ? 'null' : value);
+  });
+  return formData;
+};
