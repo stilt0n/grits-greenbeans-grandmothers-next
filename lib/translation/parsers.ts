@@ -2,7 +2,6 @@ import {
   recipeFormSchema,
   RecipeFormData,
   RecipePageData,
-  recipePageSchema,
   IntermediateRecipe,
   intermediateSchema,
 } from './schema';
