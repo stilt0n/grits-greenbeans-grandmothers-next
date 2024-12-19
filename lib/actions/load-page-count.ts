@@ -1,6 +1,6 @@
 'use server';
 
-import { getRecipeCount } from '@/lib/repository/recipe-store/query';
+import { getRecipeCount } from '@/lib/repository/recipe-store/read';
 
 interface LoadPageCountArgs {
   pageSize: number;
