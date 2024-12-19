@@ -4,25 +4,23 @@ import {
   RecipeForm,
   RecipeFormProps,
 } from '@/components/recipe-edit-form.client';
-import { recipeCreateAction } from '@/app/actions/form-actions';
+import { createRecipeAction } from '@/lib/actions/create-recipe';
 import { useRouter } from 'next/navigation';
-import { recipeToFormData } from '@/lib/formUtils';
+import { recipeToFormData } from '@/lib/translation/parsers';
 
 interface UseCreateRecipeFromFormProps {
   redirect?: string;
-  dryRun?: boolean;
 }
 
 const useCreateRecipeFromForm = ({
   redirect = '/recipes',
-  dryRun = false,
 }: UseCreateRecipeFromFormProps = {}): RecipeFormProps['onSubmitSuccess'] => {
   const router = useRouter();
   const [, startTransition] = useTransition();
 
   return (data) => {
     startTransition(async () => {
-      const recipeId = await recipeCreateAction(recipeToFormData(data), dryRun);
+      const recipeId = await createRecipeAction(recipeToFormData(data));
       if (redirect && recipeId !== undefined) {
         router.push(`${redirect}/${recipeId}`);
       }

@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import { loadRecipe } from '@/app/actions/load-recipe';
+import { loadRecipePageAction } from '@/lib/actions/load-recipe-page';
 import { currentUser } from '@clerk/nextjs/server';
 import { hasElevatedPermissions } from '@/lib/auth';
 import { DecorativeTag as Tag } from '@/components/form/decorative-tag';
@@ -16,8 +16,8 @@ const Page = async ({ params }: { params: { slug: string } }) => {
     return notFound();
   }
 
-  const recipe = await loadRecipe(recipeId);
-  if (recipe === null) {
+  const recipe = await loadRecipePageAction(recipeId);
+  if (recipe === undefined) {
     return notFound();
   }
 
@@ -26,7 +26,7 @@ const Page = async ({ params }: { params: { slug: string } }) => {
   let TagArea: ReactNode = null;
   if (recipe.tags && recipe.tags.length > 0) {
     TagArea = (
-      <div className='flex flex-col'>
+      <div className='flex flex-col mb-2'>
         <h2 className='text-xl'>Tags:</h2>
         <div className='flex flex-row gap-2'>
           {recipe.tags.map((tag) => (
