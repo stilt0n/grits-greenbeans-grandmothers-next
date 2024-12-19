@@ -8,6 +8,7 @@ import { convertFormDataToRecipe } from '@/lib/translation/parsers';
 import { preprocessImage } from '@/lib/repository/image-store/utils';
 import { uploadFileToImageStore } from '@/lib/repository/image-store/upload';
 import { RecipePageData } from '@/lib/translation/schema';
+import { createRecipe } from '@/lib/repository/recipe-store/create';
 
 const xor = (a: any, b: any) => !!((a || b) && !(a && b));
 
@@ -48,4 +49,6 @@ export const createRecipeAction = async (formData: FormData) => {
   // as well in case someone submits malicious HTML directly to
   // the API endpoint instead of going through the GUI
   recipeData.instructions = sanitizeHtml(recipeData.instructions);
+
+  return createRecipe(recipeData);
 };
