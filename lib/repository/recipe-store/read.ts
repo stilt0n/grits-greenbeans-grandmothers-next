@@ -1,8 +1,14 @@
 import { SQLiteSelect } from 'drizzle-orm/sqlite-core';
-import { ColumnKey, splitRecipeAndTags, queryFromKeys } from './utils';
+import {
+  ColumnKey,
+  splitRecipeAndTags,
+  queryFromKeys,
+  createWhereIdClause,
+} from './utils';
 import { db } from '@/db';
 import { recipes } from '@/db/schema';
 import { count, like } from 'drizzle-orm';
+import { getTagsUtilitySchema } from '@/lib/translation/utils';
 
 interface GetRecipeWithTagsArgs {
   keys: ColumnKey[];
@@ -90,4 +96,13 @@ export const getRecipeCount = (searchString?: string) => {
   }
 
   return qb;
+};
+
+export const getRecipeTags = async (recipeId: number) => {
+  const result = await getRecipes({
+    keys: ['id', 'tags'],
+    whereClause: createWhereIdClause(recipeId),
+  });
+  const [{ tags }] = getTagsUtilitySchema.parse(result);
+  return tags ?? [];
 };
