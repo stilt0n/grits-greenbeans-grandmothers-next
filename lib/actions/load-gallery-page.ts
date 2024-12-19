@@ -5,7 +5,7 @@ import {
   createPaginateClause,
   createWhereSearchClause,
 } from '@/lib/repository/recipe-store/utils';
-import { getRecipes } from '@/lib/repository/recipe-store/query';
+import { getRecipes } from '@/lib/repository/recipe-store/read';
 import { z } from 'zod';
 
 export interface LoadGalleryArgs {

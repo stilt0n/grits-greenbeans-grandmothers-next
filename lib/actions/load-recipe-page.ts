@@ -1,5 +1,5 @@
 'use server';
-import { getRecipes } from '@/lib/repository/recipe-store/query';
+import { getRecipes } from '@/lib/repository/recipe-store/read';
 import { createWhereIdClause } from '@/lib/repository/recipe-store/utils';
 import { recipePageSchema } from '@/lib/translation/schema';
 
