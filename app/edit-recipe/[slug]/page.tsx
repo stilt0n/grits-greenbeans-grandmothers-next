@@ -21,7 +21,13 @@ const Page = async ({ params }: { params: { slug: string } }) => {
 
   return (
     <Suspense fallback='Loading...'>
-      <EditRecipe recipe={{ id: recipeId, initialTags, ...recipe }} />
+      <EditRecipe
+        recipe={{
+          id: recipeId,
+          initialTags: initialTags ?? undefined,
+          ...recipe,
+        }}
+      />
     </Suspense>
   );
 };
