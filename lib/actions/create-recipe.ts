@@ -1,7 +1,6 @@
 'use server';
 
 import sanitizeHtml from 'sanitize-html';
-import { revalidatePath } from 'next/cache';
 import { currentUser } from '@clerk/nextjs/server';
 import { hasElevatedPermissions } from '@/lib/auth';
 import { convertFormDataToRecipe } from '@/lib/translation/parsers';
