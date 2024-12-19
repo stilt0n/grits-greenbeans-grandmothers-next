@@ -26,7 +26,7 @@ const Page = async ({ params }: { params: { slug: string } }) => {
   let TagArea: ReactNode = null;
   if (recipe.tags && recipe.tags.length > 0) {
     TagArea = (
-      <div className='flex flex-col'>
+      <div className='flex flex-col mb-2'>
         <h2 className='text-xl'>Tags:</h2>
         <div className='flex flex-row gap-2'>
           {recipe.tags.map((tag) => (

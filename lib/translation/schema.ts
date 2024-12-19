@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { isValid, z } from 'zod';
 
 const isValidCropCoordinate = (str: string) => {
   try {
@@ -74,7 +74,7 @@ export const baseRecipeSchema = z.object({
   recipeTime: z.string().optional().nullable(),
 });
 
-export const tagsSchema = z.array(z.string()).optional();
+export const tagsSchema = z.array(z.string()).nullable().optional();
 
 export const recipePageSchema = baseRecipeSchema.extend({
   imageUrl: z.string().optional().nullable(),
@@ -90,9 +90,38 @@ export const galleryItemSchema = recipePageSchema
   })
   .extend({ id: Integer });
 
+export const intermediateSchema = baseRecipeSchema.extend({
+  tags: z
+    .string()
+    .nullable()
+    .refine((str) => str === null || isValidJsonArray(str))
+    .transform((str) => {
+      if (str) {
+        const validatedArray = tagsSchema.parse(JSON.parse(str));
+        return validatedArray;
+      }
+      return null;
+    }),
+  cropCoordinates: z
+    .string()
+    .nullable()
+    .refine((str) => str === null || isValidCropCoordinate(str))
+    .transform((str) => {
+      if (str) {
+        const validatedCropCoordinates = cropCoordinateSchema.parse(
+          JSON.parse(str)
+        );
+        return validatedCropCoordinates;
+      }
+      return null;
+    }),
+  image: z.unknown().transform((value) => value as File | undefined),
+});
+
 export type RecipeFormData = z.infer<typeof recipeFormSchema>;
 export type BaseRecipe = z.infer<typeof baseRecipeSchema>;
 export type TagsArray = z.infer<typeof tagsSchema>;
 export type RecipePageData = z.infer<typeof recipePageSchema>;
 export type CropCoordinates = z.infer<typeof cropCoordinateSchema>;
 export type GalleryItemData = z.infer<typeof galleryItemSchema>;
+export type IntermediateRecipe = z.infer<typeof intermediateSchema>;
