@@ -5,10 +5,9 @@ import {
   RecipeForm,
   type RecipeFormProps,
 } from '@/components/recipe-edit-form.client';
-import { recipeUpdateAction } from '@/app/actions/form-actions';
-import { recipeToFormData } from '@/lib/formUtils';
-import { shouldUpdateRecipe } from '@/lib/database/utils';
+import { recipeToFormData } from '@/lib/translation/parsers';
 import { RecipeFormData } from '@/lib/translation/schema';
+import { updateRecipeAction } from '@/lib/actions/update-recipe';
 
 interface RecipeFormDataWithId extends RecipeFormData {
   id: number;
@@ -33,19 +32,16 @@ const useEditRecipeFromForm = ({
   dryRun = false,
 }: UseEditRecipeFromFormProps): RecipeFormProps['onSubmitSuccess'] => {
   const router = useRouter();
-  const [, startTransition] = useTransition();
+  const [transitioning, startTransition] = useTransition();
 
   return (data) => {
-    // TODO: refactor this to be less awful
-    const { tags: currentTags, ...recipeDiffData } = recipeData;
-    const { tags: newTags, ...newData } = data;
-
-    if (!shouldUpdateRecipe(recipeDiffData, newData)) {
+    if (transitioning) {
+      console.log('recipe is already submitting');
       return;
     }
     startTransition(async () => {
       const formData = recipeToFormData(data);
-      await recipeUpdateAction(formData, id, dryRun);
+      await updateRecipeAction({ formData, id });
       router.push(`${redirect}/${id}`);
     });
   };
@@ -68,7 +64,7 @@ export const EditRecipe = ({ recipe }: EditRecipeProps) => {
         }}
         initialRecipeData={{
           ...initialRecipeData,
-          tags: tags ? JSON.stringify(tags) : null,
+          tags: tags,
           cropCoordinates: null,
           imageFileList: null,
         }}

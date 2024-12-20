@@ -9,7 +9,6 @@ const isAdminPermissionRoute = createRouteMatcher(['/(api|trpc)(.*)']);
 
 export default clerkMiddleware((auth, req) => {
   if (isWritePermissionRoute(req)) {
-    console.log('in write permission route');
     auth().protect(() => {
       const { userId, sessionClaims } = auth();
       return (

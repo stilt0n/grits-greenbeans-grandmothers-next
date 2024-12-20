@@ -7,7 +7,7 @@ import {
 } from './utils';
 import { db } from '@/db';
 import { recipes } from '@/db/schema';
-import { count, like } from 'drizzle-orm';
+import { count, eq, like } from 'drizzle-orm';
 import { getTagsUtilitySchema } from '@/lib/translation/utils';
 
 interface GetRecipeWithTagsArgs {
@@ -105,4 +105,17 @@ export const getRecipeTags = async (recipeId: number) => {
   });
   const [{ tags }] = getTagsUtilitySchema.parse(result);
   return tags ?? [];
+};
+
+export const getRecipeImageUrl = async (recipeId: number) => {
+  const result = await db
+    .select({ imageUrl: recipes.imageUrl })
+    .from(recipes)
+    .where(eq(recipes.id, recipeId));
+
+  if (result.length === 1) {
+    return result[0].imageUrl;
+  }
+
+  return null;
 };

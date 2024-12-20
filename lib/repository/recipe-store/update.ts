@@ -29,22 +29,23 @@ export const updateRecipe = ({
       // for realistic tag array sizes linear includes is probably
       // faster than the inherent overhead of a set
       const removeIds = extractColumn(
-        existingTagRows.filter(({ name }) => {
-          tagsToRemove.includes(name);
-        }),
+        existingTagRows.filter(({ name }) => tagsToRemove.includes(name)),
         'id'
       );
 
       if (removeIds.length !== tagsToRemove.length) {
-        trx.rollback();
         console.error(
           'invariant: attempting to delete tags that do not exist.'
         );
+        console.error(`tagsToRemove: [${tagsToRemove.join(', ')}]`);
+        console.error(`removeIds: [${removeIds.join(', ')}]`);
+        trx.rollback();
         return;
       }
 
       if (removeIds.length > 0) {
-        trx
+        console.log('removing ids');
+        const result = await trx
           .delete(recipesToTags)
           .where(
             and(
@@ -52,6 +53,8 @@ export const updateRecipe = ({
               inArray(recipesToTags.tagId, removeIds)
             )
           );
+
+        console.log(result);
       }
 
       const existingTagNames = extractColumn(existingTagRows, 'name');
