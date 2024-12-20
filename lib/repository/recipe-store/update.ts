@@ -58,6 +58,10 @@ export const updateRecipe = ({
         .filter((tag) => !existingTagNames.includes(tag))
         .map((name) => ({ name }));
 
+      const tagIdsToAdd = existingTagRows
+        .filter(({ name }) => tagsToAdd.includes(name))
+        .map(({ id: tagId }) => ({ tagId }));
+
       if (newTags.length > 0) {
         // note: we don't expect conflicts here since we
         // deliberately filtered them out
@@ -66,9 +70,14 @@ export const updateRecipe = ({
           .values(newTags)
           .onConflictDoNothing()
           .returning({ tagId: tags.id });
+
+        tagIdsToAdd.push(...newTagIds);
+      }
+
+      if (tagIdsToAdd.length > 0) {
         await trx
           .insert(recipesToTags)
-          .values(newTagIds.map(({ tagId }) => ({ tagId, recipeId })))
+          .values(tagIdsToAdd.map(({ tagId }) => ({ tagId, recipeId })))
           .onConflictDoNothing();
       }
     }
