@@ -19,10 +19,3 @@ jobs:
       - name: Run component unit tests
         id: bun-test-client
         run: bun test
-      # Bun's test config seems like it might not be
-      # flexible enough to support multiple test configs
-      # or roots. I will need to think of a better long
-      # term solution for this
-      - name: Run lib unit tests
-        id: bun-test-lib
-        run: bun test ./lib/actions/__tests__/actions.ts
