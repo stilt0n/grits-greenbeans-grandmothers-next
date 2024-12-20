@@ -18,7 +18,6 @@ export const updateRecipe = ({
   tagsToRemove,
 }: UpdateRecipeArgs) => {
   return db.transaction(async (trx) => {
-    // update tags
     if (tagsToAdd.length > 0 || tagsToRemove.length > 0) {
       // check for existing tags
       const existingTagRows = await trx
@@ -44,8 +43,7 @@ export const updateRecipe = ({
       }
 
       if (removeIds.length > 0) {
-        console.log('removing ids');
-        const result = await trx
+        await trx
           .delete(recipesToTags)
           .where(
             and(
@@ -53,8 +51,6 @@ export const updateRecipe = ({
               inArray(recipesToTags.tagId, removeIds)
             )
           );
-
-        console.log(result);
       }
 
       const existingTagNames = extractColumn(existingTagRows, 'name');

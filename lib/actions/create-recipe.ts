@@ -8,8 +8,7 @@ import { preprocessImage } from '@/lib/repository/image-store/utils';
 import { uploadFileToImageStore } from '@/lib/repository/image-store/upload';
 import { RecipePageData } from '@/lib/translation/schema';
 import { createRecipe } from '@/lib/repository/recipe-store/create';
-
-const xor = (a: any, b: any) => !!((a || b) && !(a && b));
+import { xor } from './action-utils';
 
 export const createRecipeAction = async (formData: FormData) => {
   // middleware should already be protecting this route, but this serves
@@ -30,6 +29,7 @@ export const createRecipeAction = async (formData: FormData) => {
     console.error(
       'Assertion error: unexpectedly recieved only one of image and cropCoordinates'
     );
+    return;
   }
 
   const recipeData: RecipePageData = { ...recipe, imageUrl: null };

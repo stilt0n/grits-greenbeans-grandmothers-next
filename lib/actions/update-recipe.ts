@@ -10,19 +10,12 @@ import { preprocessImage } from '@/lib/repository/image-store/utils';
 import { uploadFileToImageStore } from '@/lib/repository/image-store/upload';
 import { RecipePageData } from '@/lib/translation/schema';
 import { updateRecipe } from '@/lib/repository/recipe-store/update';
+import { xor, getTagOperations } from './action-utils';
 
 export interface UpdateRecipeActionArgs {
   formData: FormData;
   id: number;
 }
-
-const xor = (a: any, b: any) => !!((a || b) && !(a && b));
-
-const getTagOperations = (previousTags: string[], currentTags: string[]) => {
-  const tagsToRemove = previousTags.filter((tag) => !currentTags.includes(tag));
-  const tagsToAdd = currentTags.filter((tag) => !previousTags.includes(tag));
-  return { tagsToAdd, tagsToRemove };
-};
 
 export const updateRecipeAction = async ({
   formData,
