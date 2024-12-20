@@ -46,6 +46,7 @@ export const updateRecipeAction = async ({
     console.error(
       'Assertion error: unexpectedly recieved only one of image and cropCoordinates'
     );
+    return;
   }
 
   const previousTags = await getRecipeTags(id);
