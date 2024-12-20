@@ -1,3 +1,4 @@
+import { IMAGE_BASE_URL } from '../constants';
 import {
   intermediateSchema,
   recipeFormSchema,
@@ -70,4 +71,8 @@ export const recipeToFormData = ({
     formData.append(key, value === null ? 'null' : value);
   });
   return formData;
+};
+
+export const convertImageUrlToImageId = (imageUrl: string) => {
+  return imageUrl.replace(`${IMAGE_BASE_URL}/images/`, '');
 };
