@@ -19,7 +19,10 @@ export const TagInput = ({ inputProps, ...props }: TagInputProps) => {
   const [value, setValue] = useState('');
 
   const onTagCreate = () => {
-    const updatedTags = [...tags, value];
+    if (value === '') {
+      return;
+    }
+    const updatedTags = [...tags, value.toLowerCase()];
     setTags(updatedTags);
     props.onChange?.(updatedTags);
     setValue('');
@@ -34,7 +37,9 @@ export const TagInput = ({ inputProps, ...props }: TagInputProps) => {
             key={text}
             text={text}
             onClose={() => {
-              setTags((current) => current.toSpliced(index, 1));
+              const updatedTags = tags.toSpliced(index, 1);
+              setTags(updatedTags);
+              props.onChange?.(updatedTags);
             }}
           />
         ))}
