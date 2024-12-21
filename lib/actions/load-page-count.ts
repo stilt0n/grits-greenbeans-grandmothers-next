@@ -2,7 +2,7 @@
 
 import { getRecipeCount } from '@/lib/repository/recipe-store/read';
 
-interface LoadPageCountArgs {
+export interface LoadPageCountArgs {
   pageSize: number;
   filter?: string;
   debug?: boolean;

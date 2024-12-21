@@ -7,19 +7,10 @@ import { Suspense } from 'react';
 import { unstable_noStore as noStore } from 'next/cache';
 import { loadGalleryPageAction } from '@/lib/actions/load-gallery-page';
 import { loadPageCountAction as defaultLoadPageCountAction } from '@/lib/actions/load-page-count';
-export interface LoadRecipeArgs {
-  page: number;
-  pageSize: number;
-  filter?: string;
-}
 
-export type LoadRecipeAction = (
-  args: LoadRecipeArgs
-) => Promise<ReturnedRecipeInfo>;
+export type LoadRecipeAction = typeof loadGalleryPageAction;
 
-export type LoadPageCountAction = (
-  args: Omit<LoadRecipeArgs, 'page'>
-) => Promise<number>;
+export type LoadPageCountAction = typeof defaultLoadPageCountAction;
 
 export interface RecipeGalleryProps {
   page: number;
@@ -53,7 +44,7 @@ const RecipeGallery = async ({
 }: RecipeGalleryProps) => {
   // TODO: improve on this by being more granular with caching strategy
   noStore();
-  const pageCount = await loadPageCountAction({ pageSize });
+  const pageCount = await loadPageCountAction({ pageSize, filter });
   const recipes = await loadRecipeAction({ page, pageSize, filter });
   return (
     <Suspense fallback={<p>Loading...</p>}>
@@ -72,21 +63,9 @@ const RecipeGallery = async ({
   );
 };
 
-const returnedRecipesSchema = z.array(
-  z.object({
-    id: z.number(),
-    title: z.string(),
-    description: z.string(),
-    imageUrl: z.string().optional().nullable(),
-    author: z.string().optional().nullable(),
-  })
-);
-
 const searchParamsSchema = z.object({
   page: z.coerce.number().optional(),
   query: z.string().optional(),
 });
-
-type ReturnedRecipeInfo = z.infer<typeof returnedRecipesSchema>;
 
 export default RecipeGallery;
