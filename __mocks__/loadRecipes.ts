@@ -36,11 +36,12 @@ export const mockLoadRecipeAction: LoadRecipeAction = async ({
     ? mockDatabase.filter(makeFilter(filter))
     : mockDatabase;
   return filteredDatabase
-    .map(({ id, title, description, imageUrl }) => ({
+    .map(({ id, title, description, imageUrl, author }) => ({
       id,
       title,
       description,
       imageUrl,
+      author,
     }))
     .slice(page * pageSize, (page + 1) * pageSize);
 };
