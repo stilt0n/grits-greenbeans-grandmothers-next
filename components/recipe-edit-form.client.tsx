@@ -8,7 +8,7 @@ import {
   recipeFormSchema,
   type RecipeFormData,
   type CropCoordinates,
-} from '@/types/recipeTypes';
+} from '@/lib/translation/schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormInput } from '@/components/form/form-input';
 import { Button } from '@/components/ui/button';
@@ -20,7 +20,6 @@ export interface RecipeFormProps {
   onSubmitError: SubmitErrorHandler<RecipeFormData>;
   initialRecipeData?: RecipeFormData;
   initialTags?: string[];
-  _hackyFeatureFlag?: boolean;
 }
 
 const blankRecipeData: RecipeFormData = {
@@ -75,14 +74,12 @@ export const RecipeForm = ({
           required
           {...register('description')}
         />
-        {props._hackyFeatureFlag ? (
-          <TagInput
-            label='Recipe Tags'
-            onChange={onTagsChange}
-            inputProps={register('tags')}
-            initialTags={props.initialTags}
-          />
-        ) : null}
+        <TagInput
+          label='Recipe Tags'
+          onChange={onTagsChange}
+          inputProps={register('tags')}
+          initialTags={props.initialTags}
+        />
         <FormInput label='Author' type='text' {...register('author')} />
         <FormInput
           label='Recipe time'
