@@ -1,11 +1,9 @@
-'use client';
-
 import { hasElevatedPermissions } from '@/lib/auth';
-import { useUser } from '@clerk/nextjs';
+import { currentUser } from '@clerk/nextjs/server';
 import { ReactNode } from 'react';
 
-export const FamilyOnly = ({ children }: { children: ReactNode }) => {
-  const { user } = useUser();
+export const FamilyOnly = async ({ children }: { children: ReactNode }) => {
+  const user = await currentUser();
   const hasPermission = hasElevatedPermissions(user);
   if (!hasPermission) {
     return null;
