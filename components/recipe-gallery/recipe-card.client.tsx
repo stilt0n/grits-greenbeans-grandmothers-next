@@ -30,7 +30,7 @@ export const RecipeCardDesign = (props: RecipeCardDesignProps) => {
       className='flex flex-col md:flex-row w-full h-full max-4-4xl cursor-pointer'
       onClick={props.onClick}
     >
-      <div className='md:w-1/2 overflow-hidden rounded-t-lg md:rounded-t-none md:rounded-l-lg'>
+      <div className='h-2/5 md:h-auto md:w-2/5 overflow-hidden rounded-t-lg md:rounded-t-none md:rounded-l-lg'>
         <Image
           src={props.imageUrl || images.default}
           placeholder='blur'
@@ -41,17 +41,23 @@ export const RecipeCardDesign = (props: RecipeCardDesignProps) => {
           className='w-full h-full object-cover'
         />
       </div>
-      <div className='p-6 md:p-8 flex flex-col justify-center'>
-        <CardTitle id={titleId} className='text-lg'>
+      <div className='h-3/5 md:h-auto p-6 md:p-8 md:w-3/5 flex flex-col justify-between md:justify-center'>
+        <CardTitle id={titleId} className='text-lg md:text-2xl'>
           {props.title}
         </CardTitle>
         {props.author ? (
-          <p className='mt-4 mb-3 text-zinc-700 text-sm'>
-            Author: {props.author}
+          <p className='mt-4 mb-3 text-zinc-700 text-sm md:text-lg'>
+            {props.author}
           </p>
         ) : undefined}
-        <CardDescription className='mt-2 text-zinc-500' id={descriptionId}>
-          {props.description}
+        <CardDescription className='mt-2 text-zinc-500 flex-grow md:flex-none overflow-hidden'>
+          <div
+            className='line-clamp-4'
+            id={descriptionId}
+            title={props.description}
+          >
+            {props.description}
+          </div>
         </CardDescription>
         <div className='mt-6 flex gap-2'>
           <LinkButton
