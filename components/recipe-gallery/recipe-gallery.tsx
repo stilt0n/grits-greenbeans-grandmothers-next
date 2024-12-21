@@ -52,7 +52,10 @@ const RecipeGallery = async ({
         {recipes.map((recipe) => {
           const { id, ...recipeProps } = recipe;
           return (
-            <li key={recipeProps.title} className='col-span-7 col-start-2 h-96'>
+            <li
+              key={recipeProps.title}
+              className='col-span-7 col-start-2 h-[28rem]'
+            >
               <RecipeCard {...recipeProps} href={`/recipes/${id}`} />
             </li>
           );
