@@ -17,16 +17,18 @@ export interface RecipeCardProps {
   author?: string | null;
 }
 
-export const RecipeCard = (props: RecipeCardProps) => {
+export interface RecipeCardDesignProps extends RecipeCardProps {
+  onClick?: () => void;
+  linkDisabled?: boolean; // for storybook
+}
+
+export const RecipeCardDesign = (props: RecipeCardDesignProps) => {
   const titleId = useId();
   const descriptionId = useId();
-  const router = useRouter();
   return (
     <Card
       className='flex flex-col md:flex-row w-full h-full max-4-4xl cursor-pointer'
-      onClick={() => {
-        router.push(props.href);
-      }}
+      onClick={props.onClick}
     >
       <div className='md:w-1/2 overflow-hidden rounded-t-lg md:rounded-t-none md:rounded-l-lg'>
         <Image
@@ -56,6 +58,7 @@ export const RecipeCard = (props: RecipeCardProps) => {
             href={props.href}
             aria-labelledby={titleId}
             aria-describedby={descriptionId}
+            disabled={props.linkDisabled}
           >
             Read More
           </LinkButton>
@@ -63,4 +66,10 @@ export const RecipeCard = (props: RecipeCardProps) => {
       </div>
     </Card>
   );
+};
+
+export const RecipeCard = (props: RecipeCardProps) => {
+  const router = useRouter();
+  const onClick = () => router.push(props.href);
+  return <RecipeCardDesign onClick={onClick} {...props} />;
 };
