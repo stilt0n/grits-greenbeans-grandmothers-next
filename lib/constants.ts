@@ -9,6 +9,8 @@ export const images = {
     'https://grits-greenbeans-and-grandmothers.s3.us-east-005.backblazeb2.com/images/default_recipe_image_00.png',
 };
 
+export const FAMILY_TREE_LINK = process.env.family_tree_link ?? '';
+
 export const IMAGE_BASE_URL =
   'https://grits-greenbeans-and-grandmothers.s3.us-east-005.backblazeb2.com';
 
