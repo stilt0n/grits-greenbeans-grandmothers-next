@@ -5,7 +5,6 @@ import { NextPageBaseProps } from '@/types/nextTypes';
 
 const Home = async ({ searchParams }: NextPageBaseProps) => {
   const recipeGalleryProps = createSearchParamProps(searchParams);
-  console.log('filter', recipeGalleryProps.filter);
   return (
     <div>
       <RecipeGallery {...recipeGalleryProps} />

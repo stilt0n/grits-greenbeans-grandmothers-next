@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { HamburgerMenuIcon } from '@radix-ui/react-icons';
 import {
   Sheet,
@@ -14,11 +14,26 @@ import { useUser } from '@clerk/nextjs';
 import { hasElevatedPermissions } from '@/lib/auth';
 import { SidebarLogin } from './sidebar-login';
 import { Search } from './search.client';
+import { usePathname } from 'next/navigation';
+
+const useCloseOnRouteChange = (onClose: () => void) => {
+  const pathname = usePathname();
+  useEffect(() => {
+    onClose();
+  }, [pathname, onClose]);
+};
 
 export const SideNav = () => {
   const [open, setOpen] = useState(false);
   const { user } = useUser();
   const canCreateRecipes = hasElevatedPermissions(user);
+
+  // the callback keeps onClose stable for the dependency array
+  // it's not strictly necessary but I like this a little better
+  // than silencing the React linter warning
+  const closeNav = useCallback(() => setOpen(false), []);
+  useCloseOnRouteChange(closeNav);
+
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
@@ -31,7 +46,7 @@ export const SideNav = () => {
           <SheetTitle>Menu</SheetTitle>
         </SheetHeader>
         <div className='flex flex-col pt-8 pl-4 gap-8'>
-          <Search successCallback={() => setOpen(false)} />
+          <Search successCallback={closeNav} />
           {canCreateRecipes ? (
             <Link href='/create-recipe'>Create a Recipe</Link>
           ) : null}
