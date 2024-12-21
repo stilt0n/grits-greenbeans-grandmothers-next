@@ -1,4 +1,4 @@
-import { FamilyOnly } from '@/components/auth/family-only.client';
+import { FamilyOnly } from '@/components/auth/family-only';
 import { FAMILY_TREE_LINK } from '@/lib/constants';
 import { LinkButton } from '@/components/recipe-gallery/link-button.client';
 
