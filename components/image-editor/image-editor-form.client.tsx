@@ -6,7 +6,7 @@ import ReactCrop, {
   centerCrop,
   makeAspectCrop,
 } from 'react-image-crop';
-import { CropCoordinates } from '@/types/recipeTypes';
+import { CropCoordinates } from '@/lib/translation/schema';
 import 'react-image-crop/dist/ReactCrop.css';
 
 const HEIGHT_ASPECT_SCALE = 0.5625;

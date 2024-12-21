@@ -69,7 +69,6 @@ export const EditRecipe = ({ recipe }: EditRecipeProps) => {
           imageFileList: null,
         }}
         initialTags={initialTags}
-        _hackyFeatureFlag={true}
       />
     </div>
   );
