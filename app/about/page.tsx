@@ -188,7 +188,7 @@ const AboutPage = () => {
           <p>
             There are many generations of recipes on this site and you may not
             recognize all the names. Ali has been putting together a family tree
-            and that can be a useful visual aide for the curious.{' '}
+            and that can be a useful visual aid for the curious.{' '}
             <a href={FAMILY_TREE_LINK}>You can view the family tree here.</a>
           </p>
           <h2>Problems and Suggestions</h2>
