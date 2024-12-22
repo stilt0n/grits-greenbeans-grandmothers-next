@@ -5,7 +5,6 @@ import {
   EMAIL_ADDRESS,
   GITHUB_REPO_LINK,
 } from '@/lib/constants';
-import { LinkButton } from '@/components/recipe-gallery/link-button.client';
 import { EmailIcon } from '@/components/icons';
 
 const AboutPage = () => {
@@ -192,7 +191,6 @@ const AboutPage = () => {
             and that can be a useful visual aide for the curious.{' '}
             <a href={FAMILY_TREE_LINK}>You can view the family tree here.</a>
           </p>
-          <LinkButton href={FAMILY_TREE_LINK}>Link to family tree</LinkButton>
           <h2>Problems and Suggestions</h2>
           <p>
             If you run into problems while on the site and have time to report
