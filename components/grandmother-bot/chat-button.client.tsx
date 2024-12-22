@@ -15,7 +15,7 @@ export const ChatButton = (props: ChatButtonProps) => {
   return (
     <Button
       size='icon'
-      className={cn('w-48 rounded-md', props.className)}
+      className={cn('text-xs w-44 px-2 rounded-md', props.className)}
       onClick={() => props.setChatOpen((prev) => !prev)}
       aria-label='open chat window'
     >
