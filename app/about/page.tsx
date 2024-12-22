@@ -35,9 +35,11 @@ const AboutPage = () => {
           supper table.
         </p>
         <blockquote>
-          &quot;We may live without poetry, music, and art; We may live without
-          conscience and live without heart; We may live without friends and
-          live without books; But civilized man cannot live without cooks.&quot;
+          &quot;We may live without poetry, music, and art;
+          <br />
+          We may live without conscience and live without heart;
+          <br /> We may live without friends and live without books;
+          <br /> But civilized man cannot live without cooks.&quot;
           <br />
           <br />
           Copied [Toasts for All Occasions (1903)]
@@ -63,8 +65,9 @@ const AboutPage = () => {
           cook.&quot; By judgement, one could tell –
         </p>
         <blockquote>
-          Bread was done when it smelled right. A cake was done when it felt
-          right. Gravy was done when it looked right.
+          Bread was done when it smelled right.
+          <br /> A cake was done when it felt right.
+          <br /> Gravy was done when it looked right.
         </blockquote>
         <p>
           Oh, there were times for the cook to shine and sometimes use recipes.
