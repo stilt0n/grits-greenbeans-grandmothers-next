@@ -12,6 +12,7 @@ const AboutPage = () => {
     <div className='prose prose-zinc -mt-4 w-screen min-h-screen about-page'>
       <section className='max-w-[65rem] m-auto px-8 py-16 bg-white min-h-screen'>
         <h1>Introduction from the Original Book</h1>
+        <h2 className='text-lg text-zinc-800'>Ada Wesson Jones</h2>
         <p>
           In this cookbook, you probably won&apos;t see many terms such as au
           gratin, escalope, paté, sauté or étouffée. You will see fry, brown,
@@ -165,17 +166,19 @@ const AboutPage = () => {
           recipes, share them, and enjoy the good food and fellowship around the
           table.
         </p>
-        <blockquote>
+        <p>
           Please join us. The food is ready
           <br />
           <br />
           Now, would someone say the blessing....
           <br />
           <br />
-          Ada Wesson Jones
-          <br />
-          Spring, 1994
-        </blockquote>
+          <span className='font-bold'>
+            Ada Wesson Jones
+            <br />
+            Spring, 1994
+          </span>
+        </p>
         <h1 className='mt-10'>About this site</h1>
         <p>
           This website was made with the goal of digitizing the original recipe
