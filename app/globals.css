@@ -13,3 +13,7 @@
 .about-page.prose {
   max-width: none;
 }
+
+.rendered-recipe.prose {
+  max-width: 55rem;
+}

@@ -48,7 +48,7 @@ const Page = async ({ params }: { params: { slug: string } }) => {
 
   return (
     <>
-      <div className='prose prose-zinc mx-auto bg-zinc-50 px-4 border-x border-zinc-200 min-h-screen -mt-4 pt-4'>
+      <div className='prose prose-zinc rendered-recipe mx-auto bg-zinc-50 px-4 border-x border-zinc-200 min-h-screen -mt-4 pt-4'>
         <span className='flex flex-col mb-8 md:mb-0 md:flex md:flex-row md:justify-between md:items-center'>
           <h1>{recipe.title}</h1>
           <ChatPanel buttonClassName='md:mb-[2em]' pageContext={pageContext} />
@@ -74,7 +74,7 @@ const Page = async ({ params }: { params: { slug: string } }) => {
         {TagArea}
         {hasElevatedPermissions(user) ? (
           <div className='flex justify-center'>
-            <LinkButton className='my-4' href={`/edit-recipe/${recipeId}`}>
+            <LinkButton className='mb-4 mt-8' href={`/edit-recipe/${recipeId}`}>
               Edit
             </LinkButton>
           </div>
