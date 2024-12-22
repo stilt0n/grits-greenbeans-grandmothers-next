@@ -47,6 +47,7 @@ export const SideNav = () => {
         </SheetHeader>
         <div className='flex flex-col pt-8 pl-4 gap-8'>
           <Search successCallback={closeNav} />
+          <Link href='/about'>About This Site</Link>
           {canCreateRecipes ? (
             <Link href='/create-recipe'>Create a Recipe</Link>
           ) : null}

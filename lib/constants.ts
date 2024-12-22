@@ -10,6 +10,9 @@ export const images = {
 };
 
 export const FAMILY_TREE_LINK = process.env.family_tree_link ?? '';
+export const EMAIL_ADDRESS = process.env.email_address ?? '';
+export const GITHUB_REPO_LINK =
+  'https://github.com/stilt0n/grits-greenbeans-grandmothers-next/issues';
 
 export const IMAGE_BASE_URL =
   'https://grits-greenbeans-and-grandmothers.s3.us-east-005.backblazeb2.com';

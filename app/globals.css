@@ -9,3 +9,7 @@
 .ProseMirror:focus {
   outline: none;
 }
+
+.about-page.prose {
+  max-width: none;
+}
