@@ -172,7 +172,9 @@ const AboutPage = () => {
           Now, would someone say the blessing....
           <br />
           <br />
-          Ada Wesson Jones Spring, 1994
+          Ada Wesson Jones
+          <br />
+          Spring, 1994
         </blockquote>
         <h1 className='mt-10'>About this site</h1>
         <p>
