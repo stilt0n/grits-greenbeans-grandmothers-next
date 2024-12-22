@@ -119,7 +119,9 @@ export const RecipeForm = ({
               : undefined
           }
         />
-        <Button type='submit'>Submit</Button>
+        <Button className='mt-6' type='submit'>
+          Submit
+        </Button>
       </form>
     </>
   );
