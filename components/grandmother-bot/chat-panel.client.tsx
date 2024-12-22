@@ -1,12 +1,12 @@
 'use client';
 import { useState } from 'react';
 import { AiChat } from '@nlux/react';
-import '@nlux/themes/nova.css';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { ChatButton } from './chat-button.client';
 import { useChatAdapter } from './config/adapters';
 import { intialConversation } from './config/history';
 import { ChatPanelProps } from './types';
+import '@nlux/themes/nova.css';
 
 // note that props is used implicitly by the defaultAdapter
 export const ChatPanel = (props: ChatPanelProps) => {
@@ -21,7 +21,7 @@ export const ChatPanel = (props: ChatPanelProps) => {
           setChatOpen={setOpen}
         />
       </SheetTrigger>
-      <SheetContent side='left' className='w-[48rem] max-w-full'>
+      <SheetContent side='left' className='w-[48rem] max-w-full' focusOnContent>
         <div className='pt-4 w-full h-full'>
           <AiChat
             adapter={adapter}
