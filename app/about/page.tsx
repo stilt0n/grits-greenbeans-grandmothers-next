@@ -64,11 +64,11 @@ const AboutPage = () => {
           curt reply, &quot;If you have no judgement, you shouldn&apos;t
           cook.&quot; By judgement, one could tell –
         </p>
-        <blockquote>
+        <p className='my-8 italic'>
           Bread was done when it smelled right.
           <br /> A cake was done when it felt right.
           <br /> Gravy was done when it looked right.
-        </blockquote>
+        </p>
         <p>
           Oh, there were times for the cook to shine and sometimes use recipes.
           Even through the depression, there was a time for feasting. During the
