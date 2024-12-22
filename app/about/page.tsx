@@ -166,9 +166,10 @@ const AboutPage = () => {
           table.
         </p>
         <blockquote>
-          Please join us. The food is ready Now, would someone say the
-          blessing....
+          Please join us. The food is ready
           <br />
+          <br />
+          Now, would someone say the blessing....
           <br />
           <br />
           Ada Wesson Jones Spring, 1994
