@@ -5,7 +5,7 @@ const isWritePermissionRoute = createRouteMatcher([
   '/edit-recipe(.*)',
 ]);
 
-const isAdminPermissionRoute = createRouteMatcher(['/(api|trpc)(.*)']);
+const isAdminPermissionRoute = createRouteMatcher(['/(trpc)(.*)']);
 
 export default clerkMiddleware((auth, req) => {
   if (isWritePermissionRoute(req)) {
