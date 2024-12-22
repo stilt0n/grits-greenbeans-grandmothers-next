@@ -43,7 +43,7 @@ const EditorInput = ({
         id={editorId}
         editor={editor}
         className={cn(
-          'prose prose-zinc bg-white',
+          'prose prose-zinc recipe-editor bg-white',
           'outline outline-1 outline-zinc-200 rounded-sm focus-within:outline-2 focus-within:outline-zinc-400',
           props.className
         )}

@@ -17,3 +17,9 @@
 .rendered-recipe.prose {
   max-width: 55rem;
 }
+
+.recipe-editor.prose {
+  max-width: none;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
