@@ -51,13 +51,13 @@ export const RecipeCardDesign = (props: RecipeCardDesignProps) => {
           </p>
         ) : undefined}
         <CardDescription className='mt-2 text-zinc-500 flex-grow md:flex-none overflow-hidden'>
-          <div
+          <span
             className='line-clamp-4'
             id={descriptionId}
             title={props.description}
           >
             {props.description}
-          </div>
+          </span>
         </CardDescription>
         <div className='mt-6 flex gap-2'>
           <LinkButton

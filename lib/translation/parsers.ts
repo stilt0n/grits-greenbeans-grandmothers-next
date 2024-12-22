@@ -76,3 +76,23 @@ export const recipeToFormData = ({
 export const convertImageUrlToImageId = (imageUrl: string) => {
   return imageUrl.replace(`${IMAGE_BASE_URL}/images/`, '');
 };
+
+export const convertRecipeToPromptContext = ({
+  title,
+  description,
+  instructions,
+  recipeTime,
+}: Omit<RecipePageData, 'author' | 'imageUrl' | 'tags'>) => {
+  const time = recipeTime ? `<p class='recipe-time'>${recipeTime}</p>\n` : '';
+  const indentedInstructions = instructions
+    .split('\n')
+    .map((line) => (line.length > 0 ? `  ${line}` : ''))
+    .join('\n');
+  const output = `<h1 class='title'>${title}</h1>
+<h2 class='description'>${description}</h2>
+${time}
+<div class='recipe-instructions'>
+${indentedInstructions}
+</div>`;
+  return output;
+};
