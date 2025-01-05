@@ -15,6 +15,7 @@ import { hasElevatedPermissions } from '@/lib/auth';
 import { SidebarLogin } from './sidebar-login';
 import { Search } from './search.client';
 import { usePathname } from 'next/navigation';
+import { PRIVACY_POLICY_LINK } from '@/lib/constants';
 
 const useCloseOnRouteChange = (onClose: () => void) => {
   const pathname = usePathname();
@@ -51,6 +52,7 @@ export const SideNav = () => {
           {canCreateRecipes ? (
             <Link href='/create-recipe'>Create a Recipe</Link>
           ) : null}
+          <Link href={PRIVACY_POLICY_LINK}>Privacy Policy</Link>
           <SidebarLogin className='flex flex-col gap-8 items-start' />
         </div>
       </SheetContent>

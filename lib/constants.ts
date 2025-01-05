@@ -20,6 +20,5 @@ export const IMAGE_BASE_URL =
 export const blurDataUrl =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mM0W7q0HgAEmgIB3KULHAAAAABJRU5ErkJggg==';
 
-const hash = Date.now().toString();
-
-export const robohash = `https://robohash.org/${hash}?set=set3`;
+export const PRIVACY_POLICY_LINK =
+  'https://www.termsfeed.com/live/5a3c3270-af06-4898-af2d-44938bf7aac1';
