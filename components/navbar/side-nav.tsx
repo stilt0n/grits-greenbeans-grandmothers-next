@@ -46,14 +46,16 @@ export const SideNav = () => {
         <SheetHeader>
           <SheetTitle>Menu</SheetTitle>
         </SheetHeader>
-        <div className='flex flex-col pt-8 pl-4 gap-8'>
+        <div className='flex flex-col pt-8 pl-4 gap-8 h-full'>
           <Search successCallback={closeNav} />
           <Link href='/about'>About This Site</Link>
           {canCreateRecipes ? (
             <Link href='/create-recipe'>Create a Recipe</Link>
           ) : null}
-          <Link href={PRIVACY_POLICY_LINK}>Privacy Policy</Link>
           <SidebarLogin className='flex flex-col gap-8 items-start' />
+          <Link className='mt-auto mb-8' href={PRIVACY_POLICY_LINK}>
+            Privacy Policy
+          </Link>
         </div>
       </SheetContent>
     </Sheet>
