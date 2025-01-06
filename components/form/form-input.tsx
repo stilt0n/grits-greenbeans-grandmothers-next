@@ -11,7 +11,7 @@ const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
   ({ label, className, errorMessage, ...inputProps }, ref) => {
     const inputId = useId();
     return (
-      <div className={className}>
+      <div className={`relative ${className}`}>
         <Label htmlFor={inputId}>
           {label}
           {inputProps.required ? <span className='text-red-700'>*</span> : null}
@@ -23,7 +23,11 @@ const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
           autoComplete='off'
           {...inputProps}
         />
-        {errorMessage ? <p className='text-red-800'>{errorMessage}</p> : null}
+        {errorMessage ? (
+          <>
+            <p className='absolute text-red-800'>{errorMessage}</p>
+          </>
+        ) : null}
       </div>
     );
   }

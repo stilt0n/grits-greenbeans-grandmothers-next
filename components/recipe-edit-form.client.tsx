@@ -15,6 +15,9 @@ import { Button } from '@/components/ui/button';
 import EditorInput from '@/components/editor';
 import ImageEditorForm, { useImageFileUrl } from '@/components/image-editor';
 import { TagInput } from './form/tag-input.client';
+import { useState, useTransition } from 'react';
+import { generateDescriptionAction } from '@/lib/actions/ai/generate-description';
+
 export interface RecipeFormProps {
   onSubmitSuccess: SubmitHandler<RecipeFormData>;
   onSubmitError: SubmitErrorHandler<RecipeFormData>;
@@ -48,7 +51,11 @@ export const RecipeForm = ({
     defaultValues: initialRecipeData,
   });
   const onSubmit = handleSubmit(props.onSubmitSuccess, props.onSubmitError);
-  const imageFileList = watch('imageFileList');
+  const [imageFileList, title, instructions] = watch([
+    'imageFileList',
+    'title',
+    'instructions',
+  ]);
   const imageUrl = useImageFileUrl(imageFileList);
   const onCropChange = (coords: CropCoordinates | null) => {
     setValue('cropCoordinates', coords ? JSON.stringify(coords) : null);
@@ -56,10 +63,17 @@ export const RecipeForm = ({
   const onTagsChange = (tags: string[]) => {
     setValue('tags', tags.length > 0 ? JSON.stringify(tags) : null);
   };
+  const { isGenerating, showError, onGenerate } = useGenerateDescription(
+    title,
+    instructions,
+    (text: string) => {
+      setValue('description', text);
+    }
+  );
   return (
     <>
       <form
-        className='h-full flex flex-col gap-y-4 p-4 lg:p-8'
+        className='h-full flex flex-col gap-y-8 p-4 lg:p-8'
         onSubmit={onSubmit}
       >
         <FormInput
@@ -68,12 +82,33 @@ export const RecipeForm = ({
           required
           {...register('title')}
         />
-        <FormInput
-          label='Recipe description'
-          type='text'
-          required
-          {...register('description')}
-        />
+        <div className='flex flex-row gap-x-2 w-full items-center'>
+          <FormInput
+            className='w-3/4'
+            label='Recipe description'
+            type='text'
+            required
+            errorMessage={
+              showError
+                ? 'Need a title and instructions to generate an AI description.'
+                : undefined
+            }
+            disabled={isGenerating}
+            placeholder='If you have a title and instructions you can generate a description with the button.'
+            {...register('description')}
+          />
+          <Button
+            className='self-end'
+            disabled={isGenerating}
+            onClick={(e) => {
+              e.preventDefault();
+              onGenerate();
+            }}
+            aria-label='Generate Description'
+          >
+            {isGenerating ? '...' : 'Generate ✨'}
+          </Button>
+        </div>
         <TagInput
           label='Recipe Tags'
           onChange={onTagsChange}
@@ -125,4 +160,32 @@ export const RecipeForm = ({
       </form>
     </>
   );
+};
+
+const useGenerateDescription = (
+  title: string | null,
+  instructions: string | null,
+  setDescription: (text: string) => void
+) => {
+  const [isGenerating, startTransition] = useTransition();
+  const [showError, setShowError] = useState(false);
+  const onGenerate = () => {
+    if (!title || !instructions) {
+      setShowError(true);
+      return;
+    }
+    setShowError(false);
+    startTransition(async () => {
+      const generatedDescription = await generateDescriptionAction({
+        title,
+        instructions,
+      });
+      if (!generatedDescription) {
+        setShowError(true);
+        return;
+      }
+      setDescription(generatedDescription);
+    });
+  };
+  return { isGenerating, showError, onGenerate };
 };
