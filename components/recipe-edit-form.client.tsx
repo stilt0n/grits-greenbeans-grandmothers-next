@@ -90,11 +90,11 @@ export const RecipeForm = ({
             required
             errorMessage={
               showError
-                ? 'Need a title and instructions to generate an AI description.'
+                ? 'Your recipe needs a name and instructions to generate an AI description.'
                 : undefined
             }
             disabled={isGenerating}
-            placeholder='If you have a title and instructions you can generate a description with the button.'
+            placeholder='If you have a recipe name and instructions you can generate a description with the button.'
             {...register('description')}
           />
           <Button
