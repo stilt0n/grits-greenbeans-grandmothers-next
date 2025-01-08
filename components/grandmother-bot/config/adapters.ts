@@ -1,14 +1,20 @@
 import { useAsStreamAdapter, type StreamingAdapterObserver } from '@nlux/react';
 import { createPromptFromContext } from './prompts';
 import '@nlux/themes/nova.css';
+import { convertNluxChatHistory } from '@/lib/translation/parsers';
 
 export const useChatAdapter = (context?: string) => {
   return useAsStreamAdapter(
-    async (prompt: string, observer: StreamingAdapterObserver) => {
+    async (
+      prompt: string,
+      observer: StreamingAdapterObserver,
+      { conversationHistory }
+    ) => {
       const response = await fetch('/api/chat', {
         method: 'POST',
         body: JSON.stringify({
           prompt: createPromptFromContext(prompt, context),
+          history: convertNluxChatHistory(conversationHistory),
         }),
         headers: { 'Content-Type': 'application/json' },
       });

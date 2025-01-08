@@ -1,3 +1,5 @@
+import type { CoreMessage } from 'ai';
+import type { ChatItem } from '@nlux/react';
 import { IMAGE_BASE_URL } from '../constants';
 import {
   intermediateSchema,
@@ -95,4 +97,18 @@ ${time}
 ${indentedInstructions}
 </div>`;
   return output;
+};
+
+// The docs for the library I'm using are not clear on this but it seems like chatHistory can contain string arrays
+// I'm guessing this is because the message was streamed in chunks and this is how they're represented, but I'm not
+// totally sure. We need to converte these chunks into a single string when this happens.
+export const convertNluxChatHistory = (
+  chatHistory?: ChatItem<string | string[]>[]
+): CoreMessage[] => {
+  return (
+    chatHistory?.map(({ role, message }) => ({
+      role,
+      content: Array.isArray(message) ? message.join('') : message,
+    })) ?? []
+  );
 };
