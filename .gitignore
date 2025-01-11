@@ -45,3 +45,5 @@ PLAN.md
 *storybook.log
 transformed_image.png
 /local-backups
+
+scripts/sandbox.ts
