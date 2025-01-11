@@ -7,7 +7,7 @@ import {
 } from './utils';
 import { db } from '@/db';
 import { recipes } from '@/db/schema';
-import { count, eq, like } from 'drizzle-orm';
+import { count, eq, ilike } from 'drizzle-orm';
 import { getTagsUtilitySchema } from '@/lib/translation/utils';
 
 interface GetRecipeWithTagsArgs {
@@ -85,7 +85,7 @@ export const getRecipes = async ({
 };
 
 const withFilter = <T extends SQLiteSelect>(qb: T, filter: string) => {
-  return qb.where(like(recipes.title, `%${filter}%`));
+  return qb.where(ilike(recipes.title, `%${filter}%`));
 };
 
 export const getRecipeCount = (searchString?: string) => {
