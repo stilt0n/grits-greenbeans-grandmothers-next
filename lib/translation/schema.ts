@@ -118,6 +118,20 @@ export const intermediateSchema = baseRecipeSchema.extend({
   image: z.unknown().transform((value) => value as File | undefined),
 });
 
+export type SearchCategory = 'title' | 'author' | 'tag';
+
+export const searchParamsSchema = z.object({
+  page: z.coerce.number().optional(),
+  query: z.string().optional(),
+  category: z
+    .string()
+    .optional()
+    .transform(
+      (s = 'title') =>
+        (['title', 'author', 'tag'].includes(s) ? s : 'title') as SearchCategory
+    ),
+});
+
 export type RecipeFormData = z.infer<typeof recipeFormSchema>;
 export type BaseRecipe = z.infer<typeof baseRecipeSchema>;
 export type TagsArray = z.infer<typeof tagsSchema>;
@@ -125,3 +139,4 @@ export type RecipePageData = z.infer<typeof recipePageSchema>;
 export type CropCoordinates = z.infer<typeof cropCoordinateSchema>;
 export type GalleryItemData = z.infer<typeof galleryItemSchema>;
 export type IntermediateRecipe = z.infer<typeof intermediateSchema>;
+export type GallerySearchParams = z.infer<typeof searchParamsSchema>;

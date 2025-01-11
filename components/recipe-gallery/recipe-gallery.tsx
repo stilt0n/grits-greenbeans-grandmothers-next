@@ -1,7 +1,10 @@
 import { GalleryPagination } from './gallery-pagination.client';
 import { RecipeCard } from './recipe-card.client';
-import { z } from 'zod';
-import { NextSearchParams } from '@/types/nextTypes';
+import type { NextSearchParams } from '@/types/nextTypes';
+import {
+  searchParamsSchema,
+  type SearchCategory,
+} from '@/lib/translation/schema';
 import { cn } from '@/lib/utils';
 import { Suspense } from 'react';
 import { unstable_noStore as noStore } from 'next/cache';
@@ -19,6 +22,7 @@ export interface RecipeGalleryProps {
   pageSize?: number;
   className?: string;
   filter?: string;
+  category?: SearchCategory;
 }
 
 const defaultPageSize = 10;
@@ -26,11 +30,12 @@ const defaultPageSize = 10;
 export const createSearchParamProps = (searchParams: NextSearchParams) => {
   // Zod will return undefined if there are extra search params values and we parse them directly
   // I'd rather just ignore these params and handle valid params correctly whenever present
-  const { page, query } = searchParams;
+  const { page, query, category } = searchParams;
   const { data } = searchParamsSchema.safeParse({ page, query });
   return {
     page: data?.page ?? 1,
     filter: data?.query,
+    category,
   };
 };
 
@@ -38,6 +43,7 @@ const RecipeGallery = async ({
   page,
   pageSize = defaultPageSize,
   filter,
+  category,
   loadPageCountAction = defaultLoadPageCountAction,
   loadRecipeAction = loadGalleryPageAction,
   ...props
@@ -65,10 +71,5 @@ const RecipeGallery = async ({
     </Suspense>
   );
 };
-
-const searchParamsSchema = z.object({
-  page: z.coerce.number().optional(),
-  query: z.string().optional(),
-});
 
 export default RecipeGallery;

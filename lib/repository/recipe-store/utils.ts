@@ -26,6 +26,9 @@ export const createWhereIdClause = (id: number) => ({
   where: eq(recipes.id, id),
 });
 
-export const createWhereSearchClause = (searchString: string) => ({
-  where: like(recipes.title, `%${searchString}%`),
+export const createWhereSearchClause = (
+  searchString: string,
+  searchColumn: 'title' | 'author' = 'title'
+) => ({
+  where: like(recipes[searchColumn], `%${searchString}%`),
 });
