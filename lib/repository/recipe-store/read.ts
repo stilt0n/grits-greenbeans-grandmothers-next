@@ -32,7 +32,6 @@ export const getRecipes = async ({
   whereClause,
   debug,
 }: GetRecipeWithTagsArgs) => {
-  // const recipeKeys = keys?.filter((key) => key !== 'tags');
   const { recipeKeys, includeTags } = splitRecipeAndTags(keys);
   if (recipeKeys.length === 0) {
     throw new TypeError(

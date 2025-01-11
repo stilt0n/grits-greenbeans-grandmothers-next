@@ -12,6 +12,7 @@ export interface LoadGalleryArgs {
   page: number;
   pageSize: number;
   filter?: string;
+  category?: string;
   debug?: boolean;
 }
 
@@ -19,6 +20,7 @@ export const loadGalleryPageAction = async ({
   page,
   pageSize,
   filter,
+  category,
   debug,
 }: LoadGalleryArgs) => {
   const result = await getRecipes({
