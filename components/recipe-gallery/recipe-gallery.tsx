@@ -50,8 +50,8 @@ const RecipeGallery = async ({
 }: RecipeGalleryProps) => {
   // TODO: improve on this by being more granular with caching strategy
   noStore();
-  const pageCount = await loadPageCountAction({ pageSize, filter });
-  const recipes = await loadRecipeAction({ page, pageSize, filter });
+  const pageCount = await loadPageCountAction({ pageSize, filter, category });
+  const recipes = await loadRecipeAction({ page, pageSize, filter, category });
   return (
     <Suspense fallback={<p>Loading...</p>}>
       <ul className={cn('w-full grid grid-cols-9 gap-4', props.className)}>
