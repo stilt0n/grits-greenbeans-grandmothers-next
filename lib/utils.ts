@@ -44,3 +44,6 @@ export const verticalSlice = <T, K extends keyof T>(
 export const extractColumn = <T, K extends keyof T>(objs: T[], key: K) => {
   return objs.map(({ [key]: value }) => value);
 };
+
+export const capitalized = (word: string) =>
+  word[0].toUpperCase() + word.slice(1).toLowerCase();

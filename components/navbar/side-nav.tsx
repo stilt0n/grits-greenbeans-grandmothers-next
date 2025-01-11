@@ -24,6 +24,8 @@ const useCloseOnRouteChange = (onClose: () => void) => {
   }, [pathname, onClose]);
 };
 
+const searchCategories = ['title', 'author', 'tag'];
+
 export const SideNav = () => {
   const [open, setOpen] = useState(false);
   const { user } = useUser();
@@ -47,7 +49,7 @@ export const SideNav = () => {
           <SheetTitle>Menu</SheetTitle>
         </SheetHeader>
         <div className='flex flex-col pt-8 pl-4 gap-8 h-full'>
-          <Search successCallback={closeNav} />
+          <Search successCallback={closeNav} categories={searchCategories} />
           <Link href='/about'>About This Site</Link>
           {canCreateRecipes ? (
             <Link href='/create-recipe'>Create a Recipe</Link>
