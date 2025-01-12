@@ -7,7 +7,7 @@ import {
 } from './utils';
 import { db } from '@/db';
 import { recipes, recipesToTags, tags } from '@/db/schema';
-import { count, eq, like } from 'drizzle-orm';
+import { count, countDistinct, eq, like } from 'drizzle-orm';
 import { getTagsUtilitySchema } from '@/lib/translation/utils';
 import { SearchCategory } from '@/lib/translation/schema';
 
@@ -111,7 +111,7 @@ export const getRecipesFilteredByTag = async ({
 
   // do not use join if there is no filter
   if (filter) {
-    qb = db
+    const sq = db
       .select({
         id: recipes.id,
         title: recipes.title,
@@ -123,6 +123,17 @@ export const getRecipesFilteredByTag = async ({
       .leftJoin(recipes, eq(recipes.id, recipesToTags.recipeId))
       .leftJoin(tags, eq(tags.id, recipesToTags.tagId))
       .where(like(tags.name, `%${filter}%`))
+      .as('sq');
+
+    qb = db
+      .selectDistinct({
+        id: sq.id,
+        title: sq.title,
+        description: sq.description,
+        imageUrl: sq.imageUrl,
+        author: sq.author,
+      })
+      .from(sq)
       .$dynamic();
   } else {
     qb = db
@@ -150,7 +161,7 @@ const getRecipeCountFilteredByTags = (searchString?: string) => {
   }
 
   return db
-    .select({ count: count() })
+    .select({ count: countDistinct(recipes.id) })
     .from(recipesToTags)
     .leftJoin(recipes, eq(recipes.id, recipesToTags.recipeId))
     .leftJoin(tags, eq(tags.id, recipesToTags.id))
