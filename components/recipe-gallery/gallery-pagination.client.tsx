@@ -23,8 +23,14 @@ export const GalleryPagination = (props: GalleryPaginationProps) => {
     props.pageCount
   );
   const itemNumbers = getItemNumbers(currentPage, props.pageCount);
-  const page = (pageNumber: number) =>
-    `${pathname}?page=${truncateRange(pageNumber, 1, props.pageCount)}`;
+  const page = (pageNumber: number) => {
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set(
+      'page',
+      truncateRange(pageNumber, 1, props.pageCount).toString()
+    );
+    return `${pathname}?${newSearchParams.toString()}`;
+  };
   return (
     <Pagination>
       <PaginationContent>
