@@ -35,7 +35,7 @@ export const createSearchParamProps = (searchParams: NextSearchParams) => {
   return {
     page: data?.page ?? 1,
     filter: data?.query,
-    category,
+    category: data?.category,
   };
 };
 
