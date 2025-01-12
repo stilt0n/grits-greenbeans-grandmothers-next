@@ -1,7 +1,7 @@
 import { GalleryPagination } from '../gallery-pagination.client';
 import { withMockNavigation } from '@/__mocks__/nextMocks';
 import { describe, it, expect } from 'bun:test';
-import { screen, render, within } from '@testing-library/react';
+import { screen, render, within, waitFor } from '@testing-library/react';
 
 describe('Given Gallery Pagination component', () => {
   it('should render three list items when there is one page', () => {
