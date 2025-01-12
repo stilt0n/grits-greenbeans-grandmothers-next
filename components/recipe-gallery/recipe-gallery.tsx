@@ -31,7 +31,7 @@ export const createSearchParamProps = (searchParams: NextSearchParams) => {
   // Zod will return undefined if there are extra search params values and we parse them directly
   // I'd rather just ignore these params and handle valid params correctly whenever present
   const { page, query, category } = searchParams;
-  const { data } = searchParamsSchema.safeParse({ page, query });
+  const { data } = searchParamsSchema.safeParse({ page, query, category });
   return {
     page: data?.page ?? 1,
     filter: data?.query,
