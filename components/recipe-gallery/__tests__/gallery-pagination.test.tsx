@@ -20,6 +20,7 @@ describe('Given Gallery Pagination component', () => {
     expect(getAllByRole('listitem')).toHaveLength(7);
   });
 
+  // troubleshoot these
   it('should set aria current based on search params', () => {
     withMockNavigation({ searchParams: { page: '4' } });
     render(<GalleryPagination pageCount={10} />);
