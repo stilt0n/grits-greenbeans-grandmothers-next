@@ -55,9 +55,14 @@ export const SideNav = () => {
             <Link href='/create-recipe'>Create a Recipe</Link>
           ) : null}
           <SidebarLogin className='flex flex-col gap-8 items-start' />
-          <Link className='mt-auto mb-8' href={PRIVACY_POLICY_LINK}>
-            Privacy Policy
-          </Link>
+          <div className='flex flex-row mt-auto mb-8 gap-x-8'>
+            <Link className='text-sm' href={PRIVACY_POLICY_LINK}>
+              Privacy Policy
+            </Link>
+            <Link className='text-sm' href='/delete-my-account'>
+              Delete My Account
+            </Link>
+          </div>
         </div>
       </SheetContent>
     </Sheet>
