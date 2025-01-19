@@ -18,7 +18,9 @@ export const loadPageCountAction = async ({
 }: LoadPageCountArgs) => {
   const [{ count }] = await getRecipeCount(filter, category);
   if (debug) {
-    console.log(`Got page count ${count}`);
+    console.log(
+      `Got item count ${count} and page count ${Math.ceil(count / pageSize)}`
+    );
   }
   return Math.ceil(count / pageSize);
 };
