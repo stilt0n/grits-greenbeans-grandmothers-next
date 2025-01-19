@@ -1,6 +1,6 @@
 # Grits, Greenbeans and Grandmothers
 
-This repository has the source code for gritsgreenbeansandgrandmothers.com
+This repository has the source code for [gritsgreenbeansandgrandmothers.com](https://www.gritsgreenbeansandgrandmothers.com)
 
 ## About
 
@@ -45,7 +45,7 @@ Technologies I used to build this site:
 - Drizzle ORM
 - Backblaze B2 and AWS S3 SDK for image storage
 - Clerk for authentication
-- ShadcnUI as a component library
+- shadcn UI as a component library
 - TipTap for the text editor component
 - react-image-crop for the image cropper component
 - sharp for cropping and downsizing images
@@ -62,12 +62,12 @@ My [last project](https://github.com/stilt0n/dependor) was written in Go, mostly
 
 - Prioritize finished work
 - Use libraries when they are available
-- Prefer newer techs even if they're less battletested
+- Prefer newer techs even if they're less battle-tested
 - Write tests only when there is a pain point
 - Don't spend more than an hour on any technical decision
 - Don't be afraid to rewrite code
 
-I don't necessarily endorse this philosophy as a general development philosophy, but work in industry can often feel like it involves a lot of red tape. So using a "no red tape" appraoch can help clarify when I don't miss it and when I do.
+I don't necessarily endorse this philosophy as a general development philosophy, but work in industry can often feel like it involves a lot of red tape. So using a "no red tape" approach can help clarify when I don't miss it and when I do.
 
 ## Roadmap
 
