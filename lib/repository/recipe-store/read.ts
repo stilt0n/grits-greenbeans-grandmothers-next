@@ -164,7 +164,7 @@ const getRecipeCountFilteredByTags = (searchString?: string) => {
     .select({ count: countDistinct(recipes.id) })
     .from(recipesToTags)
     .leftJoin(recipes, eq(recipes.id, recipesToTags.recipeId))
-    .leftJoin(tags, eq(tags.id, recipesToTags.id))
+    .leftJoin(tags, eq(tags.id, recipesToTags.tagId))
     .where(like(tags.name, `%${searchString}%`));
 };
 
