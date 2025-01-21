@@ -33,18 +33,19 @@ export const GalleryPagination = (props: GalleryPaginationProps) => {
     );
     return `${pathname}?${newSearchParams.toString()}`;
   };
+
+  const firstDisabled = currentPage === 1 || !currentPage ? true : undefined;
+  const lastDisabled =
+    currentPage === props.pageCount || props.pageCount <= 1 ? true : undefined;
   return (
     <Pagination>
       <PaginationContent>
         <PaginationItem>
-          <PaginationFirst
-            aria-disabled={currentPage === 1 || !currentPage}
-            href={page(1)}
-          />
+          <PaginationFirst aria-disabled={firstDisabled} href={page(1)} />
         </PaginationItem>
         <PaginationItem>
           <PaginationPrevious
-            aria-disabled={currentPage === 1 || !currentPage}
+            aria-disabled={firstDisabled}
             href={page(currentPage - 1)}
           />
         </PaginationItem>
@@ -60,13 +61,13 @@ export const GalleryPagination = (props: GalleryPaginationProps) => {
         ))}
         <PaginationItem>
           <PaginationNext
-            aria-disabled={currentPage === props.pageCount}
+            aria-disabled={lastDisabled}
             href={page(currentPage + 1)}
           />
         </PaginationItem>
         <PaginationItem>
           <PaginationLast
-            aria-disabled={currentPage === props.pageCount || !currentPage}
+            aria-disabled={lastDisabled}
             href={page(props.pageCount)}
           />
         </PaginationItem>

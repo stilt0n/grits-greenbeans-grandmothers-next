@@ -9,7 +9,7 @@ describe('Given Gallery Pagination component', () => {
     render(<GalleryPagination pageCount={1} />);
     const pagination = screen.getByRole('navigation');
     const { getAllByRole } = within(pagination);
-    expect(getAllByRole('listitem')).toHaveLength(3);
+    expect(getAllByRole('listitem')).toHaveLength(5);
   });
 
   it('should render no more than seven list items', () => {
@@ -17,7 +17,7 @@ describe('Given Gallery Pagination component', () => {
     render(<GalleryPagination pageCount={10} />);
     const pagination = screen.getByRole('navigation');
     const { getAllByRole } = within(pagination);
-    expect(getAllByRole('listitem')).toHaveLength(7);
+    expect(getAllByRole('listitem')).toHaveLength(9);
   });
 
   it('should set aria current based on search params', () => {
@@ -27,10 +27,21 @@ describe('Given Gallery Pagination component', () => {
     expect(current).toHaveTextContent('4');
   });
 
-  it('should disable previous button when on first page', () => {
-    withMockNavigation();
+  it('should disable previous and first button when on first page', () => {
+    withMockNavigation({ searchParams: { page: '1' } });
     render(<GalleryPagination pageCount={7} />);
-    const prev = document.querySelector('[aria-disabled]');
-    expect(prev).toHaveTextContent(/previous/i);
+    const prev = document.querySelectorAll('[aria-disabled]');
+    expect(prev).toHaveLength(2);
+    expect(prev[0]).toHaveTextContent(/first/i);
+    expect(prev[1]).toHaveTextContent(/previous/i);
+  });
+
+  it('should disable last and next button when on last page', () => {
+    withMockNavigation({ searchParams: { page: '7' } });
+    render(<GalleryPagination pageCount={7} />);
+    const next = document.querySelectorAll('[aria-disabled]');
+    expect(next).toHaveLength(2);
+    expect(next[0]).toHaveTextContent(/next/i);
+    expect(next[1]).toHaveTextContent(/last/i);
   });
 });
