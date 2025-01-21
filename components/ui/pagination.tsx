@@ -3,6 +3,8 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   DotsHorizontalIcon,
+  DoubleArrowLeftIcon,
+  DoubleArrowRightIcon,
 } from '@radix-ui/react-icons';
 
 import { cn } from '@/lib/utils';
@@ -109,7 +111,7 @@ const PaginationFirst = ({
     className={cn('gap-1 pl-2.5', className)}
     {...props}
   >
-    <ChevronLeftIcon className='h-4 w-4' />
+    <DoubleArrowLeftIcon className='h-4 w-4' />
     <span>First</span>
   </PaginationLink>
 );
@@ -126,7 +128,7 @@ const PaginationLast = ({
     {...props}
   >
     <span>Last</span>
-    <ChevronRightIcon className='h-4 w-4' />
+    <DoubleArrowRightIcon className='h-4 w-4' />
   </PaginationLink>
 );
 PaginationLast.displayName = 'PaginationLast';
