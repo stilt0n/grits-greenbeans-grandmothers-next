@@ -2,7 +2,9 @@
 import {
   Pagination,
   PaginationContent,
+  PaginationFirst,
   PaginationItem,
+  PaginationLast,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
@@ -35,8 +37,14 @@ export const GalleryPagination = (props: GalleryPaginationProps) => {
     <Pagination>
       <PaginationContent>
         <PaginationItem>
+          <PaginationFirst
+            aria-disabled={currentPage === 1 || !currentPage}
+            href={page(1)}
+          />
+        </PaginationItem>
+        <PaginationItem>
           <PaginationPrevious
-            aria-disabled={currentPage === 1}
+            aria-disabled={currentPage === 1 || !currentPage}
             href={page(currentPage - 1)}
           />
         </PaginationItem>
@@ -54,6 +62,12 @@ export const GalleryPagination = (props: GalleryPaginationProps) => {
           <PaginationNext
             aria-disabled={currentPage === props.pageCount}
             href={page(currentPage + 1)}
+          />
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationLast
+            aria-disabled={currentPage === props.pageCount || !currentPage}
+            href={page(props.pageCount)}
           />
         </PaginationItem>
       </PaginationContent>
