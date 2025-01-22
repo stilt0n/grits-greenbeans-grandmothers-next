@@ -1,9 +1,9 @@
-import { openai } from '@ai-sdk/openai';
-import { streamText } from 'ai';
-import { html as dedent } from '@/lib/utils';
+'use server';
 
-// allow streaming responses up to 20 seconds
-export const maxDuration = 20;
+import { openai } from '@ai-sdk/openai';
+import { streamText, type CoreMessage } from 'ai';
+import { createStreamableValue } from 'ai/rsc';
+import { html as dedent } from '@/lib/utils';
 
 const systemMessage = dedent`
   You are grandmother_bot, a helpful grandmother from East Texas who knows a lot about cooking and recipes.
@@ -31,17 +31,31 @@ const systemMessage = dedent`
 // to avoid excessive costs by sending a lot of history I am limiting chat history to the last 10 items
 const MAX_HISTORY = 10;
 
-export async function POST(req: Request) {
-  const { prompt, history } = await req.json();
+export const recipeChatAction = async (
+  prompt: string,
+  history: CoreMessage[]
+) => {
   const messages = [
     ...history.slice(-MAX_HISTORY),
-    { role: 'user', content: prompt },
+    { role: 'user', content: prompt } as CoreMessage,
   ];
-  const result = await streamText({
-    model: openai('gpt-4o-mini'),
-    system: systemMessage,
-    messages,
-  });
+  const stream = createStreamableValue('');
 
-  return result.toTextStreamResponse();
-}
+  const streamFunction = async () => {
+    const { textStream } = await streamText({
+      model: openai('gpt-4o-mini'),
+      system: systemMessage,
+      messages,
+    });
+
+    for await (const delta of textStream) {
+      stream.update(delta);
+    }
+
+    stream.done();
+  };
+
+  streamFunction();
+
+  return { output: stream.value };
+};

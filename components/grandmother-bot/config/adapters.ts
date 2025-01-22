@@ -2,6 +2,8 @@ import { useAsStreamAdapter, type StreamingAdapterObserver } from '@nlux/react';
 import { createPromptFromContext } from './prompts';
 import '@nlux/themes/nova.css';
 import { convertNluxChatHistory } from '@/lib/translation/parsers';
+import { recipeChatAction } from '@/lib/actions/ai/recipe-chat';
+import { readStreamableValue } from 'ai/rsc';
 
 export const useChatAdapter = (context?: string) => {
   return useAsStreamAdapter(
@@ -10,35 +12,14 @@ export const useChatAdapter = (context?: string) => {
       observer: StreamingAdapterObserver,
       { conversationHistory }
     ) => {
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        body: JSON.stringify({
-          prompt: createPromptFromContext(prompt, context),
-          history: convertNluxChatHistory(conversationHistory),
-        }),
-        headers: { 'Content-Type': 'application/json' },
-      });
-      if (response.status !== 200) {
-        observer.error(new Error('Failed to connect to the server'));
-        return;
-      }
+      const { output } = await recipeChatAction(
+        createPromptFromContext(prompt, context),
+        convertNluxChatHistory(conversationHistory)
+      );
 
-      if (!response.body) {
-        return;
-      }
-
-      const reader = response.body.getReader();
-      const textDecoder = new TextDecoder();
-
-      while (true) {
-        const { value, done } = await reader.read();
-        if (done) {
-          break;
-        }
-
-        const content = textDecoder.decode(value);
-        if (content) {
-          observer.next(content);
+      for await (const chunk of readStreamableValue(output)) {
+        if (typeof chunk === 'string') {
+          observer.next(chunk);
         }
       }
 
