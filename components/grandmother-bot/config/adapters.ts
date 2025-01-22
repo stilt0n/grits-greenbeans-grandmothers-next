@@ -1,9 +1,9 @@
+import { readStreamableValue } from 'ai/rsc';
 import { useAsStreamAdapter, type StreamingAdapterObserver } from '@nlux/react';
-import { createPromptFromContext } from './prompts';
-import '@nlux/themes/nova.css';
 import { convertNluxChatHistory } from '@/lib/translation/parsers';
 import { recipeChatAction } from '@/lib/actions/ai/recipe-chat';
-import { readStreamableValue } from 'ai/rsc';
+import { createPromptFromContext } from './prompts';
+import '@nlux/themes/nova.css';
 
 export const useChatAdapter = (context?: string) => {
   return useAsStreamAdapter(
