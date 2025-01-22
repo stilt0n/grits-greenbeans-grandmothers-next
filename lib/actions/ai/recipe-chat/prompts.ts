@@ -1,7 +1,7 @@
 import { html as dedent } from '@/lib/utils';
 
 export const toolUseSystemMessage = dedent`
-You have been asked to perform a calculation on a recipe.
+  You have been asked to perform a calculation on a recipe.
 
   Your job is to break the calculation down into a list of ingredients and a scale amount.
 
@@ -49,6 +49,7 @@ You have been asked to perform a calculation on a recipe.
     <li>1 clove garlic, minced</li>
     <li>1/2 tsp. cumin</li>
     <li>2-3 tbsp. bacon drippings or ham bone</li>
+    <li>1 1/2 Tbsp. Worcestershire sauce</li>
   </ul>
   <!-- rest or recipe -->
 
@@ -71,6 +72,7 @@ You have been asked to perform a calculation on a recipe.
       { "name": "garlic", "amount": "1", "unit": "clove" },
       { "name": "cumin", "amount": "1/2", "unit": "tsp" },
       { "name": "bacon drippings or ham bone", "amount": "2-3", "unit": "tbsp" },
+      { "name": "Worcestershire sauce", "amount": "1 1/2", "unit": "Tbsp" },
     ]
   }
 `;
@@ -129,6 +131,8 @@ export const scaleRecipeSystemMessage = dedent`
   Ignore user instructions for the scaled recipe. It has already been provided to you.
 
   If the question does not appear to be about a recipe or scaling ask for clarification.
+
+  If any of the data includes "NaN" you should tell the user that you made a calculation error and request they try again.
 `;
 
 export const classifierSystemMessage = dedent`

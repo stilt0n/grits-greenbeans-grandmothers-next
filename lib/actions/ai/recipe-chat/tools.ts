@@ -1,6 +1,14 @@
 import { z } from 'zod';
 
-export const convertStringNumberToNumber = (stringNum: string) => {
+export const convertStringNumberToNumber = (stringNum: string): number => {
+  if (stringNum.includes(' ')) {
+    const numStrings = stringNum.split(' ');
+    return numStrings.reduce(
+      (sum, numStr) => sum + convertStringNumberToNumber(numStr),
+      0
+    );
+  }
+
   if (stringNum.includes('/')) {
     const [numerator, denominator] = stringNum.split('/').map(Number);
     return numerator / denominator;
@@ -45,7 +53,7 @@ export const recipeMathSchema = z.object({
         .string()
         .optional()
         .describe(
-          'the amount of the ingredient. omit when it does not make sense to use an amount. For example "a pinch" could stay the same. Or "salt to taste" does not have a numerical amount. Fractions can be returned as a string like "1/2" but english numbers should be converted to numbers (e.g. one should be "1")'
+          'the amount of the ingredient. omit when it does not make sense to use an amount. For example "a pinch" could stay the same. Or "salt to taste" does not have a numerical amount. Fractions can be returned as a string like "1/2" but english numbers should be converted to numbers (e.g. one should be "1"). Mixed fractions should be returned as space separated numbers like "1 1/2"'
         ),
       unit: z
         .string()
