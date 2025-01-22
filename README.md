@@ -35,6 +35,13 @@ Images have an enforced aspect ratio and are uploaded via an image cropper compo
 
 Instructions are entered through a What-You-See-is-What-You-Get (WYSIWYG) text editor (think MS Word or Google docs but with many fewer features).
 
+**AI Features:**
+
+- An AI assistant named grandmother_bot is accessible on all recipe pages
+- grandmother_bot can answer questions about food or recipes
+- grandmother_bot can use tools to help scale recipes up and down accurately
+- Recipe descriptions can be generated using AI by clicking a button in the recipe create/edit forms. The AI uses the title and instructions to come up with a description.
+
 ## Technical details -- overview
 
 Technologies I used to build this site:
@@ -76,7 +83,7 @@ The GitHub issues are the most up to date place to look for this. But some thing
 **grandmother_bot:**
 
 - Move to langchain to support more complex workflows
-- Support tool use so that grandmother_bot is more reliable with requests like "double this recipe"
+- ~~Support tool use so that grandmother_bot is more reliable with requests like "double this recipe"~~
 - Duplicate recipe data in Pinecone to allow grandmother_bot to refer to other recipes on the site
 
 **Site reliability:**
@@ -87,5 +94,5 @@ The GitHub issues are the most up to date place to look for this. But some thing
 **UX:**
 
 - Better search functionality
-- Better pagination
+- ~~Better pagination~~
 - Improve accessibility in areas where it is weak
