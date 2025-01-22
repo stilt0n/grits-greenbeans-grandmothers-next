@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
 
 interface TagProps {
   text: string;
@@ -6,20 +7,22 @@ interface TagProps {
 
 export const DecorativeTag = (props: TagProps) => {
   return (
-    <span
-      className={cn(
-        'inline-flex justify-between items-center gap-2 border border-black',
-        'bg-zinc-800 text-white rounded-xl',
-        'max-w-52 px-2 py-1 text-ellipsis h-8'
-      )}
-    >
-      <p
-        className='max-w-40 whitespace-nowrap overflow-hidden text-ellipsis'
-        title={props.text}
-        aria-label={`tag: ${props.text}`}
+    <Link href={`/?query=${props.text}&category=tag`}>
+      <span
+        className={cn(
+          'inline-flex justify-between items-center gap-2 border border-black',
+          'bg-zinc-800 text-white rounded-xl',
+          'max-w-52 px-2 py-1 text-ellipsis h-8'
+        )}
       >
-        {props.text}
-      </p>
-    </span>
+        <p
+          className='max-w-40 whitespace-nowrap overflow-hidden text-ellipsis'
+          title={props.text}
+          aria-label={`tag: ${props.text}`}
+        >
+          {props.text}
+        </p>
+      </span>
+    </Link>
   );
 };
