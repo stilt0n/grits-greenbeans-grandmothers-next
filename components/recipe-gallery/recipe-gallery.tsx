@@ -8,17 +8,17 @@ import {
 import { cn } from '@/lib/utils';
 import { Suspense } from 'react';
 import { unstable_noStore as noStore } from 'next/cache';
-import { loadGalleryPageAction } from '@/lib/actions/load-gallery-page';
-import { loadPageCountAction as defaultLoadPageCountAction } from '@/lib/actions/load-page-count';
+import { loadGalleryPage } from '@/lib/loaders/load-gallery-page';
+import { loadPageCount as defaultLoadPageCount } from '@/lib/loaders/load-page-count';
 
-export type LoadRecipeAction = typeof loadGalleryPageAction;
+export type LoadRecipes = typeof loadGalleryPage;
 
-export type LoadPageCountAction = typeof defaultLoadPageCountAction;
+export type LoadPageCount = typeof defaultLoadPageCount;
 
 export interface RecipeGalleryProps {
   page: number;
-  loadRecipeAction?: LoadRecipeAction;
-  loadPageCountAction?: LoadPageCountAction;
+  loadRecipes?: LoadRecipes;
+  loadPageCount?: LoadPageCount;
   pageSize?: number;
   className?: string;
   filter?: string;
@@ -44,14 +44,14 @@ const RecipeGallery = async ({
   pageSize = defaultPageSize,
   filter,
   category,
-  loadPageCountAction = defaultLoadPageCountAction,
-  loadRecipeAction = loadGalleryPageAction,
+  loadPageCount = defaultLoadPageCount,
+  loadRecipes = loadGalleryPage,
   ...props
 }: RecipeGalleryProps) => {
   // TODO: improve on this by being more granular with caching strategy
   noStore();
-  const pageCount = await loadPageCountAction({ pageSize, filter, category });
-  const recipes = await loadRecipeAction({ page, pageSize, filter, category });
+  const pageCount = await loadPageCount({ pageSize, filter, category });
+  const recipes = await loadRecipes({ page, pageSize, filter, category });
   return (
     <Suspense fallback={<p>Loading...</p>}>
       <ul className={cn('w-full grid grid-cols-9 gap-4', props.className)}>

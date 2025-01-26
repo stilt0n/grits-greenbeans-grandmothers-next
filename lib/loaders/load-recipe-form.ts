@@ -1,11 +1,9 @@
-'use server';
-
 import { getRecipes } from '@/lib/repository/recipe-store/read';
 import { createWhereIdClause } from '@/lib/repository/recipe-store/utils';
 import { recipePageSchema } from '@/lib/translation/schema';
 import { convertPageToForm } from '@/lib/translation/parsers';
 
-export const loadRecipeFormAction = async (recipeId: number) => {
+export const loadRecipeForm = async (recipeId: number) => {
   const recipes = await getRecipes({
     keys: [
       'title',

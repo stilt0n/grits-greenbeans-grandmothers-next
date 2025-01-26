@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { EditRecipe } from './edit-recipe.client';
 import { unstable_noStore as noStore } from 'next/cache';
 import { Suspense } from 'react';
-import { loadRecipeFormAction } from '@/lib/actions/load-edit-page';
+import { loadRecipeForm } from '@/lib/loaders/load-recipe-form';
 
 const Page = async ({ params }: { params: { slug: string } }) => {
   noStore();
@@ -12,7 +12,7 @@ const Page = async ({ params }: { params: { slug: string } }) => {
     return notFound();
   }
 
-  const result = await loadRecipeFormAction(recipeId);
+  const result = await loadRecipeForm(recipeId);
   if (result === undefined) {
     return notFound();
   }

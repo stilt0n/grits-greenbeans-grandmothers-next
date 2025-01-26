@@ -1,10 +1,7 @@
 'use server';
 
 import { images } from '@/lib/constants';
-import type {
-  LoadRecipeAction,
-  LoadPageCountAction,
-} from '@/components/recipe-gallery';
+import type { LoadRecipes, LoadPageCount } from '@/components/recipe-gallery';
 
 const createDummyRecipes = (count: number) => {
   return [...Array(count)].map((_, i) => ({
@@ -27,7 +24,7 @@ const makeFilter =
   ({ title }: DatabaseEntry) =>
     title[func](filterValue);
 
-export const mockLoadRecipeAction: LoadRecipeAction = async ({
+export const mockLoadRecipes: LoadRecipes = async ({
   page = 0,
   pageSize = 10,
   filter,
@@ -46,8 +43,5 @@ export const mockLoadRecipeAction: LoadRecipeAction = async ({
     .slice(page * pageSize, (page + 1) * pageSize);
 };
 
-export const mockLoadPageCountAction: LoadPageCountAction = async ({
-  filter,
-  pageSize,
-}) =>
+export const mockLoadPageCount: LoadPageCount = async ({ filter, pageSize }) =>
   Math.ceil(mockDatabase.filter(makeFilter(filter ?? '')).length / pageSize);

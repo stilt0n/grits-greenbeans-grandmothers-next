@@ -1,5 +1,3 @@
-'use server';
-
 import { SearchCategory } from '@/lib/translation/schema';
 import { getRecipeCount } from '@/lib/repository/recipe-store/read';
 
@@ -10,7 +8,7 @@ export interface LoadPageCountArgs {
   debug?: boolean;
 }
 
-export const loadPageCountAction = async ({
+export const loadPageCount = async ({
   pageSize,
   filter,
   category,
