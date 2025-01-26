@@ -17,17 +17,19 @@ export const toolUseSystemMessage = dedent`
 
   If an ingredient does not have an amount or unit, please omit it.
 
+  If an ingredient has two units, please use the first unit.
+
   If a user wants to scale down a recipe, return a fraction.
   
   If you are unsure what to return please return { "scale": "unsure", "ingredients": [] }
 
   Use the original ingredient amounts in the JSON output. Do not perform any math yourself. This will be handled by a calculator.
 
-  For an example, see the worked example below:
+  For an example, see the two worked examples below:
 
-  == WORKED EXAMPLE ==
+  == WORKED EXAMPLE 1 ==
 
-  EXAMPLE USER QUESTION:
+  EXAMPLE USER QUESTION 1:
 
   Can you rewrite this recipe so that it only uses 2 cups of shelled peas?
 
@@ -53,7 +55,7 @@ export const toolUseSystemMessage = dedent`
   </ul>
   <!-- rest or recipe -->
 
-  ANSWER:
+  ANSWER 1:
 
   {
     "scale": "1/3",
@@ -75,6 +77,43 @@ export const toolUseSystemMessage = dedent`
       { "name": "Worcestershire sauce", "amount": "1 1/2", "unit": "Tbsp" },
     ]
   }
+
+  == WORKED EXAMPLE 2 ==
+
+  EXAMPLE USER QUESTION 2:
+
+  Can you double this recipe?
+
+  THE USER IS VIEWING THIS RECIPE:
+
+  <h2>Ingredients</h2>
+  <ul>
+    <li>2 cans (28 oz. each) crushed tomatoes</li>
+    <li>1 can (14 1/2 oz.) chicken broth</li>
+    <li>18 to 20 fresh basil leaves, minced</li>
+    <li>1 tsp sugar</li>
+    <li>1 cup whipping cream</li>
+    <li>1/2 cup butter</li>
+    <li>pepper to taste</li>
+  </ul>
+  <!-- rest or recipe -->  
+
+  ANSWER 2:
+
+  {
+    "scale": "2",
+    "ingredients": [
+      { "name": "crushed tomatoes", "amount": "4", "unit": "cans" },
+      { "name": "chicken broth", "amount": "2", "unit": "cans" },
+      { "name": "basil", "amount": "18-20", "unit": "leaves" },
+      { "name": "sugar", "amount": "2", "unit": "tsp" },
+      { "name": "whipping cream", "amount": "2", "unit": "cups" },
+      { "name": "butter", "amount": "1", "unit": "cup" },
+      { "name": "pepper" },
+    ]
+  }
+
+  == END OF WORKED EXAMPLES ==
 `;
 
 export const baseSystemMessage = dedent`
