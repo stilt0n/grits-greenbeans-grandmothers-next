@@ -23,7 +23,7 @@ const classifyPrompt = async (messages: CoreMessage[]) => {
     output: 'object',
     schema: z.object({ calculation: z.boolean() }),
     system: classifierSystemMessage,
-    messages: messages,
+    messages,
   });
 
   return calculation;

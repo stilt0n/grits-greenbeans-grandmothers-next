@@ -1,5 +1,3 @@
-'use server';
-
 import { galleryItemSchema, SearchCategory } from '@/lib/translation/schema';
 import {
   createPaginateClause,
@@ -19,7 +17,7 @@ export interface LoadGalleryArgs {
   debug?: boolean;
 }
 
-export const loadGalleryPageAction = async ({
+export const loadGalleryPage = async ({
   page,
   pageSize,
   filter,
