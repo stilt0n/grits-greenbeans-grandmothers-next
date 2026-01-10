@@ -1,0 +1,45 @@
+name: AI Label
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  ai-label:
+    name: add ai label
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Check if label already exists
+        id: check-label
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          labels=$(gh pr view ${{ github.event.pull_request.number }} --repo ${{ github.repository }} --json labels --jq '.labels[].name')
+          if echo "$labels" | grep -q "Ai-Generated"; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check for Claude co-author
+        if: steps.check-label.outputs.skip == 'false'
+        id: check-claude
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          commits=$(gh pr view ${{ github.event.pull_request.number }} --repo ${{ github.repository }} --json commits --jq '.commits[].messageBody')
+          if echo "$commits" | grep -qi "Co-Authored-By:.*Claude"; then
+            echo "found=true" >> $GITHUB_OUTPUT
+          else
+            echo "found=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Add AI label
+        if: steps.check-label.outputs.skip == 'false' && steps.check-claude.outputs.found == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh pr edit ${{ github.event.pull_request.number }} --repo ${{ github.repository }} --add-label "Ai-Generated"
