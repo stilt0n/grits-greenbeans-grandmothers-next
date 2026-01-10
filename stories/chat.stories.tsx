@@ -87,7 +87,7 @@ export const LongConversation: Story = {
         id: '4',
         role: 'assistant',
         content:
-          "To cook grits: Bring 4 cups of water (or a mix of water and milk) to a boil. Add 1 cup of grits slowly while stirring. Reduce heat and simmer for 15-20 minutes, stirring occasionally. Season with salt, butter, and cheese if desired.",
+          'To cook grits: Bring 4 cups of water (or a mix of water and milk) to a boil. Add 1 cup of grits slowly while stirring. Reduce heat and simmer for 15-20 minutes, stirring occasionally. Season with salt, butter, and cheese if desired.',
       },
       { id: '5', role: 'user', content: 'What do you serve them with?' },
       {

@@ -39,7 +39,10 @@ export const ChatInput = ({
   return (
     <form
       onSubmit={handleSubmit}
-      className={cn('flex items-end gap-2 p-4 border-t border-zinc-200', className)}
+      className={cn(
+        'flex items-end gap-2 p-4 border-t border-zinc-200',
+        className
+      )}
     >
       <textarea
         value={value}
@@ -56,12 +59,12 @@ export const ChatInput = ({
         )}
       />
       <Button
-        type="submit"
-        size="icon"
+        type='submit'
+        size='icon'
         disabled={disabled || !value.trim()}
-        aria-label="Send message"
+        aria-label='Send message'
       >
-        <PaperPlaneIcon className="h-4 w-4" />
+        <PaperPlaneIcon className='h-4 w-4' />
       </Button>
     </form>
   );
