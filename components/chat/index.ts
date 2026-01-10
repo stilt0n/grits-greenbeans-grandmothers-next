@@ -2,6 +2,6 @@ export {
   ChatBubble,
   type ChatBubbleProps,
   type MessageRole,
-} from './ChatBubble';
-export { Chat, type ChatProps, type Message } from './Chat.client';
-export { ChatInput, type ChatInputProps } from './ChatInput.client';
+} from './chat-bubble';
+export { Chat, type ChatProps, type Message } from './chat.client';
+export { ChatInput, type ChatInputProps } from './chat-input.client';
