@@ -27,10 +27,7 @@ export const Chat = ({ messages, className }: ChatProps) => {
   return (
     <div
       ref={scrollRef}
-      className={cn(
-        'flex flex-col gap-3 overflow-y-auto p-4',
-        className
-      )}
+      className={cn('flex flex-col gap-3 overflow-y-auto p-4', className)}
     >
       {messages.map((message) => (
         <ChatBubble
