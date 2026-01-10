@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { ChatBubble, type MessageRole } from './ChatBubble';
+import { ChatBubble, type MessageRole } from './chat-bubble';
 import { cn } from '@/lib/utils';
 
 export interface Message {
@@ -26,6 +26,9 @@ export const Chat = ({ messages, className }: ChatProps) => {
 
   return (
     <div
+      role='log'
+      aria-live='polite'
+      aria-label='Chat messages'
       ref={scrollRef}
       className={cn('flex flex-col gap-3 overflow-y-auto p-4', className)}
     >

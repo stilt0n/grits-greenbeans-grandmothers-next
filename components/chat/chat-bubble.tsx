@@ -13,6 +13,7 @@ export const ChatBubble = ({ role, content, className }: ChatBubbleProps) => {
 
   return (
     <div
+      aria-label={isUser ? 'User message' : 'Assistant message'}
       className={cn(
         'flex w-full',
         isUser ? 'justify-end' : 'justify-start',

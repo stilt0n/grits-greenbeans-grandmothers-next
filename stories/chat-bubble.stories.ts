@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { ChatBubble } from '@/components/chat/ChatBubble';
+import { ChatBubble } from '@/components/chat/chat-bubble';
 
 const meta = {
   title: 'Chat/ChatBubble',
