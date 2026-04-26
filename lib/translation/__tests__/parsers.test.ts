@@ -201,9 +201,7 @@ describe('convertNluxChatHistory', () => {
   });
 
   it('passes through string messages unchanged', () => {
-    const result = convertNluxChatHistory([
-      { role: 'user', message: 'hello' },
-    ]);
+    const result = convertNluxChatHistory([{ role: 'user', message: 'hello' }]);
     expect(result).toEqual([{ role: 'user', content: 'hello' }]);
   });
 
