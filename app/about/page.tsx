@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import type { Metadata } from 'next';
 import { FamilyOnly } from '@/components/auth/family-only';
 import {
   FAMILY_TREE_LINK,
@@ -6,6 +7,20 @@ import {
   GITHUB_REPO_LINK,
 } from '@/lib/constants';
 import { EmailIcon } from '@/components/icons';
+
+const ABOUT_DESCRIPTION =
+  'The story behind our family recipe collection — Ada Wesson Jones’s 1994 introduction, the cooks who came before us, and the cookbook this site continues.';
+
+export const metadata: Metadata = {
+  title: 'About',
+  description: ABOUT_DESCRIPTION,
+  openGraph: {
+    title: 'About',
+    description: ABOUT_DESCRIPTION,
+    url: '/about',
+    type: 'article',
+  },
+};
 
 const AboutPage = () => {
   return (
