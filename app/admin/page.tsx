@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { currentUser } from '@clerk/nextjs/server';
 import { hasAdminPermissions } from '@/lib/auth';
@@ -22,6 +23,10 @@ const inavalidateAllCachesAction = async () => {
     revalidatePath(`/recipes/${id}`);
   }
   console.log('admin: finished revalidating paths');
+};
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
 };
 
 const AdminStuff = async () => {

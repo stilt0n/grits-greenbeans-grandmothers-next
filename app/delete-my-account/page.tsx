@@ -1,3 +1,9 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
+
 const DeleteMyAccount = () => (
   <div className='prose prose-zinc rendered-recipe bg-white mx-auto px-6 min-h-full -mt-4 pt-4 border-x border-zinc-200'>
     <h1>How to delete your account</h1>

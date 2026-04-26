@@ -2,14 +2,41 @@ import { ClerkProvider } from '@clerk/nextjs';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import Navbar from '@/components/navbar';
+import { SITE_URL } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
+const SITE_NAME = 'Grits Greenbeans and Grandmothers';
+const SITE_DESCRIPTION =
+  'Heritage Southern recipes passed down through generations of our family — from a 1994 family cookbook to your kitchen today.';
+
 export const metadata: Metadata = {
-  title: 'Grits Greenbeans and Grandmothers',
-  description: 'A site for family recipes',
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: SITE_NAME,
+    template: `%s — ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  openGraph: {
+    type: 'website',
+    siteName: SITE_NAME,
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+    locale: 'en_US',
+  },
+  twitter: {
+    card: 'summary',
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({

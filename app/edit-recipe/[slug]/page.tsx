@@ -1,8 +1,13 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { EditRecipe } from './edit-recipe.client';
 import { unstable_noStore as noStore } from 'next/cache';
 import { Suspense } from 'react';
 import { loadRecipeForm } from '@/lib/loaders/load-recipe-form';
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 const Page = async ({ params }: { params: { slug: string } }) => {
   noStore();
