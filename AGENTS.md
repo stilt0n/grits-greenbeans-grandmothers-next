@@ -78,7 +78,7 @@ Grits, Greenbeans and Grandmothers is a Next.js recipe website that digitizes fa
 ### Other Directories
 
 - **`scripts/`**: Utility scripts (backup, upload, etc.)
-- **`tests/`**: Playwright E2E tests
+- **`e2e/`**: Playwright E2E tests
 - **`components/__tests__/`**: Unit tests for components
 - **`stories/`**: Storybook stories
 - **`migrations/`**: Drizzle database migrations
@@ -169,7 +169,7 @@ export const loadSomething = async (args: LoadArgs) => {
 ### E2E Tests
 
 - Use Playwright
-- Located in `tests/`
+- Located in `e2e/`
 - Configuration in `playwright.config.ts`
 
 ### Running Tests

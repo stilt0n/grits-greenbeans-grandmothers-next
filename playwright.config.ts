@@ -18,7 +18,8 @@ const { VERCEL_AUTOMATION_BYPASS_SECRET } = requireEnv(
   'VERCEL_AUTOMATION_BYPASS_SECRET'
 );
 export default defineConfig({
-  testDir: './tests',
+  testDir: './e2e',
+  testMatch: /.*\.e2e\.ts/,
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
