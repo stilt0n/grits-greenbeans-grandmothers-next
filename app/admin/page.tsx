@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { getRecipes } from '@/lib/repository/recipe-store/read';
 import { revalidatePath } from 'next/cache';
 import { AdminActionButton } from './admin-action-button';
+import { recipePath } from '@/lib/seo/recipe-slug';
 
 const invalidationSchema = z.array(
   z.object({
@@ -20,7 +21,7 @@ const inavalidateAllCachesAction = async () => {
   const rows = invalidationSchema.parse(result);
   for (const { id, title } of rows) {
     console.log(`admin: invalidating cache for ${title} page`);
-    revalidatePath(`/recipes/${id}`);
+    revalidatePath(recipePath(id, title));
   }
   console.log('admin: finished revalidating paths');
 };

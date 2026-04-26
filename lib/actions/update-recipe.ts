@@ -70,6 +70,6 @@ export const updateRecipeAction = async ({
     tagsToRemove,
   });
 
-  revalidatePath(`/recipes/${id}`);
+  revalidatePath('/recipes/[slug]', 'page');
   return result;
 };

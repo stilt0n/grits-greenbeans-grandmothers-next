@@ -4,6 +4,7 @@ import { EditRecipe } from './edit-recipe.client';
 import { unstable_noStore as noStore } from 'next/cache';
 import { Suspense } from 'react';
 import { loadRecipeForm } from '@/lib/loaders/load-recipe-form';
+import { parseRecipeSlug } from '@/lib/seo/recipe-slug';
 
 export const metadata: Metadata = {
   robots: { index: false, follow: false },
@@ -11,11 +12,11 @@ export const metadata: Metadata = {
 
 const Page = async ({ params }: { params: { slug: string } }) => {
   noStore();
-  const { slug } = params;
-  const recipeId = parseInt(slug);
-  if (Number.isNaN(recipeId)) {
+  const parsed = parseRecipeSlug(params.slug);
+  if (!parsed) {
     return notFound();
   }
+  const recipeId = parsed.id;
 
   const result = await loadRecipeForm(recipeId);
   if (result === undefined) {

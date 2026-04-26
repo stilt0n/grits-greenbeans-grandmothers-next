@@ -1,5 +1,6 @@
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import Image from 'next/image';
+import type { Metadata } from 'next';
 import { loadRecipePage } from '@/lib/loaders/load-recipe-page';
 import { currentUser } from '@clerk/nextjs/server';
 import { hasElevatedPermissions } from '@/lib/auth';
@@ -10,17 +11,52 @@ import { images } from '@/lib/constants';
 import { ReactNode } from 'react';
 import { ChatPanel } from '@/components/grandmother-bot/chat-panel.client';
 import { convertRecipeToPromptContext } from '@/lib/translation/parsers';
+import {
+  parseRecipeSlug,
+  recipePath,
+  editRecipePath,
+  slugify,
+} from '@/lib/seo/recipe-slug';
+
+export const generateMetadata = async ({
+  params,
+}: {
+  params: { slug: string };
+}): Promise<Metadata> => {
+  const parsed = parseRecipeSlug(params.slug);
+  if (!parsed) return {};
+  const recipe = await loadRecipePage(parsed.id);
+  if (!recipe) return {};
+  const url = recipePath(parsed.id, recipe.title);
+  return {
+    title: recipe.title,
+    description: recipe.description,
+    alternates: { canonical: url },
+    openGraph: {
+      title: recipe.title,
+      description: recipe.description,
+      url,
+      type: 'article',
+      images: recipe.imageUrl ? [{ url: recipe.imageUrl }] : undefined,
+    },
+  };
+};
 
 const Page = async ({ params }: { params: { slug: string } }) => {
-  const { slug } = params;
-  const recipeId = parseInt(slug);
-  if (Number.isNaN(recipeId)) {
+  const parsed = parseRecipeSlug(params.slug);
+  if (!parsed) {
     return notFound();
   }
+  const { id: recipeId, slug } = parsed;
 
   const recipe = await loadRecipePage(recipeId);
   if (recipe === undefined) {
     return notFound();
+  }
+
+  const canonicalSlug = slugify(recipe.title);
+  if (slug !== canonicalSlug) {
+    permanentRedirect(recipePath(recipeId, recipe.title));
   }
 
   const user = await currentUser();
@@ -74,7 +110,10 @@ const Page = async ({ params }: { params: { slug: string } }) => {
         {TagArea}
         {hasElevatedPermissions(user) ? (
           <div className='flex justify-center'>
-            <LinkButton className='mb-4 mt-8' href={`/edit-recipe/${recipeId}`}>
+            <LinkButton
+              className='mb-4 mt-8'
+              href={editRecipePath(recipeId, recipe.title)}
+            >
               Edit
             </LinkButton>
           </div>
