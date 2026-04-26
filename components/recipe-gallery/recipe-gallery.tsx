@@ -10,6 +10,7 @@ import { Suspense } from 'react';
 import { unstable_noStore as noStore } from 'next/cache';
 import { loadGalleryPage } from '@/lib/loaders/load-gallery-page';
 import { loadPageCount as defaultLoadPageCount } from '@/lib/loaders/load-page-count';
+import { recipePath } from '@/lib/seo/recipe-slug';
 
 export type LoadRecipes = typeof loadGalleryPage;
 
@@ -62,7 +63,10 @@ const RecipeGallery = async ({
               key={recipeProps.title}
               className='col-span-7 col-start-2 h-[28rem]'
             >
-              <RecipeCard {...recipeProps} href={`/recipes/${id}`} />
+              <RecipeCard
+                {...recipeProps}
+                href={recipePath(id, recipeProps.title)}
+              />
             </li>
           );
         })}

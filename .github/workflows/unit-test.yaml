@@ -21,3 +21,7 @@ jobs:
       - name: Run component unit tests
         id: bun-test-client
         run: bun test
+
+      - name: Run lib unit tests
+        id: bun-test-lib
+        run: find lib \( -name '*.test.ts' -o -name '*.test.tsx' \) | sed 's|^|./|' | xargs bun test
