@@ -12,7 +12,7 @@ export const images = {
 const stripTrailingSlash = (url: string) => url.replace(/\/+$/, '');
 
 export const SITE_URL = stripTrailingSlash(
-  process.env.SITE_URL ?? 'https://gritsgreenbeansandgrandmothers.com',
+  process.env.SITE_URL ?? 'https://gritsgreenbeansandgrandmothers.com'
 );
 
 export const FAMILY_TREE_LINK = process.env.family_tree_link ?? '';
