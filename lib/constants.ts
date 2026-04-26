@@ -9,7 +9,11 @@ export const images = {
     'https://grits-greenbeans-and-grandmothers.s3.us-east-005.backblazeb2.com/images/default_recipe_image_00.png',
 };
 
-export const SITE_URL = 'https://gritsgreenbeansandgrandmothers.com';
+const stripTrailingSlash = (url: string) => url.replace(/\/+$/, '');
+
+export const SITE_URL = stripTrailingSlash(
+  process.env.SITE_URL ?? 'https://gritsgreenbeansandgrandmothers.com',
+);
 
 export const FAMILY_TREE_LINK = process.env.family_tree_link ?? '';
 export const EMAIL_ADDRESS = process.env.email_address ?? '';
