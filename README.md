@@ -42,28 +42,11 @@ Instructions are entered through a What-You-See-is-What-You-Get (WYSIWYG) text e
 - grandmother_bot can use tools to help scale recipes up and down accurately
 - Recipe descriptions can be generated using AI by clicking a button in the recipe create/edit forms. The AI uses the title and instructions to come up with a description.
 
-## Technical details -- overview
+## Contributing
 
-Technologies I used to build this site:
+If you'd like to run the project locally or contribute, see [CONTRIBUTING.md](./CONTRIBUTING.md) for the tech stack, project structure, and development workflow.
 
-- NextJS
-- Tailwind CSS for styling
-- Turso (LibSQL) as a database and database host
-- Drizzle ORM
-- Backblaze B2 and AWS S3 SDK for image storage
-- Clerk for authentication
-- shadcn UI as a component library
-- TipTap for the text editor component
-- react-image-crop for the image cropper component
-- sharp for cropping and downsizing images
-- Vercel for hosting
-- Bun as a package manager (NextJS still uses node for the runtime)
-- Bun test and react-testing-library for unit tests
-- Playwright for E2E tests
-- OpenAI, Vercel AI SDK for AI features
-- nlux for a chat component
-
-## Technical details -- Project Philosophy
+## Project Philosophy
 
 My [last project](https://github.com/stilt0n/dependor) was written in Go, mostly using TDD and with only one dependency. This project is basically the opposite of that project:
 
