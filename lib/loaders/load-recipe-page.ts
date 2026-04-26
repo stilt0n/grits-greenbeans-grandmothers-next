@@ -1,8 +1,9 @@
+import { cache } from 'react';
 import { getRecipes } from '@/lib/repository/recipe-store/read';
 import { createWhereIdClause } from '@/lib/repository/recipe-store/utils';
 import { recipePageSchema } from '@/lib/translation/schema';
 
-export const loadRecipePage = async (recipeId: number) => {
+export const loadRecipePage = cache(async (recipeId: number) => {
   const recipes = await getRecipes({
     keys: [
       'title',
@@ -22,4 +23,4 @@ export const loadRecipePage = async (recipeId: number) => {
 
   const { success, data } = recipePageSchema.safeParse(recipes[0]);
   return success ? data : undefined;
-};
+});

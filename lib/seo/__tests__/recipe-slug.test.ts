@@ -77,6 +77,10 @@ describe('parseRecipeSlug', () => {
     expect(parseRecipeSlug('')).toBeNull();
   });
 
+  it('returns null when the slug segment is empty (leading dash)', () => {
+    expect(parseRecipeSlug('-42')).toBeNull();
+  });
+
   it('takes only the trailing numeric segment as the id', () => {
     expect(parseRecipeSlug('recipe-2-electric-boogaloo-99')).toEqual({
       id: 99,

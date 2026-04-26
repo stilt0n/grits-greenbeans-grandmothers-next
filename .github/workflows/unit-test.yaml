@@ -24,4 +24,4 @@ jobs:
 
       - name: Run lib unit tests
         id: bun-test-lib
-        run: find lib \( -name '*.test.ts' -o -name '*.test.tsx' \) | sed 's|^|./|' | xargs bun test
+        run: find lib \( -name '*.test.ts' -o -name '*.test.tsx' \) -exec printf './%s\0' {} + | xargs -0 -r bun test

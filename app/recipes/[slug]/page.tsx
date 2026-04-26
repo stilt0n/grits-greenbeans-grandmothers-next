@@ -1,4 +1,4 @@
-import { notFound, redirect } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import Image from 'next/image';
 import type { Metadata } from 'next';
 import { loadRecipePage } from '@/lib/loaders/load-recipe-page';
@@ -56,7 +56,7 @@ const Page = async ({ params }: { params: { slug: string } }) => {
 
   const canonicalSlug = slugify(recipe.title);
   if (slug !== canonicalSlug) {
-    redirect(recipePath(recipeId, recipe.title));
+    permanentRedirect(recipePath(recipeId, recipe.title));
   }
 
   const user = await currentUser();

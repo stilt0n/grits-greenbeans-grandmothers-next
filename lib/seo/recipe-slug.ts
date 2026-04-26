@@ -25,7 +25,7 @@ export interface ParsedRecipeSlug {
 }
 
 export const parseRecipeSlug = (param: string): ParsedRecipeSlug | null => {
-  const match = param.match(/^(?:(.*)-)?(\d+)$/);
+  const match = param.match(/^(?:(.+)-)?(\d+)$/);
   if (!match) {
     return null;
   }
