@@ -1,11 +1,15 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+import { NextResponse } from 'next/server';
 
 const isWritePermissionRoute = createRouteMatcher([
   '/create-recipe(.*)',
   '/edit-recipe(.*)',
 ]);
 
-const isAdminPermissionRoute = createRouteMatcher(['/(trpc)(.*)']);
+const isAdminPermissionRoute = createRouteMatcher([
+  '/(trpc)(.*)',
+  '/admin(.*)',
+]);
 
 export default clerkMiddleware((auth, req) => {
   if (isWritePermissionRoute(req)) {
@@ -20,10 +24,11 @@ export default clerkMiddleware((auth, req) => {
   }
 
   if (isAdminPermissionRoute(req)) {
-    auth().protect(() => {
-      const { userId, sessionClaims } = auth();
-      return !!userId && sessionClaims?.metadata?.role === 'admin';
-    });
+    const { userId, sessionClaims } = auth();
+    const isAdmin = !!userId && sessionClaims?.metadata?.role === 'admin';
+    if (!isAdmin) {
+      return NextResponse.rewrite(new URL('/_not-found', req.url));
+    }
   }
 });
 
