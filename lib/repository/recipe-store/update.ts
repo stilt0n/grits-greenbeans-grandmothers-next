@@ -1,5 +1,5 @@
 import { RecipePageData } from '@/lib/translation/schema';
-import { db } from '@/db';
+import { getDb } from '@/db';
 import { recipes, tags, recipesToTags } from '@/db/schema';
 import { and, eq, inArray } from 'drizzle-orm';
 import { extractColumn } from '@/lib/utils';
@@ -17,6 +17,7 @@ export const updateRecipe = ({
   tagsToAdd,
   tagsToRemove,
 }: UpdateRecipeArgs) => {
+  const db = getDb();
   return db.transaction(async (trx) => {
     if (tagsToAdd.length > 0 || tagsToRemove.length > 0) {
       // check for existing tags

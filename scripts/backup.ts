@@ -1,10 +1,11 @@
-import { db } from '@/db';
+import { getDb } from '@/db';
 import { recipes } from '@/db/schema';
 // Rudimentary database backup. Should eventually be replaced by a real backup
 // but will work okay with the current database size. Should the database need
 // to be recreated the JSON file can be parsed and inserted.
 const backupRecipes = async (filename = 'default.backup.json') => {
   try {
+    const db = getDb();
     const rows = await db.select().from(recipes);
     const jsonString = JSON.stringify({
       rows,

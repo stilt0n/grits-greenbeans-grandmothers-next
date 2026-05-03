@@ -1,9 +1,10 @@
-import { db } from '@/db';
+import { getDb } from '@/db';
 import { recipes, recipesToTags, tags } from '@/db/schema';
 import { RecipePageData } from '@/lib/translation/schema';
 import { inArray } from 'drizzle-orm';
 
 export const createRecipe = async (recipePageData: RecipePageData) => {
+  const db = getDb();
   const { tags: tagArray, ...recipe } = recipePageData;
   return db.transaction(async (trx) => {
     const [{ recipeId }] = await trx
