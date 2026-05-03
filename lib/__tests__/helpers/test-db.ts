@@ -2,7 +2,7 @@ import { afterAll, beforeAll, beforeEach } from 'bun:test';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { createClient } from '@libsql/client';
+import { createClient, type Client } from '@libsql/client';
 import { drizzle } from 'drizzle-orm/libsql';
 import { migrate } from 'drizzle-orm/libsql/migrator';
 import { dbStorage, type Db } from '@/db';
@@ -22,12 +22,14 @@ import * as schema from '@/db/schema';
 // from accidentally reaching prod.
 export const setupTestDb = () => {
   let testDb: Db;
-  let tmpDir: string;
+  let client: Client | undefined;
+  let tmpDir: string | undefined;
 
   beforeAll(async () => {
     tmpDir = mkdtempSync(join(tmpdir(), 'ggg-test-db-'));
     const url = `file:${join(tmpDir, 'test.db')}`;
-    testDb = drizzle(createClient({ url }), { schema });
+    client = createClient({ url });
+    testDb = drizzle(client, { schema });
     await migrate(testDb, { migrationsFolder: './migrations' });
   });
 
@@ -36,7 +38,8 @@ export const setupTestDb = () => {
   });
 
   afterAll(() => {
-    rmSync(tmpDir, { recursive: true, force: true });
+    client?.close();
+    if (tmpDir) rmSync(tmpDir, { recursive: true, force: true });
   });
 
   return () => testDb;
