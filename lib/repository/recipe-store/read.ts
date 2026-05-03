@@ -5,7 +5,7 @@ import {
   queryFromKeys,
   createWhereIdClause,
 } from './utils';
-import { db } from '@/db';
+import { getDb } from '@/db';
 import { recipes, recipesToTags, tags } from '@/db/schema';
 import { count, countDistinct, eq, like } from 'drizzle-orm';
 import { getTagsUtilitySchema } from '@/lib/translation/utils';
@@ -42,6 +42,7 @@ export const getRecipes = async ({
 
   const columns = queryFromKeys(recipeKeys);
 
+  const db = getDb();
   // get query pagination
   // get where clause
   const results = await db.query.recipes.findMany({
@@ -107,6 +108,7 @@ export const getRecipesFilteredByTag = async ({
   offset,
   limit,
 }: GetRecipesFilteredByTagArgs) => {
+  const db = getDb();
   let qb;
 
   // do not use join if there is no filter
@@ -156,6 +158,7 @@ export const getRecipesFilteredByTag = async ({
 };
 
 const getRecipeCountFilteredByTags = (searchString?: string) => {
+  const db = getDb();
   if (!searchString) {
     return db.select({ count: count() }).from(recipes);
   }
@@ -183,6 +186,7 @@ export const getRecipeCount = (
   if (category === 'tag') {
     return getRecipeCountFilteredByTags(searchString);
   }
+  const db = getDb();
   const qb = db.select({ count: count() }).from(recipes).$dynamic();
   if (searchString) {
     withFilter(qb, searchString, category);
@@ -201,6 +205,7 @@ export const getRecipeTags = async (recipeId: number) => {
 };
 
 export const getRecipeImageUrl = async (recipeId: number) => {
+  const db = getDb();
   const result = await db
     .select({ imageUrl: recipes.imageUrl })
     .from(recipes)
