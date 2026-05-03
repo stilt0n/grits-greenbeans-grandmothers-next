@@ -1,4 +1,4 @@
-import { readStreamableValue } from 'ai/rsc';
+import { readStreamableValue } from '@ai-sdk/rsc';
 import { useAsStreamAdapter, type StreamingAdapterObserver } from '@nlux/react';
 import { convertNluxChatHistory } from '@/lib/translation/parsers';
 import { recipeChatAction } from '@/lib/actions/ai/recipe-chat';
