@@ -1,4 +1,4 @@
-import type { CoreMessage } from 'ai';
+import type { ModelMessage } from 'ai';
 import type { ChatItem } from '@nlux/react';
 import { IMAGE_BASE_URL } from '../constants';
 import {
@@ -104,7 +104,7 @@ ${indentedInstructions}
 // totally sure. We need to converte these chunks into a single string when this happens.
 export const convertNluxChatHistory = (
   chatHistory?: ChatItem<string | string[]>[]
-): CoreMessage[] => {
+): ModelMessage[] => {
   return (
     chatHistory?.map(({ role, message }) => ({
       role,

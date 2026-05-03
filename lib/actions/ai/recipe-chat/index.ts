@@ -1,8 +1,8 @@
 'use server';
 
 import { openai } from '@ai-sdk/openai';
-import { generateObject, streamText, type CoreMessage } from 'ai';
-import { createStreamableValue } from 'ai/rsc';
+import { generateText, streamText, Output, type ModelMessage } from 'ai';
+import { createStreamableValue } from '@ai-sdk/rsc';
 import {
   createScaledRecipePrompt,
   classifierSystemMessage,
@@ -15,13 +15,14 @@ import { z } from 'zod';
 
 const MAX_HISTORY = 10;
 
-const classifyPrompt = async (messages: CoreMessage[]) => {
+const classifyPrompt = async (messages: ModelMessage[]) => {
   const {
-    object: { calculation },
-  } = await generateObject({
+    output: { calculation },
+  } = await generateText({
     model: openai('gpt-4o-mini'),
-    output: 'object',
-    schema: z.object({ calculation: z.boolean() }),
+    output: Output.object({
+      schema: z.object({ calculation: z.boolean() }),
+    }),
     system: classifierSystemMessage,
     messages,
   });
@@ -29,27 +30,26 @@ const classifyPrompt = async (messages: CoreMessage[]) => {
   return calculation;
 };
 
-const extractIngredientsAndScale = async (messages: CoreMessage[]) => {
+const extractIngredientsAndScale = async (messages: ModelMessage[]) => {
   // this should have been converted to a string before being passed to the action
   const prompt = messages.at(-1)!.content as string;
-  const { object } = await generateObject({
+  const { output } = await generateText({
     model: openai('gpt-4o-mini'),
-    output: 'object',
-    schema: recipeMathSchema,
+    output: Output.object({ schema: recipeMathSchema }),
     system: toolUseSystemMessage,
     prompt,
   });
 
-  return object;
+  return output;
 };
 
 export const recipeChatAction = async (
   prompt: string,
-  history: CoreMessage[]
+  history: ModelMessage[]
 ) => {
   const messages = [
     ...history.slice(-MAX_HISTORY),
-    { role: 'user', content: prompt } as CoreMessage,
+    { role: 'user', content: prompt } as ModelMessage,
   ];
 
   const stream = createStreamableValue('');
