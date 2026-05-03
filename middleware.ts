@@ -28,7 +28,7 @@ export default clerkMiddleware((auth, req) => {
     const isAdmin = !!userId && sessionClaims?.metadata?.role === 'admin';
     if (!isAdmin) {
       return NextResponse.rewrite(new URL('/_not-found', req.url));
-    }
+      return new NextResponse(null, { status: 404 });
   }
 });
 
