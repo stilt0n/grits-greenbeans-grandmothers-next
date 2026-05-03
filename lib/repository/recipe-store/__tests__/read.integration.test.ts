@@ -55,7 +55,7 @@ beforeAll(async () => {
 });
 
 describe('AsyncLocalStorage propagation', () => {
-  it('binds getDb() to the in-memory test db (proves ALS works through bun hooks)', () => {
+  it('binds getDb() to the test db (proves ALS works through bun hooks)', () => {
     expect(getDb()).toBe(getTestDb());
   });
 });

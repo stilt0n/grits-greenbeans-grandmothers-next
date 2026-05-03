@@ -4,7 +4,9 @@ import { createClient } from '@libsql/client';
 import { config } from 'dotenv';
 import * as schema from '@/db/schema';
 
-config({ path: '.env.local' });
+if (process.env.NODE_ENV !== 'test') {
+  config({ path: '.env.local' });
+}
 
 export type Db = ReturnType<typeof drizzle<typeof schema>>;
 
