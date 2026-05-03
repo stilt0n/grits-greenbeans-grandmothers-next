@@ -62,6 +62,10 @@ This touches every layer; it's easy to forget one.
 5. `lib/repository/recipe-store/` read and write functions
 6. UI components and forms
 
+## Before opening a PR
+
+Run `bun run format` before committing — the CI lint job fails on unformatted files and several recent PRs have been blocked by it.
+
 ## Non-obvious things
 
 - **HTML sanitization** — TipTap output is sanitized client-side, but server actions sanitize again as defense-in-depth. Don't remove the server-side sanitization assuming the client already did it.
