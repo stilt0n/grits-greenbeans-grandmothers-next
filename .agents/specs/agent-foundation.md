@@ -153,7 +153,7 @@ Stories double as visual regression coverage and a living style reference.
 Each milestone is a reviewable commit or small PR. Granular per-step work items live in [`agent-foundation-checklist.md`](./agent-foundation-checklist.md).
 
 1. **AI SDK 6 upgrade.** ✅ Already landed via rebase. `ai` and `@ai-sdk/openai` on v6; `@ai-sdk/react` removed (unused) and will be reinstalled in Milestone 4. CVE-affected version no longer in lockfile.
-2. **Throwaway integration check.** A minimal script or temporary route that hits `gpt-5.4-mini` via AI SDK 6 (`streamText`) and prints a streamed response. Confirms the model id and v6 API shape before we touch UI. Discarded after. (Still useful even though the existing nlux-backed integration works — the new code path uses `streamText` directly, which we haven't exercised.)
+2. **Throwaway integration check.** ✅ Done. `scripts/ai-smoke.ts` calls `streamText` with `gpt-5.4-mini` and prints a streamed response — confirmed end-to-end against the real API. The unsuffixed `gpt-5.4-mini` id resolves; no dated suffix needed. The OpenAI project initially lacked access to the model (console-side fix, not code). Script kept under `scripts/` as a sanity check for future SDK/model migrations rather than deleted.
 3. **Tests + Storybook stories first.** Define the four UX states as stories. Write component tests against a mocked `useChat`. Tests should fail (no component yet) — this is the contract.
 4. **Build `chat.client.tsx`.** Recipe-agnostic, takes context as a prop. shadcn/ui primitives (per AGENTS.md). Make the stories and tests pass.
 5. **Wire the route handler.** `app/api/grandmother-bot/route.ts` with `streamText`. Real end-to-end streaming on the recipe page via a temporary mount.

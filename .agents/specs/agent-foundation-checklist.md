@@ -16,15 +16,15 @@ Landed via rebase before this checklist was authored. `ai` is on v6; `@ai-sdk/op
 - [x] CVE-affected version cleared
 - [x] Bot verified working end-to-end before migration begins
 
-## Milestone 2 — Throwaway integration check
+## Milestone 2 — Throwaway integration check ✅ done
 
 The existing nlux integration goes through its own client; we still need to exercise `streamText` directly (the AI SDK 6 API surface our new code will use) before building UI on top of it.
 
-- [ ] Confirm `OPENAI_API_KEY` is set in the local `.env` and has credit (the previous "broken" symptom was an empty balance — don't repeat).
-- [ ] Write a throwaway script (`scripts/ai-smoke.ts`) that calls `streamText` with `gpt-5.4-mini` and prints streamed output.
-- [ ] Run it; confirm streaming works and the model id resolves.
-- [ ] If `gpt-5.4-mini` errors, try the dated suffix `gpt-5.4-mini-2026-03-17` and note which one we land on.
-- [ ] Delete the script (or keep it under `scripts/` if useful as a debug tool — author's call).
+- [x] Confirm `OPENAI_API_KEY` is set in the local `.env` and has credit (the previous "broken" symptom was an empty balance — don't repeat).
+- [x] Write a throwaway script (`scripts/ai-smoke.ts`) that calls `streamText` with `gpt-5.4-mini` and prints streamed output.
+- [x] Run it; confirm streaming works and the model id resolves.
+- [x] If `gpt-5.4-mini` errors, try the dated suffix `gpt-5.4-mini-2026-03-17` and note which one we land on. — Initial runs failed with `model_not_found` because the OpenAI project lacked access; after granting access in the console (and ~16h propagation) `gpt-5.4-mini` resolves directly. No need for the dated suffix.
+- [x] Delete the script (or keep it under `scripts/` if useful as a debug tool — author's call). — Kept under `scripts/` as a sanity-check tool for future SDK/model migrations. Confirmed nothing sensitive in the file.
 
 ## Milestone 3 — Tests + Storybook stories first
 
@@ -105,4 +105,4 @@ PR:
 
 (Agents: append a short note here whenever you change the spec or discover something the spec didn't anticipate. Keep it tight — date, what changed, why.)
 
-- _none yet_
+- **2026-05-04 — M2:** OpenAI project initially returned `model_not_found` for `gpt-5.4-mini`. Resolution was granting model access in the OpenAI console (not a code or SDK issue); changes took on the order of hours to propagate. Kept `scripts/ai-smoke.ts` rather than deleting — useful as a sanity check for future SDK/model migrations. Settled on the unsuffixed `gpt-5.4-mini` id as the spec intended.
