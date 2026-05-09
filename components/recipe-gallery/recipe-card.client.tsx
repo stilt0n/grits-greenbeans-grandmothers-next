@@ -42,8 +42,8 @@ export const RecipeCardDesign = (props: RecipeCardDesignProps) => {
         />
       </div>
       <div className='h-3/5 md:h-auto p-6 md:p-8 md:w-3/5 flex flex-col justify-between md:justify-center'>
-        <CardTitle id={titleId} className='text-lg md:text-2xl'>
-          {props.title}
+        <CardTitle asChild className='text-lg md:text-2xl'>
+          <h3 id={titleId}>{props.title}</h3>
         </CardTitle>
         {props.author ? (
           <p className='mt-4 mb-3 text-zinc-700 text-sm md:text-lg'>
