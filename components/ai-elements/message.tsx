@@ -115,6 +115,8 @@ interface MessageBranchContextType {
   totalBranches: number;
   goToPrevious: () => void;
   goToNext: () => void;
+  // NOTE: codemod added <any> for React 19 type tightening. Upstream
+  // vercel/ai-elements still uses bare ReactElement; revert when syncing.
   branches: ReactElement<any>[];
   setBranches: (branches: ReactElement<any>[]) => void;
 }
