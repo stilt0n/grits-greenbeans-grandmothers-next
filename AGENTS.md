@@ -2,6 +2,12 @@
 
 Context and conventions for AI agents working on this codebase. This file focuses on things that are easy to miss by exploring the code alone — for a general project tour, tech stack, and contributor onboarding, see `CONTRIBUTING.md`.
 
+## Specs for large features
+
+Large, multi-step features get a written spec under `.agents/specs/<feature>/` (one folder per spec, containing `spec.md` + `checklist.md`). See [`.agents/specs/README.md`](.agents/specs/README.md) for when to write one and how they're structured.
+
+Small changes — bug fixes, isolated refactors, anything that fits in one PR and explains itself in the diff — don't need a spec. The PR description is enough. Don't open a spec just because a task has more than one step.
+
 ## Architecture: the layers that matter
 
 Data flows through four layers, and getting them right is the most common source of subtle bugs:
