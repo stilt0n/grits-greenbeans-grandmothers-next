@@ -43,7 +43,11 @@ export const EmailIcon = () => (
   </svg>
 );
 
-export const ReturnIcon = ({ className = 'size-6' }: { className?: string }) => (
+export const ReturnIcon = ({
+  className = 'size-6',
+}: {
+  className?: string;
+}) => (
   <svg
     xmlns='http://www.w3.org/2000/svg'
     fill='none'
