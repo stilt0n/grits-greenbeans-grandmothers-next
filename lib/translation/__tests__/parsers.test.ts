@@ -5,7 +5,6 @@ import {
   recipeToFormData,
   convertImageUrlToImageId,
   convertRecipeToPromptContext,
-  convertNluxChatHistory,
 } from '../parsers';
 import { IMAGE_BASE_URL } from '../../constants';
 
@@ -192,23 +191,5 @@ describe('convertRecipeToPromptContext', () => {
     expect(out).toContain('  step two');
     // blank line should not be indented to "  "
     expect(out).not.toContain('  \n');
-  });
-});
-
-describe('convertNluxChatHistory', () => {
-  it('returns an empty array when chatHistory is undefined', () => {
-    expect(convertNluxChatHistory()).toEqual([]);
-  });
-
-  it('passes through string messages unchanged', () => {
-    const result = convertNluxChatHistory([{ role: 'user', message: 'hello' }]);
-    expect(result).toEqual([{ role: 'user', content: 'hello' }]);
-  });
-
-  it('joins streamed string[] message chunks into a single string', () => {
-    const result = convertNluxChatHistory([
-      { role: 'assistant', message: ['hel', 'lo ', 'world'] },
-    ]);
-    expect(result).toEqual([{ role: 'assistant', content: 'hello world' }]);
   });
 });

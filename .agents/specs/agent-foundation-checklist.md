@@ -65,31 +65,32 @@ The streaming / happy-path tests can be written after — they're regression cov
 
 Steps in order:
 
-- [ ] Create `lib/ai/model.ts` — exports model id constant. (Trivial; not test-driven.)
-- [ ] **Test-first:** add `lib/ai/__tests__/prompt.test.ts` with a snapshot test against a fixture recipe. Test fails (no module yet).
-- [ ] Create `lib/ai/prompt.ts` — system prompt + context assembly (extracted from existing `lib/actions/ai/`). Make the snapshot test pass; review the snapshot output as part of the diff.
-- [ ] **Test-first (security):** add `app/api/grandmother-bot/__tests__/route.test.ts` with two failing tests:
-  - [ ] does not 401 unauthenticated callers (no auth header → 200 / streams)
-  - [ ] ignores client-supplied recipe content; loads recipe server-side via the loader (pass a request body with a tampered `recipeContent` field and assert the assembled prompt uses the loader's value, not the client's)
-- [ ] Create `app/api/grandmother-bot/route.ts` — POST handler using `streamText`. Accepts `{ messages, recipeId }`. Loads the recipe via the existing loader. No `currentUser()` gate. Make the two security tests pass.
-- [ ] Add the remaining route handler tests (written after — regression coverage):
-  - [ ] assembles system prompt + recipe context correctly (uses the prompt module; this is mostly an integration check)
-  - [ ] streams response through (mocked `streamText`)
+- [x] Create `lib/ai/model.ts` — exports model id constant. (Trivial; not test-driven.)
+- [x] **Test-first:** add `lib/ai/__tests__/prompt.test.ts` with a snapshot test against a fixture recipe. Test fails (no module yet).
+- [x] Create `lib/ai/prompt.ts` — system prompt + context assembly (extracted from existing `lib/actions/ai/`). Make the snapshot test pass; review the snapshot output as part of the diff.
+- [x] **Test-first (security):** add `app/api/grandmother-bot/__tests__/route.test.ts` with two failing tests:
+  - [x] does not 401 unauthenticated callers (no auth header → 200 / streams)
+  - [x] ignores client-supplied recipe content; loads recipe server-side via the loader (pass a request body with a tampered `recipeContent` field and assert the assembled prompt uses the loader's value, not the client's)
+- [x] Create `app/api/grandmother-bot/route.ts` — POST handler using `streamText`. Accepts `{ messages, recipeId }`. Loads the recipe via the existing loader. No `currentUser()` gate. Make the two security tests pass.
+- [x] Add the remaining route handler tests (written after — regression coverage):
+  - [x] assembles system prompt + recipe context correctly (uses the prompt module; this is mostly an integration check) — covered by `passes the assembled system prompt and messages to streamText` + the security test asserting recipe context is included.
+  - [x] streams response through (mocked `streamText`) — covered by the public-endpoint test (asserts 200 response from `toUIMessageStreamResponse()`).
 - [ ] End-to-end manual: temporarily mount `chat.client.tsx` against the real route on a recipe page, confirm streaming reaches the browser.
 
 ## Milestone 6 — Replace nlux + delete dead code
 
-- [ ] Update `components/grandmother-bot/chat-panel.client.tsx` to use the new `chat.client.tsx`.
-- [ ] Pass `key={recipeId}` to the chat component (enforces the recipe-change reset rule).
-- [ ] Verify chat-panel still owns the sheet; chat component does not know about the sheet.
-- [ ] Add a panel-level test verifying `key={recipeId}` resets state on recipe change.
-- [ ] Remove `@nlux/react` and `@nlux/themes` from `package.json`.
-- [ ] Remove any nlux-specific CSS imports / theme files.
-- [ ] Delete `components/chat/` (entire directory — `chat-bubble.tsx`, `chat-input.client.tsx`, `chat.client.tsx`, `index.ts`).
-- [ ] Delete `stories/chat-bubble.stories.ts`, `stories/chat-input.stories.tsx`, `stories/chat.stories.tsx`.
-- [ ] `bun install` to update lockfile.
-- [ ] Grep the repo for any remaining `nlux` references; remove.
-- [ ] Delete the now-unused server actions in `lib/actions/ai/` (or whatever's left from the old integration). Confirm nothing else imports them.
+- [x] Update `components/grandmother-bot/chat-panel.client.tsx` to use the new `chat.client.tsx`.
+- [x] Pass `key={recipeId}` to the chat component (enforces the recipe-change reset rule).
+- [x] Verify chat-panel still owns the sheet; chat component does not know about the sheet.
+- [x] Add a panel-level test verifying `key={recipeId}` resets state on recipe change.
+- [x] Remove `@nlux/react` and `@nlux/themes` from `package.json`.
+- [x] Remove any nlux-specific CSS imports / theme files. — The `'@nlux/themes/nova.css'` import was the only one; it left the tree when `chat-panel.client.tsx` was rewritten.
+- [x] Delete `components/chat/` (entire directory — `chat-bubble.tsx`, `chat-input.client.tsx`, `chat.client.tsx`, `index.ts`).
+- [x] Delete `stories/chat-bubble.stories.ts`, `stories/chat-input.stories.tsx`, `stories/chat.stories.tsx`.
+- [x] `bun install` to update lockfile.
+- [x] Grep the repo for any remaining `nlux` references; remove. — Also dropped `convertNluxChatHistory` (and its tests) from `lib/translation/parsers.ts` — only nlux consumed it.
+- [x] Delete the now-unused server actions in `lib/actions/ai/` (or whatever's left from the old integration). Confirm nothing else imports them. — Deleted the entire `lib/actions/ai/recipe-chat/` folder. `lib/actions/ai/generate-description.ts` is unrelated (used by the recipe edit form) and stays.
+- [x] Delete `components/grandmother-bot/config/` (adapters / history / personas / prompts) — beyond original spec; all four files were nlux-specific. **(beyond spec)**
 
 ## Milestone 7 — Polish + verify
 
@@ -130,6 +131,8 @@ PR:
 - **2026-05-09 — M4 body shape:** spec said the chat component takes `{ context: string }`, but that conflicts with M5's security invariant (route loads recipe server-side from `recipeId`; ignores client-supplied content). Replaced `context` with a generic `body?: Record<string, unknown>` that the recipe wrapper fills with `{ recipeId }`. The chat component stays recipe-agnostic; backend still owns prompt assembly.
 - **2026-05-09 — M4 streaming-state test dropped:** Tried writing a happy-path test that feeds the component an SSE-formatted ReadableStream via a `globalThis.fetch` stub. Hits a happy-dom ↔ Bun ↔ `eventsource-parser/stream` interop bug: pipeThrough rejects the stream with "readable should be ReadableStream", even though the same stream pipes fine in isolation. The component itself is fine — the test harness can't deliver a working SSE response. Streaming behavior is covered by M5 route tests and M7 manual smoke / live Playwright. Revisit when we drop happy-dom (likely on a future Bun bump).
 - **2026-05-09 — M4 MSW debate:** considered adding `msw` + `msw-storybook-addon` to power richer component tests and dynamic-state stories. Decided against: the codebase has essentially one client-side `fetch()` consumer (chat), so MSW would be infrastructure-for-show. Future agentic complexity will land server-side (route handler / tool calls) where MSW isn't the right tool. Revisit if the client surface ever grows multiple endpoints or stateful flows.
+- **2026-05-09 — M5 prompt assembly:** `convertToModelMessages` is **async** in AI SDK 6 (returns `Promise<ModelMessage[]>`). `buildChatPrompt` is therefore async too. Recipe context is appended only to the latest user message (not prepended as a separate system turn) — preserves the framing the existing `baseSystemMessage` describes ("Your question will include information about the recipe…in HTML"). Earlier history is left untouched so the transcript stays clean.
+- **2026-05-09 — M5 simplification:** dropped the classifier / `extractIngredientsAndScale` / `scaleRecipeSystemMessage` paths from the old `lib/actions/ai/recipe-chat/`. Per spec, tool use (including recipe scaling) is out of scope for v1 and lands behind rate limiting in a later branch. The new route is a single `streamText` call with the base system prompt + recipe context. The old action file stays around until M6 deletes it.
 - **2026-05-09 — M3 install lessons:**
   - **Default `bunx ai-elements` (no `add` subcommand) installs the entire registry.** Don't run it. Always use `bunx ai-elements@latest add <name>` to install a single component. Same applies to `--help` etc. — the CLI treats unknown flags as install-all.
   - **`response` is no longer a component slug.** Streaming-markdown rendering is now inside `message.tsx` as `MessageResponse`. Future agents adding markdown rendering should import from `@/components/ai-elements/message`, not look for a separate `response.tsx`.
