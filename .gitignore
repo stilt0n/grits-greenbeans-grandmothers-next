@@ -43,6 +43,7 @@ next-env.d.ts
 # local files
 PLAN.md
 *storybook.log
+/storybook-static
 transformed_image.png
 /local-backups
 
