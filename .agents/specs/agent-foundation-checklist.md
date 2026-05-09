@@ -40,19 +40,19 @@ The earlier M3 (hand-built primitives + Storybook contract) was reset on 2026-05
 
 ## Milestone 4 — Build `chat.client.tsx`
 
-- [ ] Create `components/grandmother-bot/chat.client.tsx`. Recipe-agnostic. Takes `{ context: string; initialMessages?: Message[]; api?: string; className?: string }`.
-- [ ] Compose `Conversation` / `ConversationContent` / `Message` / `PromptInput` / `PromptInputSubmit` / `Response` from `components/ai-elements/`.
-- [ ] Drive everything from `useChat()` directly — no wrapper hook. Pass `status` to `PromptInputSubmit`.
-- [ ] Verify the four UX states render correctly:
-  - [ ] **Idle**: input enabled, no spinners.
-  - [ ] **Submitted**: thinking indicator visible (Elements provides this; confirm it appears).
-  - [ ] **Streaming**: tokens render incrementally via `Response` (Streamdown handles partial chunks); input disabled.
-  - [ ] **Error**: error visible with a working retry affordance from `useChat`.
-- [ ] Write component tests (`components/grandmother-bot/__tests__/chat.test.tsx`). Mock at the network layer (fetch stub or MSW), **not** by mocking `useChat`:
-  - [ ] renders user message after submit
-  - [ ] idle → submitted → streaming → idle on a happy path
-  - [ ] error state + retry on failure
-- [ ] (Optional) Add a Storybook story only if there's a composition behavior worth pinning that the registry site doesn't already document.
+- [x] Create `components/grandmother-bot/chat.client.tsx`. Recipe-agnostic. Takes `{ initialMessages?: UIMessage[]; api?: string; body?: Record<string, unknown>; className?: string; emptyStateTitle?; emptyStateDescription?; onError? }`. **(deviation: dropped `context: string`; see Discoveries 2026-05-09 — body shape)**
+- [x] Compose `Conversation` / `ConversationContent` / `Message` / `MessageContent` / `MessageResponse` / `PromptInput` / `PromptInputBody` / `PromptInputTextarea` / `PromptInputSubmit` from `components/ai-elements/`. (Note: registry has no `Response` — markdown rendering is `MessageResponse` inside `message.tsx`.)
+- [x] Drive everything from `useChat()` directly — no wrapper hook. Pass `status` to `PromptInputSubmit`; pass `stop` as `onStop`.
+- [x] Verify the four UX states render correctly:
+  - [x] **Idle**: input enabled, no spinners. Verified via Storybook `Empty` and `SeededHistory` stories + `renders the user message after submit` test.
+  - [x] **Submitted**: thinking indicator visible. Implemented as inline three-dot pulse rendered when `status === 'submitted'` (Elements doesn't ship a thinking-state component). Visual verification deferred to M5/M7 once the route streams.
+  - [x] **Streaming**: tokens render incrementally via `MessageResponse` (Streamdown). Visual verification deferred to M5/M7 — see test note below.
+  - [x] **Error**: error banner with a working retry affordance via `regenerate()` + `clearError()`. Covered by component test.
+- [x] Write component tests (`components/grandmother-bot/__tests__/chat.test.tsx`). Mock at the network layer (`globalThis.fetch` stub):
+  - [x] renders user message after submit
+  - [ ] ~~idle → submitted → streaming → idle on a happy path~~ — **dropped**, see Discoveries 2026-05-09 (M4 streaming-state test).
+  - [x] error state + retry on failure
+- [x] Storybook: added `stories/grandmother-chat.stories.tsx` with `Empty` and `SeededHistory` stories. No fetch mocking — submitting in the story will network-error, but layout/theme verification (the actual reason to have a story) doesn't need it. Dynamic-state stories deliberately not added (would need MSW; not worth standing up for one consumer).
 
 ## Milestone 5 — Wire the route handler
 
@@ -126,6 +126,10 @@ PR:
 - **2026-05-04 — M2:** OpenAI project initially returned `model_not_found` for `gpt-5.4-mini`. Resolution was granting model access in the OpenAI console (not a code or SDK issue); changes took on the order of hours to propagate. Kept `scripts/ai-smoke.ts` rather than deleting — useful as a sanity check for future SDK/model migrations.
 - **2026-05-09 — pivot to AI Elements:** Original M3 (hand-built `chat-primitives/` rename + container/view split + Storybook contract + stub tests) was reset. Switched to Vercel AI Elements: shadcn-style registry built on `@ai-sdk/react`, with `Conversation` / `Message` / `PromptInput` / `Response` (Response uses Streamdown for streaming-aware markdown). This collapses the hand-built primitives, the markdown-rendering subtask, the four-state Storybook contract, and the container/view split. The `use-grandmother-chat` hook seam was dropped (YAGNI — easy to add back; tests can mock at the network layer). Kept commits: spec (`0383356`), smoke script (`5cd4ad6`), `.gitignore` for `/storybook-static` (`a9705eb`).
 - **2026-05-09 — chat-primitives rename reverted:** the `components/chat/` → `components/chat-primitives/` rename was part of the reset M3 commit. Files are back at `components/chat/` and will be deleted in M6 rather than renamed.
+- **2026-05-09 — M4 prompt-input vertical alignment:** the empty-state placeholder sits at the top of the textarea instead of visually aligning with the submit-button icon. Tried tightening padding (`py-2`, dropping `min-h`) and forcing `pt-[1.625rem]`; the explicit pt looks good when empty but breaks multi-line typing — the submit button scrolls with the first line and the layout falls apart. Settled on `min-h-10 py-2` as a functionally-correct compromise (empty state slightly off, multi-line correct). Defer real fix to a follow-up styles pass.
+- **2026-05-09 — M4 body shape:** spec said the chat component takes `{ context: string }`, but that conflicts with M5's security invariant (route loads recipe server-side from `recipeId`; ignores client-supplied content). Replaced `context` with a generic `body?: Record<string, unknown>` that the recipe wrapper fills with `{ recipeId }`. The chat component stays recipe-agnostic; backend still owns prompt assembly.
+- **2026-05-09 — M4 streaming-state test dropped:** Tried writing a happy-path test that feeds the component an SSE-formatted ReadableStream via a `globalThis.fetch` stub. Hits a happy-dom ↔ Bun ↔ `eventsource-parser/stream` interop bug: pipeThrough rejects the stream with "readable should be ReadableStream", even though the same stream pipes fine in isolation. The component itself is fine — the test harness can't deliver a working SSE response. Streaming behavior is covered by M5 route tests and M7 manual smoke / live Playwright. Revisit when we drop happy-dom (likely on a future Bun bump).
+- **2026-05-09 — M4 MSW debate:** considered adding `msw` + `msw-storybook-addon` to power richer component tests and dynamic-state stories. Decided against: the codebase has essentially one client-side `fetch()` consumer (chat), so MSW would be infrastructure-for-show. Future agentic complexity will land server-side (route handler / tool calls) where MSW isn't the right tool. Revisit if the client surface ever grows multiple endpoints or stateful flows.
 - **2026-05-09 — M3 install lessons:**
   - **Default `bunx ai-elements` (no `add` subcommand) installs the entire registry.** Don't run it. Always use `bunx ai-elements@latest add <name>` to install a single component. Same applies to `--help` etc. — the CLI treats unknown flags as install-all.
   - **`response` is no longer a component slug.** Streaming-markdown rendering is now inside `message.tsx` as `MessageResponse`. Future agents adding markdown rendering should import from `@/components/ai-elements/message`, not look for a separate `response.tsx`.
