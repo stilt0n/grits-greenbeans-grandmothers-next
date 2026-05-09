@@ -4,7 +4,7 @@
 **Branch:** `agent-foundation`
 **Author:** mleino (with Claude)
 **Last updated:** 2026-05-09 (pivot to Vercel AI Elements; M3 reset)
-**Implementation checklist:** [`agent-foundation-checklist.md`](./agent-foundation-checklist.md) — trackable work items, milestone-by-milestone. Agents should update it as they complete steps, and update **this spec** (not just the checklist) when they discover something it didn't anticipate.
+**Implementation checklist:** [`checklist.md`](./checklist.md) — trackable work items, milestone-by-milestone. Agents should update it as they complete steps, and update **this spec** (not just the checklist) when they discover something it didn't anticipate.
 
 ## Why
 
@@ -160,7 +160,7 @@ The route handler's streaming / happy-path tests are written after — they're r
 
 ## Milestones
 
-Each milestone is a reviewable commit or small PR. Granular per-step work items live in [`agent-foundation-checklist.md`](./agent-foundation-checklist.md).
+Each milestone is a reviewable commit or small PR. Granular per-step work items live in [`checklist.md`](./checklist.md).
 
 1. **AI SDK 6 upgrade.** ✅ Landed on `main` via PR #135. `ai` and `@ai-sdk/openai` on v6; `@ai-sdk/react` removed (unused) and will be reinstalled in M3 alongside Elements. CVE-affected version no longer in lockfile.
 2. **Throwaway integration check.** ✅ Done. `scripts/ai-smoke.ts` calls `streamText` with `gpt-5.4-mini` and prints a streamed response — confirmed end-to-end against the real API. The unsuffixed `gpt-5.4-mini` id resolves; no dated suffix needed. Script kept under `scripts/` as a sanity check for future SDK/model migrations.

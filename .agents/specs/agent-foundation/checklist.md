@@ -1,6 +1,6 @@
 # Implementation Checklist: Agent Foundation
 
-Companion to `agent-foundation.md`. Read the spec first — this file is just trackable work items.
+Companion to [`spec.md`](./spec.md). Read the spec first — this file is just trackable work items.
 
 **For agents picking this up:** check off boxes as you complete them, in the same commit/PR as the work. If a step turns out to be wrong or to need splitting, edit the checklist and explain why in the commit message. If you discover something the spec didn't anticipate, update the spec, not just the checklist.
 
