@@ -10,7 +10,7 @@ Reach for a spec when at least one of these is true:
 
 - **The work spans more than ~3 distinct PRs/commits.**
 - **There are real architectural choices to make** (e.g. "where does this live", "API route vs server action", "what gets persisted").
-- **You want to capture *why* — constraints, trade-offs, things deliberately deferred —** so the next person doesn't relitigate.
+- **You want to capture _why_ — constraints, trade-offs, things deliberately deferred —** so the next person doesn't relitigate.
 - **The change touches multiple subsystems** (DB schema + API + UI + tests).
 - **There's a meaningful chance you'll abandon or pivot mid-implementation** and want a record of the original framing.
 
@@ -35,24 +35,24 @@ One folder per spec keeps the top-level navigable as we accumulate more of them.
 
 ## The two-file convention
 
-We split each spec into a **spec** (the *why*) and a **checklist** (the *what*) for a reason:
+We split each spec into a **spec** (the _why_) and a **checklist** (the _what_) for a reason:
 
-- The **spec** is for understanding. It's read by humans deciding whether the design holds up, and by agents that need context before they can make judgment calls. It changes when the *plan* changes — when something is discovered mid-implementation that the original framing got wrong.
+- The **spec** is for understanding. It's read by humans deciding whether the design holds up, and by agents that need context before they can make judgment calls. It changes when the _plan_ changes — when something is discovered mid-implementation that the original framing got wrong.
 - The **checklist** is for tracking. It's the punch list. Boxes get checked off in the same commit as the work; new boxes get added when scope grows; boxes get crossed out (with a reason) when scope shrinks.
 
-Mixing the two leads to a doc that's hard to read either way: the *why* gets buried in checkboxes, and the *what* loses the rationale that made it possible to amend it intelligently.
+Mixing the two leads to a doc that's hard to read either way: the _why_ gets buried in checkboxes, and the _what_ loses the rationale that made it possible to amend it intelligently.
 
 ### `spec.md` structure
 
 There's no rigid template, but these sections tend to earn their keep:
 
 - **Status / branch / last updated** — at the top, so a stale spec is easy to spot.
-- **Why** — the motivation. What's broken or missing. *Lead with this.*
+- **Why** — the motivation. What's broken or missing. _Lead with this._
 - **Goals (v1)** — what shipping looks like, scoped tightly.
 - **Non-goals** — what's deliberately out of scope. This is often the most valuable section: it's where future scope creep gets headed off.
 - **Current state audit** — what exists today that the change interacts with. Include file paths.
 - **Target architecture** — where new code will live and the shape of its interfaces. A small ASCII tree often beats prose.
-- **Key shape decisions** — the things you'd otherwise have to re-derive. *Why* this lives behind an API route vs. a server action; *why* there's no hook seam; etc.
+- **Key shape decisions** — the things you'd otherwise have to re-derive. _Why_ this lives behind an API route vs. a server action; _why_ there's no hook seam; etc.
 - **Testing strategy** — what gets tested, what gets mocked, what gets manually smoked. Calls out anything written test-first vs. test-after.
 - **Milestones** — the rough sequence (M1, M2, …). The granular work items live in `checklist.md`, not here.
 - **Open questions** — things you don't have an answer for yet. Honest is better than confident.
@@ -62,7 +62,7 @@ There's no rigid template, but these sections tend to earn their keep:
 
 - One section per milestone, mirroring the spec's milestones.
 - Use GitHub-flavored task list syntax (`- [ ]` / `- [x]`). Strikethrough (`~~…~~`) for items deliberately dropped, with a one-line reason.
-- A **Discoveries / scope changes** section at the bottom for short, dated notes when the spec or checklist had to change mid-flight (e.g. *"2026-05-09 — pivot to AI Elements; original M3 reset"*). These are the breadcrumbs that explain the diff history later.
+- A **Discoveries / scope changes** section at the bottom for short, dated notes when the spec or checklist had to change mid-flight (e.g. _"2026-05-09 — pivot to AI Elements; original M3 reset"_). These are the breadcrumbs that explain the diff history later.
 
 ## How agents should treat specs
 

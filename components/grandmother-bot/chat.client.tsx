@@ -1,6 +1,5 @@
 'use client';
 
-import { useState, type FormEvent } from 'react';
 import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport, type UIMessage } from 'ai';
 import { Button } from '@/components/ui/button';
@@ -19,8 +18,10 @@ import {
 import {
   PromptInput,
   PromptInputBody,
+  PromptInputFooter,
   PromptInputSubmit,
   PromptInputTextarea,
+  PromptInputTools,
   type PromptInputMessage,
 } from '@/components/ai-elements/prompt-input';
 
@@ -56,19 +57,13 @@ export const Chat = ({
       onError,
     });
 
-  const [draft, setDraft] = useState('');
   const isGenerating = status === 'submitted' || status === 'streaming';
 
-  const handleSubmit = (
-    message: PromptInputMessage,
-    event: FormEvent<HTMLFormElement>
-  ) => {
-    event.preventDefault();
+  const handleSubmit = (message: PromptInputMessage) => {
     const text = message.text.trim();
     if (!text || isGenerating) {
       return;
     }
-    setDraft('');
     sendMessage({ text });
   };
 
@@ -78,7 +73,7 @@ export const Chat = ({
   };
 
   return (
-    <div className={cn('flex h-full flex-col', className)}>
+    <div className={cn('flex h-full flex-col pt-10', className)}>
       <Conversation>
         <ConversationContent>
           {messages.length === 0 ? (
@@ -144,17 +139,19 @@ export const Chat = ({
         </div>
       )}
 
-      <div className='p-4 pt-2'>
+      <div className='border-t px-2 py-2'>
         <PromptInput onSubmit={handleSubmit}>
           <PromptInputBody>
-            <PromptInputTextarea
-              value={draft}
-              onChange={(e) => setDraft(e.currentTarget.value)}
-              disabled={isGenerating}
-              className='min-h-10 py-2'
-            />
-            <PromptInputSubmit status={status} onStop={stop} />
+            <PromptInputTextarea disabled={isGenerating} />
           </PromptInputBody>
+          <PromptInputFooter>
+            <PromptInputTools />
+            <PromptInputSubmit
+              status={status}
+              onStop={stop}
+              variant='brand'
+            />
+          </PromptInputFooter>
         </PromptInput>
       </div>
     </div>
