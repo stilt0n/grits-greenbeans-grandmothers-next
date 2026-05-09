@@ -19,7 +19,11 @@ export const ChatPanel = ({ recipeId, buttonClassName }: ChatPanelProps) => {
       <SheetTrigger asChild>
         <ChatButton className={buttonClassName} />
       </SheetTrigger>
-      <SheetContent side='left' className='w-[48rem] max-w-full' focusOnContent>
+      <SheetContent
+        side='left'
+        className='w-[48rem] max-w-full p-0 gap-0'
+        focusOnContent
+      >
         <VisuallyHidden>
           <SheetTitle>Chat with grandmother_bot</SheetTitle>
           <SheetDescription>
@@ -27,9 +31,7 @@ export const ChatPanel = ({ recipeId, buttonClassName }: ChatPanelProps) => {
             technique.
           </SheetDescription>
         </VisuallyHidden>
-        <div className='pt-4 w-full h-full'>
-          <Chat key={recipeId} body={{ recipeId }} />
-        </div>
+        <Chat key={recipeId} body={{ recipeId }} className='h-full' />
       </SheetContent>
     </Sheet>
   );

@@ -42,13 +42,13 @@ import {
 import { cn } from '@/lib/utils';
 import type { ChatStatus, FileUIPart, SourceDocumentUIPart } from 'ai';
 import {
-  EnterIcon as CornerDownLeftIcon,
   ImageIcon,
   DesktopIcon as Monitor,
   PlusIcon,
   SquareIcon,
   Cross2Icon as XIcon,
 } from '@radix-ui/react-icons';
+import { ReturnIcon } from '@/components/icons';
 import { nanoid } from 'nanoid';
 import type {
   ChangeEvent,
@@ -1225,7 +1225,7 @@ export const PromptInputSubmit = ({
 }: PromptInputSubmitProps) => {
   const isGenerating = status === 'submitted' || status === 'streaming';
 
-  let Icon = <CornerDownLeftIcon className='size-4' />;
+  let Icon = <ReturnIcon className='size-4' />;
 
   if (status === 'submitted') {
     Icon = <Spinner />;
