@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
 import type { UIMessage } from 'ai';
 import { Chat } from '@/components/grandmother-bot/chat.client';
 
