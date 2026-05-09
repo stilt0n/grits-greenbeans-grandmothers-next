@@ -1,5 +1,5 @@
 import { openai } from '@ai-sdk/openai';
-import { streamText, type UIMessage } from 'ai';
+import { streamText } from 'ai';
 import { z } from 'zod';
 import { loadRecipePage } from '@/lib/loaders/load-recipe-page';
 import { buildChatPrompt } from '@/lib/ai/prompt';
@@ -7,9 +7,20 @@ import { CHAT_MODEL_ID } from '@/lib/ai/model';
 
 export const runtime = 'nodejs';
 
+const textPartSchema = z.object({
+  type: z.literal('text'),
+  text: z.string(),
+});
+
+const uiMessageSchema = z.object({
+  id: z.string().min(1),
+  role: z.enum(['user', 'assistant', 'system']),
+  parts: z.array(textPartSchema).min(1),
+});
+
 const requestSchema = z.object({
   recipeId: z.number().int().positive(),
-  messages: z.array(z.custom<UIMessage>()).min(1),
+  messages: z.array(uiMessageSchema).min(1),
 });
 
 export const POST = async (request: Request) => {
@@ -41,6 +52,7 @@ export const POST = async (request: Request) => {
     model: openai(CHAT_MODEL_ID),
     system,
     messages: modelMessages,
+    abortSignal: request.signal,
   });
 
   return result.toUIMessageStreamResponse();

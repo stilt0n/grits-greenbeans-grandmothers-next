@@ -1,4 +1,4 @@
-import { describe, it, expect, mock } from 'bun:test';
+import { afterEach, describe, it, expect, mock } from 'bun:test';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { ChatPanel } from '../chat-panel.client';
@@ -29,7 +29,13 @@ const sseTextResponse = () =>
     },
   }) as unknown as Response;
 
+const originalFetch = globalThis.fetch;
+
 describe('ChatPanel', () => {
+  afterEach(() => {
+    globalThis.fetch = originalFetch;
+  });
+
   it('resets chat draft when recipeId changes (key={recipeId})', async () => {
     globalThis.fetch = mock(async () =>
       sseTextResponse()
