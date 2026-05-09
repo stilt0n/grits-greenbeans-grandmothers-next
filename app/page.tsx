@@ -3,7 +3,8 @@ import RecipeGallery, {
 } from '@/components/recipe-gallery';
 import { NextPageBaseProps } from '@/types/nextTypes';
 
-const Home = async ({ searchParams }: NextPageBaseProps) => {
+const Home = async (props: NextPageBaseProps) => {
+  const searchParams = await props.searchParams;
   const recipeGalleryProps = createSearchParamProps(searchParams);
   return (
     <div>

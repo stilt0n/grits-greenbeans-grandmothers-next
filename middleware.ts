@@ -11,20 +11,20 @@ const isAdminPermissionRoute = createRouteMatcher([
   '/admin(.*)',
 ]);
 
-export default clerkMiddleware((auth, req) => {
+export default clerkMiddleware(async (auth, req) => {
   if (isWritePermissionRoute(req)) {
-    auth().protect(() => {
-      const { userId, sessionClaims } = auth();
-      return (
-        !!userId &&
-        (sessionClaims?.metadata?.role === 'family' ||
-          sessionClaims?.metadata?.role === 'admin')
-      );
-    });
+    const { userId, sessionClaims, redirectToSignIn } = await auth();
+    if (!userId) {
+      return redirectToSignIn();
+    }
+    const role = sessionClaims?.metadata?.role;
+    if (role !== 'family' && role !== 'admin') {
+      return new NextResponse(null, { status: 404 });
+    }
   }
 
   if (isAdminPermissionRoute(req)) {
-    const { userId, sessionClaims } = auth();
+    const { userId, sessionClaims } = await auth();
     const isAdmin = !!userId && sessionClaims?.metadata?.role === 'admin';
     if (!isAdmin) {
       return new NextResponse(null, { status: 404 });
