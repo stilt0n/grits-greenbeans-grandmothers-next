@@ -26,15 +26,17 @@ The existing nlux integration goes through its own client; we still need to exer
 - [x] If `gpt-5.4-mini` errors, try the dated suffix and note which one we land on. — Initial runs failed with `model_not_found` because the OpenAI project lacked access; after granting access in the console (and ~16h propagation) `gpt-5.4-mini` resolves directly. No dated suffix needed.
 - [x] Keep the script under `scripts/` as a sanity-check tool for future SDK/model migrations.
 
-## Milestone 3 — Install AI Elements + dependencies
+## Milestone 3 — Install AI Elements + dependencies ✅ done
 
 The earlier M3 (hand-built primitives + Storybook contract) was reset on 2026-05-09 in favor of AI Elements. See spec "Why" section.
 
-- [ ] Install `@ai-sdk/react` at a React-18-compatible version (React 19 is a separate branch).
-- [ ] Install Vercel AI Elements via the shadcn registry. Default install location is `components/ai-elements/`. Commit the generated files — they're now project code.
-- [ ] Confirm peer deps the registry pulled in (`streamdown`, etc.) are in `package.json`, not just transitively present.
-- [ ] Verify the installed components inherit the existing shadcn theme — render one in isolation (e.g. drop a `<Conversation>` with a hardcoded `<Message>` into a throwaway page or story) and confirm colors/spacing look right with no extra setup.
-- [ ] No app-level wiring yet — this milestone is just registry install + smoke render.
+- [x] Install `@ai-sdk/react` at a React-18-compatible version (React 19 is a separate branch). — Landed at `^3.0.179`.
+- [x] Install Vercel AI Elements via the shadcn registry. Default install location is `components/ai-elements/`. Commit the generated files — they're now project code. — Installed `conversation`, `message`, `prompt-input`. (No `response` component — current Elements folds streaming-markdown rendering into `MessageResponse` inside `message.tsx`.)
+- [x] Confirm peer deps the registry pulled in (`streamdown`, etc.) are in `package.json`, not just transitively present. — `streamdown`, `@streamdown/{cjk,code,math,mermaid}`, `use-stick-to-bottom`, `cmdk`, `nanoid` all explicit.
+- [x] ~~Verify the installed components inherit the existing shadcn theme — render one in isolation~~ — **Skipped per discussion 2026-05-09.** M4's real composition will smoke-test theming as a side effect; isolated render adds no signal we wouldn't get there.
+- [x] **(beyond spec)** Swapped Elements + new shadcn components from `lucide-react` to `@radix-ui/react-icons` (project-wide icon-library policy). Removed `lucide-react` dep entirely. Used import aliases (`Cross2Icon as XIcon`, etc.) so JSX call sites are unchanged.
+- [x] **(beyond spec)** Added `'icon-sm'` size variant to `components/ui/button.tsx` — required by Elements' `MessageAction` component. Inconsistency within the Elements registry itself; the registry-shipped `button.tsx` doesn't include it either.
+- [x] **(beyond spec)** Bumped `tsconfig.json` `target` to `es2017` — Elements' `prompt-input.tsx` iterates `FileList`/`DataTransferItemList` with `for...of`, which requires modern target. Default was `es5`.
 
 ## Milestone 4 — Build `chat.client.tsx`
 
@@ -124,3 +126,9 @@ PR:
 - **2026-05-04 — M2:** OpenAI project initially returned `model_not_found` for `gpt-5.4-mini`. Resolution was granting model access in the OpenAI console (not a code or SDK issue); changes took on the order of hours to propagate. Kept `scripts/ai-smoke.ts` rather than deleting — useful as a sanity check for future SDK/model migrations.
 - **2026-05-09 — pivot to AI Elements:** Original M3 (hand-built `chat-primitives/` rename + container/view split + Storybook contract + stub tests) was reset. Switched to Vercel AI Elements: shadcn-style registry built on `@ai-sdk/react`, with `Conversation` / `Message` / `PromptInput` / `Response` (Response uses Streamdown for streaming-aware markdown). This collapses the hand-built primitives, the markdown-rendering subtask, the four-state Storybook contract, and the container/view split. The `use-grandmother-chat` hook seam was dropped (YAGNI — easy to add back; tests can mock at the network layer). Kept commits: spec (`0383356`), smoke script (`5cd4ad6`), `.gitignore` for `/storybook-static` (`a9705eb`).
 - **2026-05-09 — chat-primitives rename reverted:** the `components/chat/` → `components/chat-primitives/` rename was part of the reset M3 commit. Files are back at `components/chat/` and will be deleted in M6 rather than renamed.
+- **2026-05-09 — M3 install lessons:**
+  - **Default `bunx ai-elements` (no `add` subcommand) installs the entire registry.** Don't run it. Always use `bunx ai-elements@latest add <name>` to install a single component. Same applies to `--help` etc. — the CLI treats unknown flags as install-all.
+  - **`response` is no longer a component slug.** Streaming-markdown rendering is now inside `message.tsx` as `MessageResponse`. Future agents adding markdown rendering should import from `@/components/ai-elements/message`, not look for a separate `response.tsx`.
+  - **Elements registry has internal inconsistencies.** `MessageAction` references `size="icon-sm"` on the shadcn `Button`, but neither our installed button nor the Elements-shipped button declare that variant. Worked around by adding the variant to `components/ui/button.tsx`.
+  - **Elements ships pinned `lucide-react@1.14.0` (suspiciously old).** Wasn't worth investigating since we removed lucide entirely.
+  - **`components.json` gained `iconLibrary: "radix"` and a `registries` entry for `@ai-elements`.** Both useful side-effects of the install.
