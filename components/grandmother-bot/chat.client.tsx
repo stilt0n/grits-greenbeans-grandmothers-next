@@ -146,11 +146,7 @@ export const Chat = ({
           </PromptInputBody>
           <PromptInputFooter>
             <PromptInputTools />
-            <PromptInputSubmit
-              status={status}
-              onStop={stop}
-              variant='brand'
-            />
+            <PromptInputSubmit status={status} onStop={stop} variant='brand' />
           </PromptInputFooter>
         </PromptInput>
       </div>
