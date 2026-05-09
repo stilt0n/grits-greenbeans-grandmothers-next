@@ -10,7 +10,6 @@ import { ClockIcon } from '@radix-ui/react-icons';
 import { images } from '@/lib/constants';
 import { ReactNode } from 'react';
 import { ChatPanel } from '@/components/grandmother-bot/chat-panel.client';
-import { convertRecipeToPromptContext } from '@/lib/translation/parsers';
 import {
   parseRecipeSlug,
   recipePath,
@@ -75,19 +74,12 @@ const Page = async ({ params }: { params: { slug: string } }) => {
     );
   }
 
-  const pageContext = convertRecipeToPromptContext({
-    title: recipe.title,
-    description: recipe.description,
-    instructions: recipe.instructions,
-    recipeTime: recipe.recipeTime,
-  });
-
   return (
     <>
       <div className='prose prose-zinc rendered-recipe mx-auto bg-zinc-50 px-4 border-x border-zinc-200 min-h-screen -mt-4 pt-4'>
         <span className='flex flex-col mb-8 md:mb-0 md:flex md:flex-row md:justify-between md:items-center'>
           <h1>{recipe.title}</h1>
-          <ChatPanel buttonClassName='md:mb-[2em]' pageContext={pageContext} />
+          <ChatPanel buttonClassName='md:mb-[2em]' recipeId={recipeId} />
         </span>
         <p className='italic mt-0 mb-[2.5em]'>{recipe.description}</p>
         {recipe.author ? <p>By {recipe.author}</p> : null}

@@ -1,36 +1,34 @@
 'use client';
 import { useState } from 'react';
-import { AiChat } from '@nlux/react';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { ChatButton } from './chat-button.client';
-import { useChatAdapter } from './config/adapters';
-import { intialConversation } from './config/history';
-import { ChatPanelProps } from './types';
-import '@nlux/themes/nova.css';
+import { Chat } from './chat.client';
+import type { ChatPanelProps } from './types';
 
-// note that props is used implicitly by the defaultAdapter
-export const ChatPanel = (props: ChatPanelProps) => {
+export const ChatPanel = ({ recipeId, buttonClassName }: ChatPanelProps) => {
   const [open, setOpen] = useState(false);
-  const adapter = useChatAdapter(props.pageContext);
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <ChatButton
-          className={props.buttonClassName}
-          chatOpen={open}
-          setChatOpen={setOpen}
-        />
+        <ChatButton className={buttonClassName} />
       </SheetTrigger>
       <SheetContent side='left' className='w-[48rem] max-w-full' focusOnContent>
+        <VisuallyHidden>
+          <SheetTitle>Chat with grandmother_bot</SheetTitle>
+          <SheetDescription>
+            Ask questions about this recipe — ingredients, substitutions, and
+            technique.
+          </SheetDescription>
+        </VisuallyHidden>
         <div className='pt-4 w-full h-full'>
-          <AiChat
-            adapter={adapter}
-            initialConversation={intialConversation}
-            conversationOptions={{
-              layout: 'bubbles',
-            }}
-            displayOptions={{ colorScheme: 'light' }}
-          />
+          <Chat key={recipeId} body={{ recipeId }} />
         </div>
       </SheetContent>
     </Sheet>
