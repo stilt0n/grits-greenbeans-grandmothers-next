@@ -115,8 +115,8 @@ interface MessageBranchContextType {
   totalBranches: number;
   goToPrevious: () => void;
   goToNext: () => void;
-  branches: ReactElement[];
-  setBranches: (branches: ReactElement[]) => void;
+  branches: ReactElement<any>[];
+  setBranches: (branches: ReactElement<any>[]) => void;
 }
 
 const MessageBranchContext = createContext<MessageBranchContextType | null>(
@@ -147,7 +147,7 @@ export const MessageBranch = ({
   ...props
 }: MessageBranchProps) => {
   const [currentBranch, setCurrentBranch] = useState(defaultBranch);
-  const [branches, setBranches] = useState<ReactElement[]>([]);
+  const [branches, setBranches] = useState<ReactElement<any>[]>([]);
 
   const handleBranchChange = useCallback(
     (newBranch: number) => {

@@ -17,11 +17,10 @@ import {
   slugify,
 } from '@/lib/seo/recipe-slug';
 
-export const generateMetadata = async ({
-  params,
-}: {
-  params: { slug: string };
+export const generateMetadata = async (props: {
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> => {
+  const params = await props.params;
   const parsed = parseRecipeSlug(params.slug);
   if (!parsed) return {};
   const recipe = await loadRecipePage(parsed.id);
@@ -41,7 +40,8 @@ export const generateMetadata = async ({
   };
 };
 
-const Page = async ({ params }: { params: { slug: string } }) => {
+const Page = async (props: { params: Promise<{ slug: string }> }) => {
+  const params = await props.params;
   const parsed = parseRecipeSlug(params.slug);
   if (!parsed) {
     return notFound();
