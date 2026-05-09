@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
 import { RecipeCardDesign } from '@/components/recipe-gallery/recipe-card.client';
 import { images } from '@/lib/constants';
 

@@ -68,13 +68,13 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@chromatic-com/storybook": "^1.9.0",
+    "@chromatic-com/storybook": "^5.1.2",
     "@clerk/testing": "^1.2.18",
     "@happy-dom/global-registrator": "^15.7.3",
     "@playwright/test": "^1.46.1",
     "@smithy/shared-ini-file-loader": "^3.1.11",
-    "@storybook/addon-essentials": "^8.3.1",
-    "@storybook/nextjs": "^8.3.1",
+    "@storybook/addon-docs": "^10.3.6",
+    "@storybook/nextjs": "^10.3.6",
     "@tailwindcss/typography": "^0.5.15",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.5.0",
@@ -88,9 +88,10 @@
     "drizzle-kit": "^0.31.10",
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
-    "eslint-plugin-storybook": "^0.11.6",
+    "eslint-plugin-storybook": "^10.3.6",
     "postcss": "^8",
     "prettier": "^3.3.3",
+    "storybook": "^10.3.6",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   },
