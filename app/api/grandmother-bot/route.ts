@@ -23,7 +23,7 @@ const messagePartSchema = z.union([
 
 const uiMessageSchema = z.object({
   id: z.string().min(1),
-  role: z.enum(['user', 'assistant', 'system']),
+  role: z.enum(['user', 'assistant']),
   parts: z
     .array(messagePartSchema)
     .min(1)
