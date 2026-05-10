@@ -14,12 +14,19 @@ const textPartSchema = z.object({
 });
 
 // Assistant messages from useChat (AI SDK v6) include non-text parts such as
-// `step-start` alongside text parts. We only need to validate that *some* text
-// is present; convertToModelMessages handles the other part types.
-const messagePartSchema = z.union([
-  textPartSchema,
-  z.object({ type: z.string() }).passthrough(),
-]);
+// `step-start` alongside text parts. We accept those at the boundary so the
+// schema doesn't reject otherwise-valid conversations, but they're filtered
+// out before prompt construction below.
+//
+// True z.discriminatedUnion needs literal discriminators in every branch,
+// which we can't enumerate (the AI SDK adds new part types over time), so
+// we fall back to z.union and force the catch-all branch to refuse `'text'`
+// — otherwise `{ type: 'text' }` (no `text` field) would slip through the
+// passthrough branch and pass the refine below.
+const nonTextPartSchema = z
+  .object({ type: z.string().refine((t) => t !== 'text') })
+  .passthrough();
+const messagePartSchema = z.union([textPartSchema, nonTextPartSchema]);
 
 const uiMessageSchema = z.object({
   id: z.string().min(1),

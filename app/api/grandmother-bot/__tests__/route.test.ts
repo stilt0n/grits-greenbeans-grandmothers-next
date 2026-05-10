@@ -121,6 +121,48 @@ describe('POST /api/grandmother-bot', () => {
     expect(res.status).toBe(404);
   });
 
+  it('accepts assistant messages with non-text parts and strips them before prompting', async () => {
+    const res = await POST(
+      postJson({
+        recipeId: 42,
+        messages: [
+          userMessage('How long do I bake it?'),
+          {
+            id: 'a-1',
+            role: 'assistant',
+            parts: [
+              { type: 'step-start' },
+              { type: 'text', text: 'About 25 minutes.' },
+            ],
+          },
+          userMessage('Thanks!'),
+        ],
+      })
+    );
+
+    expect(res.status).toBe(200);
+    expect(captured.last).not.toBeNull();
+    const serialized = JSON.stringify(captured.last!.messages);
+    expect(serialized).not.toContain('step-start');
+    expect(serialized).toContain('About 25 minutes.');
+  });
+
+  it('rejects malformed text parts missing the text field', async () => {
+    const res = await POST(
+      postJson({
+        recipeId: 42,
+        messages: [
+          {
+            id: 'm-bad',
+            role: 'user',
+            parts: [{ type: 'text' }],
+          },
+        ],
+      })
+    );
+    expect(res.status).toBe(400);
+  });
+
   it('passes the assembled system prompt and messages to streamText', async () => {
     await POST(
       postJson({ recipeId: 42, messages: [userMessage('Tell me about it.')] })
