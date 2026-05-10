@@ -1,9 +1,10 @@
 import { openai } from '@ai-sdk/openai';
-import { streamText } from 'ai';
+import { stepCountIs, streamText } from 'ai';
 import { z } from 'zod';
 import { loadRecipePage } from '@/lib/loaders/load-recipe-page';
 import { buildChatPrompt } from '@/lib/ai/prompt';
 import { CHAT_MODEL_ID } from '@/lib/ai/model';
+import { recipeMathTools } from '@/lib/ai/tools';
 
 export const runtime = 'nodejs';
 
@@ -52,6 +53,8 @@ export const POST = async (request: Request) => {
     model: openai(CHAT_MODEL_ID),
     system,
     messages: modelMessages,
+    tools: recipeMathTools,
+    stopWhen: stepCountIs(3),
     abortSignal: request.signal,
   });
 
