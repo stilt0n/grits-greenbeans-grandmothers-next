@@ -46,11 +46,11 @@ export const RecipeCardDesign = (props: RecipeCardDesignProps) => {
           <h3 id={titleId}>{props.title}</h3>
         </CardTitle>
         {props.author ? (
-          <p className='mt-4 mb-3 text-zinc-700 text-sm md:text-lg'>
+          <p className='mt-4 mb-3 text-muted-foreground text-sm md:text-lg'>
             {props.author}
           </p>
         ) : undefined}
-        <CardDescription className='mt-2 text-zinc-500 flex-grow md:flex-none overflow-hidden'>
+        <CardDescription className='mt-2 text-muted-foreground flex-grow md:flex-none overflow-hidden'>
           <span
             className='line-clamp-4'
             id={descriptionId}

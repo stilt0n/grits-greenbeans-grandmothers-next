@@ -12,8 +12,8 @@ export const Tag = (props: TagProps) => {
   return (
     <span
       className={cn(
-        'inline-flex justify-between items-center gap-2 border border-black',
-        'bg-zinc-800 text-white rounded-xl',
+        'inline-flex justify-between items-center gap-2 border border-foreground',
+        'bg-primary text-primary-foreground rounded-xl',
         'max-w-52 px-2 py-1 text-ellipsis'
       )}
     >

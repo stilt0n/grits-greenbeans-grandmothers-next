@@ -7,7 +7,7 @@ const searchCategories = ['title', 'author', 'tag'];
 
 const Navbar = () => {
   return (
-    <nav className='flex flex-row px-4 py-4 drop-shadow-xl border-b border-zinc-200 items-baseline h-18'>
+    <nav className='flex flex-row px-4 py-4 drop-shadow-xl border-b border-border items-baseline h-18'>
       <h1 className='text-lg md:text-3xl text-left flex self-start'>
         <Link href='/'>Grits, Greenbeans and Grandmothers</Link>
       </h1>

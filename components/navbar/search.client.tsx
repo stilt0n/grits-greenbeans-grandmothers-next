@@ -79,14 +79,14 @@ export const Search = (props: SearchProps) => {
         >
           <SelectTrigger
             aria-label='Choose a category to search'
-            className='h-full border-0 bg-transparent focus:ring-0 focus:ring-offset-0 focus:bg-slate-100'
+            className='h-full border-0 bg-transparent focus:ring-0 focus:ring-offset-0 focus:bg-accent'
           >
             <SelectValue placeholder='title' />
           </SelectTrigger>
-          <SelectContent className='bg-white'>
+          <SelectContent className='bg-background'>
             {props.categories.map((category) => (
               <SelectItem
-                className='focus:bg-slate-100'
+                className='focus:bg-accent'
                 value={category}
                 key={category}
               >
