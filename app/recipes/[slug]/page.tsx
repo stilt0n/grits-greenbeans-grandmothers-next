@@ -76,7 +76,7 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
 
   return (
     <>
-      <div className='prose prose-zinc rendered-recipe mx-auto bg-zinc-50 px-4 border-x border-zinc-200 min-h-screen -mt-4 pt-4'>
+      <div className='prose prose-zinc rendered-recipe mx-auto bg-muted/50 px-4 border-x border-border min-h-screen -mt-4 pt-4'>
         <span className='flex flex-col mb-8 md:mb-0 md:flex md:flex-row md:justify-between md:items-center'>
           <h1>{recipe.title}</h1>
           <ChatPanel buttonClassName='md:mb-[2em]' recipeId={recipeId} />

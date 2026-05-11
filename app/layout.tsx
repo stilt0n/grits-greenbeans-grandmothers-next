@@ -53,7 +53,7 @@ export default function RootLayout({
           </header>
           {/* FIXME: Main here should not be focusable but seems to sometimes be. The tabIndex is kind of a lazy fix. */}
           <main
-            className='bg-zinc-100 pt-4 flex-grow overflow-y-auto'
+            className='bg-muted pt-4 flex-grow overflow-y-auto'
             tabIndex={-1}
           >
             {children}

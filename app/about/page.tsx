@@ -25,9 +25,9 @@ export const metadata: Metadata = {
 const AboutPage = () => {
   return (
     <div className='prose prose-zinc -mt-4 w-screen min-h-screen about-page'>
-      <section className='max-w-[65rem] m-auto px-8 py-16 bg-white min-h-screen'>
+      <section className='max-w-[65rem] m-auto px-8 py-16 bg-background min-h-screen'>
         <h1>Introduction from the Original Book</h1>
-        <h2 className='text-lg text-zinc-800'>Ada Wesson Jones</h2>
+        <h2 className='text-lg text-foreground'>Ada Wesson Jones</h2>
         <p>
           In this cookbook, you probably won&apos;t see many terms such as au
           gratin, escalope, paté, sauté or étouffée. You will see fry, brown,

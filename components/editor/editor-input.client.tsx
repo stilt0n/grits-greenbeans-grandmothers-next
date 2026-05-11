@@ -36,20 +36,20 @@ const EditorInput = ({
       />
       <Label htmlFor={editorId}>
         {props.label}
-        <span className='text-red-700'>*</span>
+        <span className='text-destructive'>*</span>
       </Label>
       <EditorMenu editor={editor} aria-label={props.menuAriaLabel} />
       <EditorContent
         id={editorId}
         editor={editor}
         className={cn(
-          'prose prose-zinc recipe-editor bg-white',
-          'outline outline-1 outline-zinc-200 rounded-sm focus-within:outline-2 focus-within:outline-zinc-400',
+          'prose prose-zinc recipe-editor bg-background',
+          'outline outline-1 outline-border rounded-sm focus-within:outline-2 focus-within:outline-ring',
           props.className
         )}
       />
       {props.errorMessage ? (
-        <span className='text-red-700'>{props.errorMessage}</span>
+        <span className='text-destructive'>{props.errorMessage}</span>
       ) : null}
     </>
   );

@@ -5,7 +5,7 @@ export const metadata: Metadata = {
 };
 
 const DeleteMyAccount = () => (
-  <div className='prose prose-zinc rendered-recipe bg-white mx-auto px-6 min-h-full -mt-4 pt-4 border-x border-zinc-200'>
+  <div className='prose prose-zinc rendered-recipe bg-background mx-auto px-6 min-h-full -mt-4 pt-4 border-x border-border'>
     <h1>How to delete your account</h1>
     <p>
       Grits, Greenbeans and Grandmothers only uses your account for login
