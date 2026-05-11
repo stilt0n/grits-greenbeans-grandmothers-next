@@ -31,7 +31,10 @@ test.describe('middleware route protection', () => {
         // @ts-ignore — same workaround as signIn.e2e.ts
         await setupClerkTestingToken({ page });
 
-        const response = await page.goto(route);
+        // waitUntil: 'commit' because the route returns a 404 with an
+        // empty body; Firefox doesn't fire `load` on empty responses, so
+        // the default wait hangs until the test timeout.
+        const response = await page.goto(route, { waitUntil: 'commit' });
         expect(response?.status()).toBe(404);
         await expect(
           page.getByRole('heading', { name: 'Sign In' })
