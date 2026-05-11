@@ -1,3 +1,6 @@
+[install]
+saveTextLockfile = true
+
 [test]
 preload = [
   "./config/test-env.ts",

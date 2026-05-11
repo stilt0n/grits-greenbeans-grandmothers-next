@@ -41,14 +41,14 @@ type EditorAction =
   | 'ul'
   | TextLevel;
 
-const getTextFromAbbreviation = (abbreviation: TextLevel) => {
+export const getTextFromAbbreviation = (abbreviation: TextLevel) => {
   if (abbreviation.startsWith('h')) {
     return `Heading ${abbreviation[1]}`;
   }
   return 'Paragraph';
 };
 
-const getActiveTextLevel = (editor: Editor) => {
+export const getActiveTextLevel = (editor: Editor) => {
   return (
     textLevels.find((lvl) => {
       if (lvl.startsWith('h')) {
@@ -152,7 +152,10 @@ export const EditorMenu = (props: EditorMenuProps) => {
   );
 };
 
-const executeEditorAction = (editor: Editor | null, action: EditorAction) => {
+export const executeEditorAction = (
+  editor: Editor | null,
+  action: EditorAction
+) => {
   if (editor === null) {
     return;
   }
