@@ -2,7 +2,6 @@
 import { html } from '@/lib/utils';
 import { useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
 
 export interface UseTipTapProps {
@@ -24,7 +23,6 @@ const defaultContent = html`
 
 const extensions = [
   StarterKit,
-  Underline,
   TextAlign.configure({
     types: ['heading', 'paragraph'],
   }),
