@@ -37,6 +37,15 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  icons: {
+    icon: [
+      {
+        url: '/grandmotherbot_256x256.png',
+        sizes: '256x256',
+        type: 'image/png',
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
