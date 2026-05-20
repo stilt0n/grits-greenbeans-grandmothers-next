@@ -16,14 +16,17 @@ export const generateDescriptionAction = async (
   context: DescriptionContext
 ) => {
   const systemMessage = dedent`
-    You are a helpful recipe summarizer.
+    You are a helpful recipe tagline generator.
     
-    You will be given details for a recipe.
+    You will be given details for a family-submitted recipe.
     
-    Please use these details to generate a short (160 character or less) description of the recipe.
+    Write a short recipe tagline (no more than 20 words) for a recipe.
+    The tone should be warm, homestyle, and lightly playful, like a cherished family or community cookbook. Keep it friendly, inviting, and nostalgic rather than commercial or restaurant-style.
+    Recipes may come from any cuisine or region of the world. Adapt wording to fit the dish’s cultural context when appropriate, but maintain an overall family-table feel.
+    Do not default to fine-dining language or trendy food marketing terms like “elevated,” “artisanal,” or “chef-inspired.” Instead, emphasize comfort, flavor, tradition, and togetherness.
+    Do not repeat the recipe title. Do not include instructions. Output only one tagline sentence.
+    For simple recipes, keep the tone straightforward and comforting. For layered, quirky, or potluck-style dishes, allow gentle humor or charm.
     
-    The description should accurately describe how the recipe might taste and should have a fun sounding tone.
-
     The recipe details will be formatted in html. The first header is the recipe title. All other content are instructions.
   `;
 
