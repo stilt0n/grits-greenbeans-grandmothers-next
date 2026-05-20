@@ -4,11 +4,10 @@ import sanitizeHtml from 'sanitize-html';
 import { currentUser } from '@clerk/nextjs/server';
 import { hasElevatedPermissions } from '@/lib/auth';
 import { convertFormDataToRecipe } from '@/lib/translation/parsers';
-import { preprocessImage } from '@/lib/repository/image-store/utils';
+import { fileToImageBuffer } from '@/lib/repository/image-store/utils';
 import { uploadFileToImageStore } from '@/lib/repository/image-store/upload';
 import { RecipePageData } from '@/lib/translation/schema';
 import { createRecipe } from '@/lib/repository/recipe-store/create';
-import { xor } from './action-utils';
 
 export const createRecipeAction = async (formData: FormData) => {
   // middleware should already be protecting this route, but this serves
@@ -22,22 +21,12 @@ export const createRecipeAction = async (formData: FormData) => {
     return;
   }
 
-  const { image, cropCoordinates, ...recipe } =
-    convertFormDataToRecipe(formData);
-
-  if (xor(image, cropCoordinates)) {
-    console.error(
-      'Assertion error: unexpectedly recieved only one of image and cropCoordinates'
-    );
-    return;
-  }
+  const { image, ...recipe } = convertFormDataToRecipe(formData);
 
   const recipeData: RecipePageData = { ...recipe, imageUrl: null };
-  if (image && cropCoordinates) {
-    // upload image
-    const imageBuffer = await preprocessImage(image, cropCoordinates);
+  if (image) {
+    const imageBuffer = await fileToImageBuffer(image);
     if (!imageBuffer) {
-      console.error('Image preprocessing failed to produce an image buffer');
       return;
     }
     const { imageUrl } = await uploadFileToImageStore(imageBuffer);

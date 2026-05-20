@@ -61,36 +61,22 @@ describe('convertFormDataToRecipe', () => {
       author: 'null',
       recipeTime: 'null',
       tags: 'null',
-      cropCoordinates: 'null',
     });
     const result = convertFormDataToRecipe(fd);
     expect(result.author).toBeNull();
     expect(result.recipeTime).toBeNull();
     expect(result.tags).toBeNull();
-    expect(result.cropCoordinates).toBeNull();
   });
 
-  it('parses tag and cropCoordinate JSON strings into structured values', () => {
+  it('parses tag JSON strings into structured values', () => {
     const fd = buildFormData({
       title: 'Pie',
       description: 'A pie',
       instructions: '<p>bake</p>',
       tags: JSON.stringify(['dessert', 'baking']),
-      cropCoordinates: JSON.stringify({
-        x: 10,
-        y: 20,
-        width: 100,
-        height: 200,
-      }),
     });
     const result = convertFormDataToRecipe(fd);
     expect(result.tags).toEqual(['dessert', 'baking']);
-    expect(result.cropCoordinates).toEqual({
-      x: 10,
-      y: 20,
-      width: 100,
-      height: 200,
-    });
   });
 
   it('throws when required fields are missing under the strict schema', () => {
@@ -107,7 +93,7 @@ describe('convertFormDataToRecipe', () => {
 });
 
 describe('recipeToFormData', () => {
-  it('serializes nullish fields to the literal string "null"', () => {
+  it('serializes nullish fields to the literal string "null" and omits cropCoordinates', () => {
     const fd = recipeToFormData({
       title: 'Pie',
       description: 'A pie',
@@ -121,19 +107,25 @@ describe('recipeToFormData', () => {
     expect(fd.get('author')).toBe('null');
     expect(fd.get('recipeTime')).toBe('null');
     expect(fd.get('tags')).toBe('null');
-    expect(fd.get('cropCoordinates')).toBe('null');
+    expect(fd.has('cropCoordinates')).toBe(false);
   });
 
-  it('does not append an image field when imageFileList is null', () => {
+  it('does not append an image field when no image or processed file is provided', () => {
     const fd = recipeToFormData({ title: 'x', imageFileList: null });
     expect(fd.has('image')).toBe(false);
   });
 
-  it('appends a single image when imageFileList contains exactly one file', () => {
-    const file = new File(['data'], 'pic.png', { type: 'image/png' });
-    const fakeList = { length: 1, 0: file } as unknown as FileList;
-    const fd = recipeToFormData({ title: 'x', imageFileList: fakeList });
-    expect(fd.get('image')).toBe(file);
+  it('prefers the processed image over imageFileList when both are provided', () => {
+    const raw = new File(['raw'], 'raw.png', { type: 'image/png' });
+    const processed = new File(['processed'], 'image.jpg', {
+      type: 'image/jpeg',
+    });
+    const fakeList = { length: 1, 0: raw } as unknown as FileList;
+    const fd = recipeToFormData(
+      { title: 'x', imageFileList: fakeList },
+      processed
+    );
+    expect(fd.get('image')).toBe(processed);
   });
 
   it('throws when imageFileList contains more than one file', () => {

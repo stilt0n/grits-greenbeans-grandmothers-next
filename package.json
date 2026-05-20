@@ -58,7 +58,6 @@
     "react-hook-form": "^7.53.0",
     "react-image-crop": "^11.0.7",
     "sanitize-html": "^2.13.0",
-    "sharp": "^0.33.5",
     "streamdown": "^2.5.0",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",

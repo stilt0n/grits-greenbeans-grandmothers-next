@@ -7,6 +7,8 @@ import {
 import { createRecipeAction } from '@/lib/actions/create-recipe';
 import { useRouter } from 'next/navigation';
 import { recipeToFormData } from '@/lib/translation/parsers';
+import { processImageForUpload } from '@/components/image-editor';
+import { cropCoordinateSchema } from '@/lib/translation/schema';
 
 interface UseCreateRecipeFromFormProps {
   redirect?: string;
@@ -20,7 +22,17 @@ const useCreateRecipeFromForm = ({
 
   return (data) => {
     startTransition(async () => {
-      const recipeId = await createRecipeAction(recipeToFormData(data));
+      let processedImage: File | undefined;
+      const file = data.imageFileList?.[0];
+      if (file && data.cropCoordinates) {
+        const crop = cropCoordinateSchema.parse(
+          JSON.parse(data.cropCoordinates)
+        );
+        processedImage = await processImageForUpload(file, crop);
+      }
+      const recipeId = await createRecipeAction(
+        recipeToFormData(data, processedImage)
+      );
       if (redirect && recipeId !== undefined) {
         router.push(`${redirect}/${recipeId}`);
       }

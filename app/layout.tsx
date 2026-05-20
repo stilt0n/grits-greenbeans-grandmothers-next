@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import Navbar from '@/components/navbar';
 import { SITE_URL } from '@/lib/constants';
+import { isLocalImageStore } from '@/lib/repository/image-store/upload';
 import { cn } from '@/lib/utils';
 import './globals.css';
 
@@ -57,6 +58,14 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang='en' className='h-full'>
         <body className={cn('h-full flex flex-col', inter.className)}>
+          {isLocalImageStore() && (
+            <div
+              role='status'
+              className='bg-amber-200 text-amber-950 text-center text-sm py-1 font-medium'
+            >
+              Test mode
+            </div>
+          )}
           <header className='h-18 flex-shrink-0'>
             <Navbar />
           </header>

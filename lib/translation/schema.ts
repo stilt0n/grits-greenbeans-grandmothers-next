@@ -102,19 +102,6 @@ export const intermediateSchema = baseRecipeSchema.extend({
       }
       return null;
     }),
-  cropCoordinates: z
-    .string()
-    .nullable()
-    .refine((str) => str === null || isValidCropCoordinate(str))
-    .transform((str) => {
-      if (str) {
-        const validatedCropCoordinates = cropCoordinateSchema.parse(
-          JSON.parse(str)
-        );
-        return validatedCropCoordinates;
-      }
-      return null;
-    }),
   image: z.unknown().transform((value) => value as File | undefined),
 });
 

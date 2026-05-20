@@ -6,11 +6,11 @@ import { revalidatePath } from 'next/cache';
 import { hasElevatedPermissions } from '@/lib/auth';
 import { getRecipeTags } from '@/lib/repository/recipe-store/read';
 import { convertFormDataToRecipe } from '@/lib/translation/parsers';
-import { preprocessImage } from '@/lib/repository/image-store/utils';
+import { fileToImageBuffer } from '@/lib/repository/image-store/utils';
 import { uploadFileToImageStore } from '@/lib/repository/image-store/upload';
 import { RecipePageData } from '@/lib/translation/schema';
 import { updateRecipe } from '@/lib/repository/recipe-store/update';
-import { xor, getTagOperations } from './action-utils';
+import { getTagOperations } from './action-utils';
 
 export interface UpdateRecipeActionArgs {
   formData: FormData;
@@ -30,17 +30,9 @@ export const updateRecipeAction = async ({
     return;
   }
 
-  const { image, cropCoordinates, tags, ...recipe } = convertFormDataToRecipe(
-    formData,
-    { optional: true }
-  );
-
-  if (xor(image, cropCoordinates)) {
-    console.error(
-      'Assertion error: unexpectedly recieved only one of image and cropCoordinates'
-    );
-    return;
-  }
+  const { image, tags, ...recipe } = convertFormDataToRecipe(formData, {
+    optional: true,
+  });
 
   const previousTags = await getRecipeTags(id);
   const { tagsToAdd, tagsToRemove } = getTagOperations(
@@ -49,10 +41,9 @@ export const updateRecipeAction = async ({
   );
 
   const recipeData: Partial<RecipePageData> = { ...recipe };
-  if (image && cropCoordinates) {
-    const imageBuffer = await preprocessImage(image, cropCoordinates);
+  if (image) {
+    const imageBuffer = await fileToImageBuffer(image);
     if (!imageBuffer) {
-      console.error('Image preprocessing failed to produce an image buffer');
       return;
     }
     const { imageUrl } = await uploadFileToImageStore(imageBuffer);
