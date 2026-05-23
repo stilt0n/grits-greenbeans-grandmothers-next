@@ -30,24 +30,29 @@ export const updateRecipeAction = async ({
     return;
   }
 
-  const { image, tags, ...recipe } = convertFormDataToRecipe(formData, {
-    optional: true,
-  });
+  let recipeData: Partial<RecipePageData>;
+  let tagsToAdd: string[];
+  let tagsToRemove: string[];
+  try {
+    const { image, tags, ...recipe } = convertFormDataToRecipe(formData, {
+      optional: true,
+    });
 
-  const previousTags = await getRecipeTags(id);
-  const { tagsToAdd, tagsToRemove } = getTagOperations(
-    previousTags,
-    tags ?? []
-  );
+    const previousTags = await getRecipeTags(id);
+    ({ tagsToAdd, tagsToRemove } = getTagOperations(previousTags, tags ?? []));
 
-  const recipeData: Partial<RecipePageData> = { ...recipe };
-  if (image) {
-    const imageBuffer = await fileToImageBuffer(image);
-    if (!imageBuffer) {
-      return;
+    recipeData = { ...recipe };
+    if (image) {
+      const processed = await fileToImageBuffer(image);
+      if (!processed) {
+        return;
+      }
+      const { imageUrl } = await uploadFileToImageStore(processed);
+      recipeData.imageUrl = imageUrl;
     }
-    const { imageUrl } = await uploadFileToImageStore(imageBuffer);
-    recipeData.imageUrl = imageUrl;
+  } catch (error) {
+    console.error('Failed to update recipe from form data', error);
+    return;
   }
 
   if (recipeData.instructions) {

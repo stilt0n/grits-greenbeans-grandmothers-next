@@ -25,10 +25,17 @@ const useCreateRecipeFromForm = ({
       let processedImage: File | undefined;
       const file = data.imageFileList?.[0];
       if (file && data.cropCoordinates) {
-        const crop = cropCoordinateSchema.parse(
-          JSON.parse(data.cropCoordinates)
-        );
-        processedImage = await processImageForUpload(file, crop);
+        try {
+          const crop = cropCoordinateSchema.parse(
+            JSON.parse(data.cropCoordinates)
+          );
+          processedImage = await processImageForUpload(file, crop);
+        } catch (error) {
+          console.error(
+            'Client image processing failed; falling back to raw image',
+            error
+          );
+        }
       }
       const recipeId = await createRecipeAction(
         recipeToFormData(data, processedImage)

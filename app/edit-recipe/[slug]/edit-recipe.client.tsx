@@ -44,13 +44,23 @@ const useEditRecipeFromForm = ({
       let processedImage: File | undefined;
       const file = data.imageFileList?.[0];
       if (file && data.cropCoordinates) {
-        const crop = cropCoordinateSchema.parse(
-          JSON.parse(data.cropCoordinates)
-        );
-        processedImage = await processImageForUpload(file, crop);
+        try {
+          const crop = cropCoordinateSchema.parse(
+            JSON.parse(data.cropCoordinates)
+          );
+          processedImage = await processImageForUpload(file, crop);
+        } catch (error) {
+          console.error(
+            'Client image processing failed; falling back to raw image',
+            error
+          );
+        }
       }
       const formData = recipeToFormData(data, processedImage);
-      await updateRecipeAction({ formData, id });
+      const result = await updateRecipeAction({ formData, id });
+      if (!result) {
+        return;
+      }
       router.push(`${redirect}/${id}`);
     });
   };

@@ -21,16 +21,21 @@ export const createRecipeAction = async (formData: FormData) => {
     return;
   }
 
-  const { image, ...recipe } = convertFormDataToRecipe(formData);
-
-  const recipeData: RecipePageData = { ...recipe, imageUrl: null };
-  if (image) {
-    const imageBuffer = await fileToImageBuffer(image);
-    if (!imageBuffer) {
-      return;
+  let recipeData: RecipePageData;
+  try {
+    const { image, ...recipe } = convertFormDataToRecipe(formData);
+    recipeData = { ...recipe, imageUrl: null };
+    if (image) {
+      const processed = await fileToImageBuffer(image);
+      if (!processed) {
+        return;
+      }
+      const { imageUrl } = await uploadFileToImageStore(processed);
+      recipeData.imageUrl = imageUrl;
     }
-    const { imageUrl } = await uploadFileToImageStore(imageBuffer);
-    recipeData.imageUrl = imageUrl;
+  } catch (error) {
+    console.error('Failed to create recipe from form data', error);
+    return;
   }
 
   // The html from TipTap is already sanitized but we do it here
