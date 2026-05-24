@@ -51,10 +51,14 @@ export function convertFormDataToRecipe(
   return validatedData;
 }
 
-export const recipeToFormData = ({
-  imageFileList,
-  ...serializableData
-}: Partial<RecipeFormData>) => {
+export const recipeToFormData = (
+  {
+    imageFileList,
+    cropCoordinates: _cropCoordinates,
+    ...serializableData
+  }: Partial<RecipeFormData>,
+  processedImage?: File
+) => {
   const formData = new FormData();
 
   if ((imageFileList?.length ?? 1) !== 1) {
@@ -63,7 +67,9 @@ export const recipeToFormData = ({
     );
   }
 
-  if (imageFileList?.length === 1) {
+  if (processedImage) {
+    formData.append('image', processedImage);
+  } else if (imageFileList?.length === 1) {
     formData.append('image', imageFileList[0]);
   }
 

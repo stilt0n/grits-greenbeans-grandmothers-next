@@ -1,51 +1,38 @@
-import type { CropCoordinates } from '@/lib/translation/schema';
-import sharp from 'sharp';
+const MAX_UPLOAD_BYTES = 2 * 1024 * 1024;
 
-const IMAGE_DIMENSIONS = {
-  width: 1280,
-  height: 720,
+const EXTENSION_BY_MIME: Record<string, string> = {
+  'image/jpeg': 'jpg',
+  'image/png': 'png',
+  'image/webp': 'webp',
+  'image/gif': 'gif',
 };
 
-const fileToBuffer = async (file: File) => {
-  const arrayBuffer = await file.arrayBuffer();
-  return Buffer.from(arrayBuffer);
-};
+export interface ProcessedImage {
+  buffer: Buffer;
+  contentType: string;
+  extension: string;
+}
 
-const fileIsImage = (file: File) => file.type.startsWith('image/');
-
-/**
- * Assumes cropCoordinates values are all integers.
- * You should parse cropCoordinates with the cropCoordinateSchema
- * before passing them to this function.
- * @param imageFile
- * @param cropCoordinates
- * @returns
- */
-export const preprocessImage = async (
-  imageFile: File,
-  cropCoordinates: CropCoordinates
-) => {
-  if (!fileIsImage(imageFile)) {
-    throw new TypeError(
-      `preprocessImage expects File to be an image file but received a different type of file. File type received: ${imageFile.type}`
-    );
+export const fileToImageBuffer = async (
+  file: File
+): Promise<ProcessedImage | null> => {
+  const extension = EXTENSION_BY_MIME[file.type];
+  if (!extension) {
+    console.error(`Rejected upload: unsupported mime type "${file.type}"`);
+    return null;
   }
 
-  try {
-    const fileBuffer = await fileToBuffer(imageFile);
-    return sharp(fileBuffer)
-      .extract({
-        left: cropCoordinates.x,
-        top: cropCoordinates.y,
-        width: cropCoordinates.width,
-        height: cropCoordinates.height,
-      })
-      .resize(IMAGE_DIMENSIONS.width, IMAGE_DIMENSIONS.height)
-      .toBuffer();
-  } catch (error) {
+  if (file.size > MAX_UPLOAD_BYTES) {
     console.error(
-      'encountered an error preprocessing the image! See error message below:'
+      `Rejected upload: file is ${file.size} bytes, exceeds limit of ${MAX_UPLOAD_BYTES}`
     );
-    console.error((error as any)?.message ?? String(error));
+    return null;
   }
+
+  const arrayBuffer = await file.arrayBuffer();
+  return {
+    buffer: Buffer.from(arrayBuffer),
+    contentType: file.type,
+    extension,
+  };
 };

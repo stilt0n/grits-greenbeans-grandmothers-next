@@ -6,8 +6,9 @@ import {
   type RecipeFormProps,
 } from '@/components/recipe-edit-form.client';
 import { recipeToFormData } from '@/lib/translation/parsers';
-import { RecipeFormData } from '@/lib/translation/schema';
+import { cropCoordinateSchema, RecipeFormData } from '@/lib/translation/schema';
 import { updateRecipeAction } from '@/lib/actions/update-recipe';
+import { processImageForUpload } from '@/components/image-editor';
 
 interface RecipeFormDataWithId extends RecipeFormData {
   id: number;
@@ -40,8 +41,26 @@ const useEditRecipeFromForm = ({
       return;
     }
     startTransition(async () => {
-      const formData = recipeToFormData(data);
-      await updateRecipeAction({ formData, id });
+      let processedImage: File | undefined;
+      const file = data.imageFileList?.[0];
+      if (file && data.cropCoordinates) {
+        try {
+          const crop = cropCoordinateSchema.parse(
+            JSON.parse(data.cropCoordinates)
+          );
+          processedImage = await processImageForUpload(file, crop);
+        } catch (error) {
+          console.error(
+            'Client image processing failed; falling back to raw image',
+            error
+          );
+        }
+      }
+      const formData = recipeToFormData(data, processedImage);
+      const result = await updateRecipeAction({ formData, id });
+      if (!result) {
+        return;
+      }
       router.push(`${redirect}/${id}`);
     });
   };
