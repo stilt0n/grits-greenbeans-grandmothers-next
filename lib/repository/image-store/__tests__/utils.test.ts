@@ -1,0 +1,53 @@
+import { describe, it, expect } from 'bun:test';
+import { detectImageMime } from '../utils';
+
+describe('detectImageMime', () => {
+  it('detects JPEG', () => {
+    const buf = Buffer.from([0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10]);
+    expect(detectImageMime(buf)).toBe('image/jpeg');
+  });
+
+  it('detects PNG', () => {
+    const buf = Buffer.from([
+      0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00,
+    ]);
+    expect(detectImageMime(buf)).toBe('image/png');
+  });
+
+  it('detects GIF87a', () => {
+    const buf = Buffer.from('GIF87a\x00\x00', 'ascii');
+    expect(detectImageMime(buf)).toBe('image/gif');
+  });
+
+  it('detects GIF89a', () => {
+    const buf = Buffer.from('GIF89a\x00\x00', 'ascii');
+    expect(detectImageMime(buf)).toBe('image/gif');
+  });
+
+  it('detects WebP', () => {
+    const buf = Buffer.concat([
+      Buffer.from('RIFF', 'ascii'),
+      Buffer.from([0x00, 0x00, 0x00, 0x00]),
+      Buffer.from('WEBP', 'ascii'),
+    ]);
+    expect(detectImageMime(buf)).toBe('image/webp');
+  });
+
+  it('returns null for unrecognized bytes', () => {
+    const buf = Buffer.from('not an image at all', 'ascii');
+    expect(detectImageMime(buf)).toBeNull();
+  });
+
+  it('returns null for empty buffer', () => {
+    expect(detectImageMime(Buffer.alloc(0))).toBeNull();
+  });
+
+  it('returns null for RIFF without WEBP marker (e.g. .wav)', () => {
+    const buf = Buffer.concat([
+      Buffer.from('RIFF', 'ascii'),
+      Buffer.from([0x00, 0x00, 0x00, 0x00]),
+      Buffer.from('WAVE', 'ascii'),
+    ]);
+    expect(detectImageMime(buf)).toBeNull();
+  });
+});
