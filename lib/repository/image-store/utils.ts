@@ -15,7 +15,7 @@ export interface ProcessedImage {
 
 // Detect image format from the leading bytes of the buffer. Returns the
 // canonical MIME type, or null if the bytes don't match a supported format.
-// Signatures sourced from the format specs; all four are stable since the 1990s.
+// Signatures sourced from the format specs and are stable for these formats.
 export const detectImageMime = (buffer: Buffer): string | null => {
   // JPEG: FF D8 FF
   if (
