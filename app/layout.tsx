@@ -2,6 +2,7 @@ import { ClerkProvider } from '@clerk/nextjs';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import Navbar from '@/components/navbar';
+import { Toaster } from '@/components/ui/sonner';
 import { SITE_URL } from '@/lib/constants';
 import { isLocalImageStore } from '@/lib/repository/image-store/upload';
 import { cn } from '@/lib/utils';
@@ -76,6 +77,7 @@ export default function RootLayout({
           >
             {children}
           </main>
+          <Toaster />
         </body>
       </html>
     </ClerkProvider>

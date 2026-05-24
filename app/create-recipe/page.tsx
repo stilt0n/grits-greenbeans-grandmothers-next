@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import { recipeToFormData } from '@/lib/translation/parsers';
 import { processImageForUpload } from '@/components/image-editor';
 import { cropCoordinateSchema } from '@/lib/translation/schema';
+import { toast } from 'sonner';
 
 interface UseCreateRecipeFromFormProps {
   redirect?: string;
@@ -31,16 +32,21 @@ const useCreateRecipeFromForm = ({
           );
           processedImage = await processImageForUpload(file, crop);
         } catch (error) {
-          console.error(
-            'Client image processing failed; falling back to raw image',
-            error
+          console.error('Client image processing failed', error);
+          toast.error(
+            'We couldn’t process the image in your browser. Try a different image or a smaller file.'
           );
+          return;
         }
       }
       const recipeId = await createRecipeAction(
         recipeToFormData(data, processedImage)
       );
-      if (redirect && recipeId !== undefined) {
+      if (recipeId === undefined) {
+        toast.error('Saving the recipe failed. Please try again.');
+        return;
+      }
+      if (redirect) {
         router.push(`${redirect}/${recipeId}`);
       }
     });
