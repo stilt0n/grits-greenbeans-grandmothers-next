@@ -75,7 +75,7 @@ Run `bun run format` before committing — the CI lint job fails on unformatted 
 ## Non-obvious things
 
 - **HTML sanitization** — TipTap output is sanitized client-side, but server actions sanitize again as defense-in-depth. Don't remove the server-side sanitization assuming the client already did it.
-- **Images** — uploads go through `lib/repository/image-store/upload.ts`; size limits, MIME allow-listing, and magic-byte signature validation live in `lib/repository/image-store/utils.ts`. The aspect ratio is enforced by the cropper component on the client.
+- **Images** — uploads go through `lib/repository/image-store/upload.ts`; size limits, MIME allow-listing, and magic-byte signature validation live in `lib/repository/image-store/utils.ts`. Note this is an S3 upload helper, not a Drizzle data-access repository — the "no validation in the repository" rule above is about the layers in the loaders → actions → repository → translation pipeline, and doesn't apply here. The aspect ratio is enforced by the cropper component on the client.
 - **Repository query helpers** — use `createWhereClause`, `createPaginateClause`, etc. from `lib/repository/recipe-store/utils.ts` rather than hand-rolling Drizzle predicates.
 - **Client components** use a `.client.tsx` suffix.
 - **shadcn/ui first** — check `components/ui/` before reaching for a new component or library.

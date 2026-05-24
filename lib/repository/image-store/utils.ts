@@ -78,10 +78,10 @@ export const fileToImageBuffer = async (
     return null;
   }
 
-  const arrayBuffer = await file.arrayBuffer();
-  const buffer = Buffer.from(arrayBuffer);
-
-  const detectedMime = detectImageMime(buffer);
+  // Sniff the header before reading the full payload so spoofed uploads don't
+  // force us to materialize the whole buffer in memory.
+  const headerBytes = Buffer.from(await file.slice(0, 12).arrayBuffer());
+  const detectedMime = detectImageMime(headerBytes);
   if (detectedMime !== file.type) {
     console.error(
       `Rejected upload: declared mime "${file.type}" does not match file signature (${detectedMime ?? 'unknown'})`
@@ -89,8 +89,9 @@ export const fileToImageBuffer = async (
     return null;
   }
 
+  const arrayBuffer = await file.arrayBuffer();
   return {
-    buffer,
+    buffer: Buffer.from(arrayBuffer),
     contentType: file.type,
     extension,
   };
