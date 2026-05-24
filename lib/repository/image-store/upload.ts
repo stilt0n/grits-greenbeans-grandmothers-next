@@ -4,7 +4,7 @@ import { v7 as uuidv7 } from 'uuid';
 import { writeFile, mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import { requireEnv } from '@/types/typeguards';
-import { IMAGE_BASE_URL } from '@/lib/constants';
+import { IMAGE_BASE_URL, SITE_URL } from '@/lib/constants';
 import type { ProcessedImage } from './utils';
 
 export const isLocalImageStore = () =>
@@ -18,7 +18,7 @@ const writeImageToLocalDisk = async ({ buffer, extension }: ProcessedImage) => {
   await writeFile(path.join(uploadsDir, filename), buffer);
   return {
     response: null,
-    imageUrl: `/uploads/${filename}`,
+    imageUrl: `${SITE_URL}/uploads/${filename}`,
   };
 };
 
