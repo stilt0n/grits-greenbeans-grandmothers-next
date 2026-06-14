@@ -18,6 +18,8 @@ const isValidJsonArray = (str: string) => {
   }
 };
 
+const fileList = z.instanceof(FileList);
+
 const Integer = z.number().transform(Math.floor);
 
 export const cropCoordinateSchema = z.object({
@@ -51,7 +53,16 @@ export const recipeFormSchema = z.object({
     .transform((str) => (str === '' ? null : str)),
   imageFileList: z
     .unknown()
-    .transform((value) => value as FileList | null)
+    .transform((value) => {
+      const { data, success } = z.instanceof(FileList).safeParse(value);
+      // We only accept one file here, but if there is more than one it
+      // is helpful to show a more specific error instead of just nulling
+      // the field out
+      if (success && data.length > 0) {
+        return data;
+      }
+      return null;
+    })
     .refine(
       (fl) => fl === null || fl.length === 1,
       'Upload a maximum of one image'
