@@ -51,7 +51,9 @@ export const recipeFormSchema = z.object({
     .transform((str) => (str === '' ? null : str)),
   imageFileList: z
     .unknown()
-    .transform((value) => value as FileList | null)
+    // We can't use `FileList` directly here because it's browser-only. For
+    // length 0 FileLists, we deliberately fall back to `null`
+    .transform((value) => ((value as any)?.length ? (value as FileList) : null))
     .refine(
       (fl) => fl === null || fl.length === 1,
       'Upload a maximum of one image'
