@@ -39,8 +39,16 @@ export const recipeFormSchema = z.object({
   instructions: z
     .string()
     .min(1, 'Instructions cannot be blank and cannot use the default template'),
-  author: z.string().nullable().default(null),
-  recipeTime: z.string().nullable().default(null),
+  author: z
+    .string()
+    .nullable()
+    .default(null)
+    .transform((str) => (str === '' ? null : str)),
+  recipeTime: z
+    .string()
+    .nullable()
+    .default(null)
+    .transform((str) => (str === '' ? null : str)),
   imageFileList: z
     .unknown()
     .transform((value) => value as FileList | null)
@@ -51,10 +59,12 @@ export const recipeFormSchema = z.object({
   cropCoordinates: z
     .string()
     .nullable()
+    .transform((str) => (str === '' ? null : str))
     .refine((str) => str === null || isValidCropCoordinate(str)),
   tags: z
     .string()
     .nullable()
+    .transform((str) => (str === '' ? null : str))
     .refine((str) => str === null || isValidJsonArray(str)),
 });
 
