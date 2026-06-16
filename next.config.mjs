@@ -1,5 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    serverActions: {
+      // TODO: remove this after switching to presigned URLs
+      // for image uploads
+      bodySizeLimit: '3mb',
+    },
+  },
   images: {
     remotePatterns: [
       {
