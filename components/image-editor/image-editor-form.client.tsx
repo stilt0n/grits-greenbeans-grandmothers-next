@@ -82,6 +82,11 @@ const ImageEditorForm = (props: ImageEditorFormProps) => {
       height
     );
     setCrop(crop);
+    // react-image-crop only fires onComplete on user interaction, so seed the
+    // crop coordinates from this initial centered crop. Without this, a user who
+    // submits without dragging the crop box leaves cropCoordinates null, the
+    // client-side resize is skipped, and the original full-size file is uploaded.
+    props.onChange(scaleCrop(crop as PercentCrop, { w: width, h: height }));
   };
 
   return (
