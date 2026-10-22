@@ -44,7 +44,7 @@ export const myAction = async (formData: FormData) => {
 Notes:
 
 - **Server actions return `undefined` on error.** Callers must check return values rather than relying on thrown exceptions.
-- **Auth is checked twice**: once in `middleware.ts` for route access, again inside server actions as defense-in-depth. Don't skip the in-action check.
+- **Auth is checked twice**: once in `proxy.ts` (Next.js 16's replacement for `middleware.ts`) for route access, again inside server actions as defense-in-depth. Don't skip the in-action check.
 - Use `hasElevatedPermissions()` (family or admin) or `hasAdminPermissions()` from `lib/auth.ts`.
 
 ## Loader pattern

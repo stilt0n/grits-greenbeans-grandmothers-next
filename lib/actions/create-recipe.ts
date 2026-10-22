@@ -10,7 +10,7 @@ import { RecipePageData } from '@/lib/translation/schema';
 import { createRecipe } from '@/lib/repository/recipe-store/create';
 
 export const createRecipeAction = async (formData: FormData) => {
-  // middleware should already be protecting this route, but this serves
+  // proxy should already be protecting this route, but this serves
   // as a fallback if that ever becomes untrue.
   const user = await currentUser();
   if (!hasElevatedPermissions(user)) {
